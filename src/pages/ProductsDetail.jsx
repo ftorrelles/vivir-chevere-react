@@ -173,7 +173,9 @@ const ProductsDetail = () => {
                         </div>
                     </div>
                     <div>
-                        <Button onClick={addToCart}>add to cart</Button>
+                        <Button size="lg" onClick={addToCart}>
+                            add to cart
+                        </Button>
                     </div>
                 </Col>
             </Row>
@@ -185,38 +187,59 @@ const ProductsDetail = () => {
                 {productsByCategory?.map((producItem) => (
                     <Col key={producItem.id}>
                         <Card style={{ margin: "1rem" }}>
-                            <Carousel variant="dark" interval="15000">
-                                <Carousel.Item className="cards">
+                            <Carousel fade variant="dark" interval={20000}>
+                                <Carousel.Item
+                                    style={{
+                                        padding: "1rem 2rem",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        width: "100% ",
+                                    }}
+                                >
                                     <img
-                                        className="d-block w-100"
-                                        src={producItem.productImgs[0]}
                                         style={{
-                                            height: 200,
-                                            width: 200,
-                                            objectFit: "cover",
+                                            height: "200px",
+                                            objectFit: "contain",
                                         }}
+                                        // className="carousel_img"
+                                        src={producItem?.productImgs?.[0]}
                                         alt="First slide"
                                     />
                                 </Carousel.Item>
-                                <Carousel.Item className="cards">
+
+                                <Carousel.Item
+                                    style={{
+                                        padding: "1rem 2rem",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        width: "100% ",
+                                    }}
+                                >
                                     <img
-                                        className="d-block w-100"
-                                        src={producItem.productImgs[1]}
                                         style={{
-                                            height: 200,
-                                            objectFit: "cover",
+                                            height: "200px",
+                                            objectFit: "contain",
                                         }}
+                                        // className="carousel_img"
+                                        src={producItem?.productImgs?.[1]}
                                         alt="Second slide"
                                     />
                                 </Carousel.Item>
-                                <Carousel.Item className="cards w-100">
+                                <Carousel.Item
+                                    style={{
+                                        padding: "1rem 2rem",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        width: "100% ",
+                                    }}
+                                >
                                     <img
-                                        className="d-block w-100"
-                                        src={producItem.productImgs[2]}
                                         style={{
-                                            height: 200,
-                                            objectFit: "cover",
+                                            height: "200px",
+                                            objectFit: "contain",
                                         }}
+                                        // className="carousel_img"
+                                        src={producItem?.productImgs?.[2]}
                                         alt="Third slide"
                                     />
                                 </Carousel.Item>
@@ -224,7 +247,12 @@ const ProductsDetail = () => {
                             <Card.Body className="card__body">
                                 <Card.Title>{producItem.title}</Card.Title>
                                 <Card.Text>${producItem.price}</Card.Text>
-                                <div style={{display:'flex', justifyContent:'space-around'}}>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "space-around",
+                                    }}
+                                >
                                     <Button
                                         variant="light"
                                         as={Link}

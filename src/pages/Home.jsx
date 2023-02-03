@@ -7,11 +7,18 @@ import {
 import { Row, Col, Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Carousel from "react-bootstrap/Carousel";
+import { Cart } from "react-bootstrap-icons";
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
 
 const Home = () => {
     const dispatch = useDispatch();
     const products = useSelector((state) => state.products);
     const [categories, setCategories] = useState([]);
+    const [input, setInput] = useState("");
+    const [productsFiltered, setProductsFiltered] = useState([]);
+
     useEffect(() => {
         dispatch(getProductsThunk());
         axios
@@ -21,43 +28,171 @@ const Home = () => {
             .then((resp) => setCategories(resp.data.data.categories))
             .catch((error) => console.error(error));
     }, []);
-    // console.log(products);
+
+    useEffect(() => {
+        setProductsFiltered(products);
+    }, [products]);
+
+    const filterByName = () => {
+        const productsFiltered = products.filter((product) =>
+            product.title.toLowerCase().includes(input)
+        );
+
+        setProductsFiltered(productsFiltered);
+    };
+
     return (
         <div>
-            <h1>home</h1>
-            {categories?.map((category) => (
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <Row xs={1} md={2} lg={2}>
+                <Col>
+                    <InputGroup className="mb-3">
+                        <Form.Control
+                            aria-label="Example text with button addon"
+                            aria-describedby="basic-addon1"
+                            id="name"
+                            type="text"
+                            value={input}
+                            placeholder="search product by name"
+                            onChange={(event) =>
+                                setInput(event.target.value.toLowerCase())
+                            }
+                        />
+                        <Button
+                            size="sm"
+                            variant="outline-primary"
+                            onClick={filterByName}
+                        >
+                            Search
+                        </Button>
+                    </InputGroup>
+                </Col>
+                <Col>
+                    <h4>
+                        <img style={{ width: "30%" }} src="/robot.png" alt="" />{" "}
+                        welcome to your friend store!!!
+                    </h4>
+                </Col>
+            </Row>
+
+            <Col
+                style={{
+                    position: "absolute",
+                    top: "6rem",
+                    right: "3rem",
+                    marginLeft: "3rem",
+                }}
+            >
+                <h4 style={{ color: "#456268" }}>Your favorite categories!!</h4>
+                {categories?.map((category) => (
+                    <Button
+                        key={category?.id}
+                        variant="outline-primary"
+                        size="sm"
+                        onClick={() =>
+                            dispatch(filterCategoriesThunk(category?.id))
+                        }
+                    >
+                        {category.name}
+                    </Button>
+                ))}
                 <Button
-                    key={category?.id}
-                    variant="primary"
-                    onClick={() =>
-                        dispatch(filterCategoriesThunk(category?.id))
-                    }
+                    variant="outline-dark"
+                    size="sm"
+                    onClick={() => dispatch(getProductsThunk())}
                 >
-                    {category.name}
+                    see all
                 </Button>
-            ))}
-            <Button variant="dark" onClick={() => dispatch(getProductsThunk())}>
-                Ver todos
-            </Button>
+            </Col>
+            <br />
+            <hr />
+            <br />
+
             <Row xs={1} md={2} lg={3}>
-                {products.map((product, index) => (
-                    <Col key={index}>
-                        <Card>
-                            <Card.Img
-                                variant="top"
-                                src={product?.productImgs?.[0]}
-                                style={{ height: 200, objectFit: "cover" }}
-                            />
-                            <Card.Body>
-                                <Card.Text>{product.category.name}</Card.Text>
-                                <Card.Title>{product.title}</Card.Title>
-                                <Button
-                                    as={Link}
-                                    variant="primary"
-                                    to={`/products/${product.id}`}
+                {productsFiltered?.map((producItem) => (
+                    <Col key={producItem.id}>
+                        <Card style={{ margin: "1rem" }}>
+                            <Carousel fade variant="dark" interval={20000}>
+                                <Carousel.Item
+                                    style={{
+                                        padding: "1rem 2rem",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        width: "100% ",
+                                    }}
                                 >
-                                    Ver detalle
-                                </Button>
+                                    <img
+                                        style={{
+                                            height: "200px",
+                                            objectFit: "contain",
+                                        }}
+                                        // className="carousel_img"
+                                        src={producItem?.productImgs?.[0]}
+                                        alt="First slide"
+                                    />
+                                </Carousel.Item>
+
+                                <Carousel.Item
+                                    style={{
+                                        padding: "1rem 2rem",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        width: "100% ",
+                                    }}
+                                >
+                                    <img
+                                        style={{
+                                            height: "200px",
+                                            objectFit: "contain",
+                                        }}
+                                        // className="carousel_img"
+                                        src={producItem?.productImgs?.[1]}
+                                        alt="Second slide"
+                                    />
+                                </Carousel.Item>
+                                <Carousel.Item
+                                    style={{
+                                        padding: "1rem 2rem",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        width: "100% ",
+                                    }}
+                                >
+                                    <img
+                                        style={{
+                                            height: "200px",
+                                            objectFit: "contain",
+                                        }}
+                                        // className="carousel_img"
+                                        src={producItem?.productImgs?.[2]}
+                                        alt="Third slide"
+                                    />
+                                </Carousel.Item>
+                            </Carousel>
+                            <Card.Body className="card__body">
+                                <Card.Title>{producItem.title}</Card.Title>
+                                <Card.Text>${producItem.price}</Card.Text>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "space-around",
+                                    }}
+                                >
+                                    <Button
+                                        variant="light"
+                                        as={Link}
+                                        to={`/products/${producItem.id}`}
+                                    >
+                                        Details
+                                    </Button>
+                                    <Button variant="primary">
+                                        <Cart />
+                                    </Button>
+                                </div>
                             </Card.Body>
                         </Card>
                     </Col>

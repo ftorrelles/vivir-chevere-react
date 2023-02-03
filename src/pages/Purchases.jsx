@@ -9,8 +9,8 @@ const Purchases = () => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = (info) => {
-        setShow(true)
-        setDataSelected(info)
+        setShow(true);
+        setDataSelected(info);
     };
     const [purchases, setPurchases] = useState([]);
     useEffect(() => {
@@ -22,17 +22,22 @@ const Purchases = () => {
             .then((resp) => setPurchases(resp.data.data.purchases))
             .catch((error) => console.error(error));
     }, []);
-    const [dataSelected, setDataSelected] = useState({})
+    const [dataSelected, setDataSelected] = useState({});
     return (
         <div>
             <h2>My purchases</h2>
             <hr />
             {purchases.map((purchase) =>
                 purchase.cart?.products?.map((item) => (
-                    <Card key={item.id} style={{margin:'1rem'}}>
-                        <Card.Header>{item.productsInCart?.createdAt.slice(0,10)}</Card.Header>
+                    <Card key={item.id} style={{ margin: "1rem" }}>
+                        <Card.Header>
+                            {item.productsInCart?.createdAt.slice(0, 10)}
+                        </Card.Header>
                         <Card.Body
-                            style={{ display: "flex", justifyContent: "space-around" }}
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-around",
+                            }}
                         >
                             <Card.Text>{item.title}</Card.Text>
                             <Card.Text
@@ -48,14 +53,21 @@ const Purchases = () => {
                                 {item.productsInCart.quantity}
                             </Card.Text>
                             <Card.Text>{item.price}</Card.Text>
-                            <Button variant="primary" onClick={()=>handleShow(item)}>
+                            <Button
+                                variant="primary"
+                                onClick={() => handleShow(item)}
+                            >
                                 see details
                             </Button>
                         </Card.Body>
                     </Card>
                 ))
             )}
-            <ModalPurchases show={show} handleClose={handleClose} data={dataSelected}/>
+            <ModalPurchases
+                show={show}
+                handleClose={handleClose}
+                data={dataSelected}
+            />
         </div>
     );
 };

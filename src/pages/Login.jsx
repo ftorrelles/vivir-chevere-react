@@ -36,40 +36,63 @@ const Login = () => {
                 setAlert(true);
             });
     };
-
+    const [isLogged, setIsLogged] = useState(localStorage.getItem("token"));
+    const logout = () => {
+        localStorage.clear();
+        setIsLogged(false);
+    };
     return (
         <>
-            <Card
-                style={{ maxWidth: 500, margin: "3rem auto", padding: "2rem" }}
-            >
-                <Form onSubmit={(e) => handleSubmit(e)}>
-                    <h1>Login</h1>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label>
-                            Email address 'torrelles@gmail.com'
-                        </Form.Label>
-                        <Form.Control
-                            type="email"
-                            placeholder="Enter email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </Form.Group>
+            {isLogged ? (
+                <Card
+                    style={{
+                        maxWidth: 500,
+                        margin: "3rem auto",
+                        padding: "2rem",
+                    }}
+                >
+                    <Button onClick={logout}>Cerrar sesión</Button>
+                </Card>
+            ) : (
+                <Card
+                    style={{
+                        maxWidth: 500,
+                        margin: "3rem auto",
+                        padding: "2rem",
+                    }}
+                >
+                    <Form onSubmit={(e) => handleSubmit(e)}>
+                        <h1>Login</h1>
+                        <Form.Group className="mb-3" controlId="formBasicEmail">
+                            <Form.Label>
+                                Email address 'torrelles@gmail.com'
+                            </Form.Label>
+                            <Form.Control
+                                type="email"
+                                placeholder="Enter email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>Password '12345678'</Form.Label>
-                        <Form.Control
-                            type="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </Form.Group>
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
-                </Form>
-            </Card>
+                        <Form.Group
+                            className="mb-3"
+                            controlId="formBasicPassword"
+                        >
+                            <Form.Label>Password '12345678'</Form.Label>
+                            <Form.Control
+                                type="password"
+                                placeholder="Password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </Form.Group>
+                        <Button variant="primary" type="submit">
+                            Submit
+                        </Button>
+                    </Form>
+                </Card>
+            )}
 
             <AlertError isVisible={alert} dismiss={() => setAlert(false)} />
         </>
