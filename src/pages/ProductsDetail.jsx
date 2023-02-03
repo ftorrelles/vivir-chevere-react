@@ -1,42 +1,32 @@
+//react/router-dom/axios
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
+//redux
 import { useDispatch, useSelector } from "react-redux";
-import { setIsLoading } from "../store/slices/isLoading.slice";
-import { Button, Col, Row, Card } from "react-bootstrap";
 import { cartThunk } from "../store/slices/cart.slice";
+import { getProductsThunk } from "../store/slices/products.slice";
+//bootstrap
+import { Button, Col, Row, Card, ListGroup } from "react-bootstrap";
 import Carousel from "react-bootstrap/Carousel";
 import { Cart } from "react-bootstrap-icons";
-//import { getProductsThunk } from "../store/slices/products.slice";
 
 const ProductsDetail = () => {
     const { id } = useParams();
-    const [detail, setDetail] = useState({});
     const dispatch = useDispatch();
     const [count, setCount] = useState(1);
     const navigate = useNavigate();
-    const products = useSelector((state) => state.products);
-    const [productsByCategory, setProductsByCategory] = useState([]);
 
     useEffect(() => {
-        //dispatch(getProductsThunk())
-        dispatch(setIsLoading(true));
-        axios
-            .get(`https://e-commerce-api.academlo.tech/api/v1/products/${id}/`)
-            .then((resp) => {
-                setDetail(resp?.data?.data?.product);
-                filterClass(resp?.data?.data?.product.category);
-            })
-            .catch((error) => console.error(error))
-            .finally(() => dispatch(setIsLoading(false)));
+        dispatch(getProductsThunk());
     }, [id]);
 
-    const filterClass = (category) => {
-        const productsFiltered = products.filter(
-            (p) => p.category.name == category
-        );
-        setProductsByCategory(productsFiltered);
-    };
+    const products = useSelector((state) => state.products);
+
+    const detail = products.find((product) => product.id === Number(id));
+    const newsRelated = products.filter(
+        (relatedProducts) =>
+            relatedProducts.category?.name === detail.category.name
+    );
 
     const addToCart = () => {
         const token = localStorage.getItem("token");
@@ -123,60 +113,74 @@ const ProductsDetail = () => {
                         justifyContent: "center",
                     }}
                 >
-                    <h2>{detail.title}</h2>
-                    <p>{detail.category}</p>
-
-                    <p>{detail.description}</p>
-                    <div
-                        style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                        }}
-                    >
-                        <div>
-                            <h5>Price</h5>
-                            <p>
-                                <strong>{detail.price}</strong>
-                            </p>
-                        </div>
-                        <div>
-                            <h5>Quantity</h5>
-                            <div style={{ display: "flex" }}>
-                                <Button
-                                    onClick={() =>
-                                        count === 1
-                                            ? setCount(count)
-                                            : setCount(count - 1)
-                                    }
-                                    variant="secondary"
-                                >
-                                    -
-                                </Button>
-                                <div
+                    <Card style={{ border: "none" }}>
+                        <Card.Body>
+                            <Card.Title>
+                                <h3>{detail?.title}</h3>
+                            </Card.Title>
+                            <Card.Text>{detail?.description}</Card.Text>
+                            <ListGroup className="list-group-flush">
+                                <ListGroup.Item
                                     style={{
-                                        width: "30px",
-                                        height: "30px",
                                         display: "flex",
-                                        justifyContent: "center",
                                         alignItems: "center",
+                                        justifyContent: "space-between",
                                     }}
                                 >
-                                    {count}
-                                </div>
-                                <Button
-                                    onClick={() => setCount(count + 1)}
-                                    variant="secondary"
+                                    <div>
+                                        <p>
+                                            <strong>Price</strong>
+                                        </p>
+                                        {detail?.price}
+                                    </div>
+                                    <div>
+                                        <i className="bx bx-car"></i>
+                                        <spam> Envio gratis</spam>
+                                    </div>
+                                </ListGroup.Item>
+                                <ListGroup.Item
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                    }}
                                 >
-                                    +
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <Button size="lg" onClick={addToCart}>
-                            add to cart
-                        </Button>
-                    </div>
+                                    <div style={{ display: "flex" }}>
+                                        <Button
+                                            onClick={() =>
+                                                count === 1
+                                                    ? setCount(count)
+                                                    : setCount(count - 1)
+                                            }
+                                            variant="secondary"
+                                        >
+                                            -
+                                        </Button>
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                                width: "40px",
+                                            }}
+                                        >
+                                            {count}
+                                        </div>
+                                        <Button
+                                            onClick={() => setCount(count + 1)}
+                                            variant="secondary"
+                                        >
+                                            +
+                                        </Button>
+                                    </div>
+
+                                    <Button size="lg" onClick={addToCart}>
+                                        add to cart
+                                    </Button>
+                                </ListGroup.Item>
+                            </ListGroup>
+                        </Card.Body>
+                    </Card>
                 </Col>
             </Row>
             <hr />
@@ -184,7 +188,7 @@ const ProductsDetail = () => {
             <h3>Related products</h3>
             <br />
             <Row xs={1} md={2} lg={3}>
-                {productsByCategory?.map((producItem) => (
+                {newsRelated?.map((producItem) => (
                     <Col key={producItem.id}>
                         <Card style={{ margin: "1rem" }}>
                             <Carousel fade variant="dark" interval={20000}>

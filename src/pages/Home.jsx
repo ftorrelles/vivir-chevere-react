@@ -74,7 +74,7 @@ const Home = () => {
                 <Col>
                     <h4>
                         <img style={{ width: "30%" }} src="/robot.png" alt="" />{" "}
-                        welcome to your friend store!!!
+                        welcome!!!
                     </h4>
                 </Col>
             </Row>
