@@ -4,6 +4,7 @@ import {
     getProductsThunk,
     filterCategoriesThunk,
 } from "../store/slices/products.slice";
+import { addCartThunk } from "../store/slices/cart.slice";
 import { Row, Col, Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -39,6 +40,14 @@ const Home = () => {
         );
 
         setProductsFiltered(productsFiltered);
+    };
+    const addToCart = (product) => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            dispatch(addCartThunk(product, 1));
+        } else {
+            navigate("/login");
+        }
     };
 
     return (
@@ -189,7 +198,10 @@ const Home = () => {
                                     >
                                         Details
                                     </Button>
-                                    <Button variant="primary">
+                                    <Button
+                                        onClick={() => addToCart(producItem)}
+                                        variant="primary"
+                                    >
                                         <Cart />
                                     </Button>
                                 </div>

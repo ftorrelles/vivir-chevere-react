@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 //redux
 import { useDispatch, useSelector } from "react-redux";
-import { cartThunk } from "../store/slices/cart.slice";
+import { addCartThunk } from "../store/slices/cart.slice";
 import { getProductsThunk } from "../store/slices/products.slice";
 //bootstrap
 import { Button, Col, Row, Card, ListGroup } from "react-bootstrap";
@@ -28,19 +28,14 @@ const ProductsDetail = () => {
             relatedProducts.category?.name === detail.category.name
     );
 
-    const addToCart = () => {
+    const addToCart = (product) => {
         const token = localStorage.getItem("token");
         if (token) {
-            const cart = {
-                id: detail.id,
-                quantity: count,
-            };
-            dispatch(cartThunk(cart));
+            dispatch(addCartThunk(product, count));
         } else {
             navigate("/login");
         }
     };
-
     return (
         <div>
             <Row xs={1} md={2} lg={2}>
@@ -174,7 +169,10 @@ const ProductsDetail = () => {
                                         </Button>
                                     </div>
 
-                                    <Button size="lg" onClick={addToCart}>
+                                    <Button
+                                        size="lg"
+                                        onClick={() => addToCart(detail)}
+                                    >
                                         add to cart
                                     </Button>
                                 </ListGroup.Item>
@@ -264,7 +262,13 @@ const ProductsDetail = () => {
                                     >
                                         Details
                                     </Button>
-                                    <Button variant="primary">
+                                    <Button
+                                        onClick={() => {
+                                            setCount(1);
+                                            addToCart(producItem);
+                                        }}
+                                        variant="primary"
+                                    >
                                         <Cart />
                                     </Button>
                                 </div>
