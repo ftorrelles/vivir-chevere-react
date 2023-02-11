@@ -58,7 +58,7 @@ export const removeCartThunk = (id) => (dispatch) => {
             getConfig()
         )
         .then((res) => dispatch(getCarThunk()))
-        .catch((err) => console.log(err.response))
+        .catch((err) => console.error(err.response))
         .finally(() => dispatch(setIsLoading(false)));
 };
 

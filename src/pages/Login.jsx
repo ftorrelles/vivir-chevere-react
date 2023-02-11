@@ -51,6 +51,7 @@ const Login = () => {
                         padding: "2rem",
                     }}
                 >
+                    <i className="bx bx-user"></i>
                     <Button onClick={logout}>Cerrar sesión</Button>
                 </Card>
             ) : (
@@ -65,7 +66,11 @@ const Login = () => {
                         <h1>Login</h1>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>
-                                Email address 'torrelles@gmail.com'
+                                Email address
+                                <strong>
+                                    {" "}
+                                    test data: 'torrelles@gmail.com'
+                                </strong>
                             </Form.Label>
                             <Form.Control
                                 type="email"
@@ -79,7 +84,10 @@ const Login = () => {
                             className="mb-3"
                             controlId="formBasicPassword"
                         >
-                            <Form.Label>Password '12345678'</Form.Label>
+                            <Form.Label>
+                                Password{" "}
+                                <strong> test data: ''12345678''</strong>
+                            </Form.Label>
                             <Form.Control
                                 type="password"
                                 placeholder="Password"

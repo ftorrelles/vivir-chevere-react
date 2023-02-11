@@ -10,52 +10,55 @@ import {
     removeCartThunk,
 } from "../store/slices/cart.slice";
 import { useSelector, useDispatch } from "react-redux";
+import { setCart } from "../store/slices/cart.slice";
+import { useNavigate } from "react-router-dom";
 
 const SideBar = ({ show, handleClose }) => {
-    const [product, setProduct] = useState([]);
+    // const [product, setProduct] = useState([]);
     const dispatch = useDispatch();
+    const [message, setMessage] = useState(true);
+    const navigate = useNavigate();
+    const productsCart = useSelector((state) => state.cart);
 
     //Obtener productos del carro
     useEffect(() => {
         dispatch(getCarThunk());
     }, [show]);
 
-    const productsCart = useSelector((state) => state.cart);
-
-    // useEffect(() => {
-    //     axios
-    //         .get(
-    //             "https://e-commerce-api.academlo.tech/api/v1/cart",
-    //             getConfig()
-    //         )
-    //         .then((resp) => setProduct(resp.data.data.cart.products))
-    //         .catch((error) => console.error(error));
-    // }, [show]);
+    useEffect(() => {
+        productsCart?.cart?.products.length > 0
+            ? setMessage(false)
+            : setMessage(true);
+    }, [productsCart]);
 
     //mandar a purchases
-    const checkoutCart = () => {
-        axios
-            .post(
-                "https://e-commerce-api.academlo.tech/api/v1/purchases",
-                {
-                    street: "Green St. 1456",
-                    colony: "Southwest",
-                    zipCode: 12345,
-                    city: "USA",
-                    references: "Some references",
-                },
-                getConfig()
-            )
-            .then((resp) => {
-                for (let i of productsCart.cart.products) {
-                    dispatch(removeCart(i.productsInCart?.productId));
-                }
-            });
-        // .then((resp) => {
-        //     dispatch(removeCartThunk(productsCart.cart.id));
-        //     dispatch(getCarThunk());
-        // })
-        // .catch((error) => console.error(error));
+    const checkoutCart = async () => {
+        await axios.post(
+            "https://e-commerce-api.academlo.tech/api/v1/purchases",
+            {
+                street: "Green St. 1456",
+                colony: "Southwest",
+                zipCode: 12345,
+                city: "USA",
+                references: "Some references",
+            },
+            getConfig()
+        );
+        for await (let i of productsCart.cart.products) {
+            axios
+                .delete(
+                    "https://e-commerce-api.academlo.tech/api/v1/cart/" +
+                        i.productsInCart?.productId,
+                    getConfig()
+                )
+                .catch(
+                    (error) =>
+                        error.response.status !== 400 && console.error(error)
+                );
+        }
+        dispatch(setCart([]));
+        setMessage(true);
+        navigate("/purchases");
     };
 
     const addUpdateCart = (product) => {
@@ -75,15 +78,14 @@ const SideBar = ({ show, handleClose }) => {
     const removeCart = (product) => {
         dispatch(removeCartThunk(product.productsInCart?.productId));
     };
-    console.log(productsCart);
-
+    // console.log(productsCart);
     return (
         <Offcanvas show={show} onHide={handleClose} placement={"end"}>
             <Offcanvas.Header closeButton>
                 <Offcanvas.Title>shopping cart</Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-                {productsCart?.cart?.products.length !== 0 ? (
+                {!message ? (
                     productsCart?.cart?.products.map((item) => (
                         <Card key={item.id} style={{ margin: "1rem" }}>
                             <Card.Body>
@@ -105,7 +107,10 @@ const SideBar = ({ show, handleClose }) => {
                                     }}
                                 >
                                     <div
-                                        style={{ display: "flex", gap: "5px" }}
+                                        style={{
+                                            display: "flex",
+                                            gap: "5px",
+                                        }}
                                     >
                                         <Button
                                             onClick={() => resUpdateCart(item)}
@@ -131,12 +136,13 @@ const SideBar = ({ show, handleClose }) => {
                         </Card>
                     ))
                 ) : (
-                    <h2>No hay nada en el carrito</h2>
+                    // <h2>No hay nada en el carrito</h2>
+                    <img src="/empty-cart.png" alt="" />
                 )}
                 <Button
                     style={{ display: "flex", justifyContent: "center" }}
                     onClick={() => checkoutCart()}
-                    disabled={productsCart.length === 0}
+                    disabled={message}
                 >
                     Pay
                 </Button>
