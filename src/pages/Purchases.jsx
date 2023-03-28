@@ -61,42 +61,6 @@ const Purchases = () => {
                     </Card.Body>
                 </Card>
             ))}
-            {/* {purchases.map((purchase) =>
-                purchase?.product?.map((item) => (
-                    <Card key={item.id} style={{ margin: "1rem" }}>
-                        <Card.Header>
-                            {item.productsInCart?.createdAt.slice(0, 10)}
-                        </Card.Header>
-                        <Card.Body
-                            style={{
-                                display: "flex",
-                                justifyContent: "space-around",
-                            }}
-                        >
-                            <Card.Text>{item.title}</Card.Text>
-                            <Card.Text
-                                style={{
-                                    width: "30px",
-                                    height: "30px",
-                                    border: "1px solid rgb(0, 0, 0)",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            >
-                                {item.productsInCart.quantity}
-                            </Card.Text>
-                            <Card.Text>{item.price}</Card.Text>
-                            <Button
-                                variant="primary"
-                                onClick={() => handleShow(item)}
-                            >
-                                see details
-                            </Button>
-                        </Card.Body>
-                    </Card>
-                ))
-            )} */}
             <ModalPurchases
                 show={show}
                 handleClose={handleClose}

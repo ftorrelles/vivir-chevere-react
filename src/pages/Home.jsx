@@ -49,13 +49,32 @@ const Home = () => {
 
     return (
         <div>
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
             <Row xs={1} md={2} lg={2}>
                 <Col>
+                    <h4 style={{ color: "#456268" }}>
+                        Your favorite categories!!
+                    </h4>
+                    {categories?.map((category) => (
+                        <Button
+                            key={category?.id}
+                            variant="outline-primary"
+                            size="sm"
+                            onClick={() =>
+                                dispatch(filterCategoriesThunk(category?.id))
+                            }
+                        >
+                            {category.name}
+                        </Button>
+                    ))}
+                    <Button
+                        variant="outline-dark"
+                        size="sm"
+                        onClick={() => dispatch(getProductsThunk())}
+                    >
+                        see all
+                    </Button>
+                </Col>
+                <Col style={{ marginTop: "1rem" }}>
                     <InputGroup className="mb-3">
                         <Form.Control
                             aria-label="Example text with button addon"
@@ -77,43 +96,8 @@ const Home = () => {
                         </Button>
                     </InputGroup>
                 </Col>
-                <Col>
-                    <h4>
-                        <img style={{ width: "30%" }} src="/robot.png" alt="" />{" "}
-                        welcome!!!
-                    </h4>
-                </Col>
             </Row>
 
-            <Col
-                style={{
-                    position: "absolute",
-                    top: "6rem",
-                    right: "3rem",
-                    marginLeft: "3rem",
-                }}
-            >
-                <h4 style={{ color: "#456268" }}>Your favorite categories!!</h4>
-                {categories?.map((category) => (
-                    <Button
-                        key={category?.id}
-                        variant="outline-primary"
-                        size="sm"
-                        onClick={() =>
-                            dispatch(filterCategoriesThunk(category?.id))
-                        }
-                    >
-                        {category.name}
-                    </Button>
-                ))}
-                <Button
-                    variant="outline-dark"
-                    size="sm"
-                    onClick={() => dispatch(getProductsThunk())}
-                >
-                    see all
-                </Button>
-            </Col>
             <br />
             <hr />
             <br />
