@@ -19,7 +19,7 @@ const ModalPurchases = ({ show, handleClose, data }) => {
                             friend shop c.a
                             <br />
                             J‑29989842‑2 <br />
-                            {data.productsInCart?.createdAt.slice(0, 10)}
+                            {data.product?.createdAt.slice(0, 10)}
                         </p>
                     </Modal.Body>
                 </Modal.Header>
@@ -35,11 +35,11 @@ const ModalPurchases = ({ show, handleClose, data }) => {
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{data.title}</td>
-                                <td>{data.price}</td>
-                                <td>{data.productsInCart?.quantity}</td>
+                                <td>{data.product?.title}</td>
+                                <td>{data.product?.price}</td>
+                                <td>{data?.quantity}</td>
                                 <td>
-                                    {data.price * data.productsInCart?.quantity}
+                                    {data.product?.price * data?.quantity}
                                     .00
                                 </td>
                             </tr>
@@ -55,7 +55,7 @@ const ModalPurchases = ({ show, handleClose, data }) => {
                     <p>
                         <strong>total paid</strong>
                     </p>
-                    <p>{data.price * data.productsInCart?.quantity}.00</p>
+                    <p>{data.product?.price * data?.quantity}.00</p>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>

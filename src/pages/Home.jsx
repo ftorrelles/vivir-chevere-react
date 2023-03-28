@@ -23,10 +23,8 @@ const Home = () => {
     useEffect(() => {
         dispatch(getProductsThunk());
         axios
-            .get(
-                "https://e-commerce-api.academlo.tech/api/v1/products/categories"
-            )
-            .then((resp) => setCategories(resp.data.data.categories))
+            .get("https://friend-shop-app-back.onrender.com/api/v1/categories")
+            .then((resp) => setCategories(resp.data))
             .catch((error) => console.error(error));
     }, []);
 
@@ -38,7 +36,6 @@ const Home = () => {
         const productsFiltered = products.filter((product) =>
             product.title.toLowerCase().includes(input)
         );
-
         setProductsFiltered(productsFiltered);
     };
     const addToCart = (product) => {
@@ -140,7 +137,7 @@ const Home = () => {
                                             objectFit: "contain",
                                         }}
                                         // className="carousel_img"
-                                        src={producItem?.productImgs?.[0]}
+                                        src={producItem?.productImgs?.[0]?.url}
                                         alt="First slide"
                                     />
                                 </Carousel.Item>
@@ -159,7 +156,7 @@ const Home = () => {
                                             objectFit: "contain",
                                         }}
                                         // className="carousel_img"
-                                        src={producItem?.productImgs?.[1]}
+                                        src={producItem?.productImgs?.[1]?.url}
                                         alt="Second slide"
                                     />
                                 </Carousel.Item>
@@ -177,7 +174,7 @@ const Home = () => {
                                             objectFit: "contain",
                                         }}
                                         // className="carousel_img"
-                                        src={producItem?.productImgs?.[2]}
+                                        src={producItem?.productImgs?.[2]?.url}
                                         alt="Third slide"
                                     />
                                 </Carousel.Item>

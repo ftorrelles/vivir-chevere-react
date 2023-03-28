@@ -26,15 +26,13 @@ const SideBar = ({ show, handleClose }) => {
     }, [show]);
 
     useEffect(() => {
-        productsCart?.cart?.products.length > 0
-            ? setMessage(false)
-            : setMessage(true);
+        productsCart?.length > 0 ? setMessage(false) : setMessage(true);
     }, [productsCart]);
 
     //mandar a purchases
     const checkoutCart = async () => {
         await axios.post(
-            "https://e-commerce-api.academlo.tech/api/v1/purchases",
+            "https://friend-shop-app-back.onrender.com/api/v1/purchases",
             {
                 street: "Green St. 1456",
                 colony: "Southwest",
@@ -44,11 +42,11 @@ const SideBar = ({ show, handleClose }) => {
             },
             getConfig()
         );
-        for await (let i of productsCart.cart.products) {
+        for await (let i of productsCart) {
             axios
                 .delete(
-                    "https://e-commerce-api.academlo.tech/api/v1/cart/" +
-                        i.productsInCart?.productId,
+                    "https://friend-shop-app-back.onrender.com/api/v1/carts/" +
+                        i?.id,
                     getConfig()
                 )
                 .catch(
@@ -61,24 +59,19 @@ const SideBar = ({ show, handleClose }) => {
         navigate("/purchases");
     };
 
-    const addUpdateCart = (product) => {
-        dispatch(
-            updateCartThunk(product, product.productsInCart?.quantity + 1)
-        );
+    const addUpdateCart = (data) => {
+        dispatch(updateCartThunk(data?.quantity + 1, data, data.id));
         dispatch(getCarThunk());
     };
-    const resUpdateCart = (product) => {
-        product.productsInCart?.quantity === 1
+    const resUpdateCart = (data) => {
+        data?.quantity === 1
             ? alert("no se puede")
-            : dispatch(
-                  updateCartThunk(product, product.productsInCart?.quantity - 1)
-              );
+            : dispatch(updateCartThunk(data?.quantity - 1, data, data.id));
         dispatch(getCarThunk());
     };
-    const removeCart = (product) => {
-        dispatch(removeCartThunk(product.productsInCart?.productId));
+    const removeCart = (data) => {
+        dispatch(removeCartThunk(data?.id));
     };
-    // console.log(productsCart);
     return (
         <Offcanvas show={show} onHide={handleClose} placement={"end"}>
             <Offcanvas.Header closeButton>
@@ -86,18 +79,17 @@ const SideBar = ({ show, handleClose }) => {
             </Offcanvas.Header>
             <Offcanvas.Body>
                 {!message ? (
-                    productsCart?.cart?.products.map((item) => (
+                    productsCart.map((item) => (
                         <Card key={item.id} style={{ margin: "1rem" }}>
                             <Card.Body>
                                 <Card.Title>
-                                    <h6>{item.title}</h6>
+                                    <h6>{item.product?.title}</h6>
                                 </Card.Title>
                                 <Card.Text>
                                     <span>
-                                        Brand: {item.brand} <br />
-                                        Quantity:{" "}
-                                        {item.productsInCart?.quantity} <br />
-                                        Price: {item.price}
+                                        {/* Brand: {item.brand} <br /> */}
+                                        Quantity: {item?.quantity} <br />
+                                        Price: {item.product?.price}
                                     </span>
                                 </Card.Text>
                                 <div

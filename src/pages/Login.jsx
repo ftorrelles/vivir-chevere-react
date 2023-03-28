@@ -23,12 +23,11 @@ const Login = () => {
         axios
 
             .post(
-                "https://e-commerce-api.academlo.tech/api/v1/users/login",
+                "https://friend-shop-app-back.onrender.com/api/v1/users/login",
                 data
             )
             .then((resp) => {
-                console.log(resp);
-                localStorage.setItem("token", resp.data.data.token);
+                localStorage.setItem("token", resp.data.token);
                 navigate("/");
             })
             .catch((error) => {
@@ -69,7 +68,7 @@ const Login = () => {
                                 Email address
                                 <strong>
                                     {" "}
-                                    test data: 'torrelles@gmail.com'
+                                    test data: 'torrellesf2@gmail.com'
                                 </strong>
                             </Form.Label>
                             <Form.Control
@@ -86,7 +85,7 @@ const Login = () => {
                         >
                             <Form.Label>
                                 Password{" "}
-                                <strong> test data: ''12345678''</strong>
+                                <strong> test data: ''cisco1234''</strong>
                             </Form.Label>
                             <Form.Control
                                 type="password"

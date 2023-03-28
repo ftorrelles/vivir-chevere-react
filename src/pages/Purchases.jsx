@@ -16,10 +16,10 @@ const Purchases = () => {
     useEffect(() => {
         axios
             .get(
-                "https://e-commerce-api.academlo.tech/api/v1/purchases",
+                "https://friend-shop-app-back.onrender.com/api/v1/purchases",
                 getConfig()
             )
-            .then((resp) => setPurchases(resp.data.data.purchases))
+            .then((resp) => setPurchases(resp.data))
             .catch((error) => console.error(error));
     }, []);
     const [dataSelected, setDataSelected] = useState({});
@@ -27,8 +27,42 @@ const Purchases = () => {
         <div>
             <h2>My purchases</h2>
             <hr />
-            {purchases.map((purchase) =>
-                purchase.cart?.products?.map((item) => (
+            {purchases.map((purchase) => (
+                <Card key={purchase.id} style={{ margin: "1rem" }}>
+                    <Card.Header>
+                        {purchase.product?.createdAt.slice(0, 10)}
+                    </Card.Header>
+                    <Card.Body
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-around",
+                        }}
+                    >
+                        <Card.Text>{purchase.product?.title}</Card.Text>
+                        <Card.Text
+                            style={{
+                                width: "30px",
+                                height: "30px",
+                                border: "1px solid rgb(0, 0, 0)",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignpurchases: "center",
+                            }}
+                        >
+                            {purchase?.quantity}
+                        </Card.Text>
+                        <Card.Text>{purchase.product?.price}</Card.Text>
+                        <Button
+                            variant="primary"
+                            onClick={() => handleShow(purchase)}
+                        >
+                            see details
+                        </Button>
+                    </Card.Body>
+                </Card>
+            ))}
+            {/* {purchases.map((purchase) =>
+                purchase?.product?.map((item) => (
                     <Card key={item.id} style={{ margin: "1rem" }}>
                         <Card.Header>
                             {item.productsInCart?.createdAt.slice(0, 10)}
@@ -62,7 +96,7 @@ const Purchases = () => {
                         </Card.Body>
                     </Card>
                 ))
-            )}
+            )} */}
             <ModalPurchases
                 show={show}
                 handleClose={handleClose}

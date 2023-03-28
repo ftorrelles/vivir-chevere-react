@@ -16,10 +16,12 @@ export const cartSlice = createSlice({
 export const getCarThunk = () => (dispatch) => {
     dispatch(setIsLoading(true));
     axios
-        .get("https://e-commerce-api.academlo.tech/api/v1/cart", getConfig())
+        .get(
+            "https://friend-shop-app-back.onrender.com/api/v1/carts",
+            getConfig()
+        )
         .then((resp) => {
-            /*console.log(resp.data.data);*/
-            dispatch(setCart(resp.data.data));
+            dispatch(setCart(resp.data));
         })
         .catch((error) => console.error(error))
         .finally(() => dispatch(setIsLoading(false)));
@@ -29,20 +31,20 @@ export const addCartThunk = (product, quantity) => (dispatch) => {
     dispatch(setIsLoading(true));
     axios
         .post(
-            "https://e-commerce-api.academlo.tech/api/v1/cart",
-            { id: product.id, quantity },
+            "https://friend-shop-app-back.onrender.com/api/v1/carts",
+            { productId: product.id, quantity },
             getConfig()
         )
         .then((resp) => dispatch(getCarThunk()))
         .catch((error) => console.error(error))
         .finally(() => dispatch(setIsLoading(false)));
 };
-export const updateCartThunk = (product, newQuantity) => (dispatch) => {
+export const updateCartThunk = (quantity, product, id) => (dispatch) => {
     dispatch(setIsLoading(true));
     axios
-        .patch(
-            "https://e-commerce-api.academlo.tech/api/v1/cart",
-            { id: product.id, newQuantity },
+        .put(
+            "https://friend-shop-app-back.onrender.com/api/v1/carts/" + id,
+            { quantity, productId: product.productId },
             getConfig()
         )
         .then((resp) => dispatch(getCarThunk()))
@@ -54,7 +56,7 @@ export const removeCartThunk = (id) => (dispatch) => {
     dispatch(setIsLoading(true));
     axios
         .delete(
-            "https://e-commerce-api.academlo.tech/api/v1/cart/" + id,
+            "https://friend-shop-app-back.onrender.com/api/v1/carts/" + id,
             getConfig()
         )
         .then((res) => dispatch(getCarThunk()))
