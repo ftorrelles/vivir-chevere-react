@@ -204,7 +204,7 @@ const ProductsDetail = () => {
                                             objectFit: "contain",
                                         }}
                                         // className="carousel_img"
-                                        src={producItem?.productImgs?.[0]}
+                                        src={producItem?.productImgs?.[0]?.url}
                                         alt="First slide"
                                     />
                                 </Carousel.Item>
@@ -223,7 +223,7 @@ const ProductsDetail = () => {
                                             objectFit: "contain",
                                         }}
                                         // className="carousel_img"
-                                        src={producItem?.productImgs?.[1]}
+                                        src={producItem?.productImgs?.[1]?.url}
                                         alt="Second slide"
                                     />
                                 </Carousel.Item>
@@ -241,7 +241,7 @@ const ProductsDetail = () => {
                                             objectFit: "contain",
                                         }}
                                         // className="carousel_img"
-                                        src={producItem?.productImgs?.[2]}
+                                        src={producItem?.productImgs?.[2]?.url}
                                         alt="Third slide"
                                     />
                                 </Carousel.Item>
