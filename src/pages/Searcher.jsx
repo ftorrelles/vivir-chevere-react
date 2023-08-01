@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { Col, InputGroup, Form, Button, Table } from "react-bootstrap";
+import { Col, InputGroup, Form, Button, Table, Row } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import {
     filterCustomersThunk,
     getCustomersThunk,
 } from "../store/slices/customers.slice";
+import ShowDetailsCustomer from "../components/ShowDetailsCustomer";
+import CustomerForm from "../components/CustomerForm";
 
 const Searcher = () => {
     const dispatch = useDispatch();
@@ -12,9 +14,8 @@ const Searcher = () => {
     const [lastName, setLastName] = useState("");
     const [identificationDocument, setIdentificationDocument] = useState("");
 
+    // Acceder a los clientes desde el estado de Redux.
     const customers = useSelector((state) => state.customers);
-
-    const customerData = Array.isArray(customers) ? customers : [customers];
 
     useEffect(() => {
         dispatch(getCustomersThunk()); // Cargar los datos iniciales de los clientes
@@ -29,69 +30,118 @@ const Searcher = () => {
         dispatch(filterCustomersThunk(filterOptions));
     };
 
+    //modal detalles cliente
+    const [dataSelected, setDataSelected] = useState({});
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = (info) => {
+        setShow(true);
+        setDataSelected(info);
+    };
+
+    //modal crear cliente
+    //Show form
+    const [showForm, setShowForm] = useState(false);
+    const handleCloseForm = () => setShow(false);
+    const handleShowForm = () => setShowForm(true);
+
     return (
         <div>
             <h2>Buscar cliente</h2>
             <br />
-            <Col style={{ marginTop: "1rem" }}>
-                <InputGroup className="mb-3">
-                    <Form.Control
-                        aria-label="Example text with button addon"
-                        aria-describedby="basic-addon1"
-                        id="firstName"
-                        type="text"
-                        value={firstName}
-                        placeholder="Filtrar por nombre"
-                        onChange={(event) =>
-                            setFirstName(event.target.value.toLowerCase())
-                        }
-                    />
-                </InputGroup>
+            <Row xs={1} md={2} lg={2}>
+                <Col lg={7} style={{ marginTop: "1rem" }}>
+                    <InputGroup className="mb-3">
+                        <Form.Control
+                            aria-label="Example text with button addon"
+                            aria-describedby="basic-addon1"
+                            id="firstName"
+                            type="text"
+                            value={firstName}
+                            placeholder="Filtrar por nombre"
+                            onChange={(event) =>
+                                setFirstName(event.target.value.toLowerCase())
+                            }
+                        />
+                    </InputGroup>
 
-                <InputGroup className="mb-3">
-                    <Form.Control
-                        aria-label="Example text with button addon"
-                        aria-describedby="basic-addon1"
-                        id="lastName"
-                        type="text"
-                        value={lastName}
-                        placeholder="Filtrar por apellido"
-                        onChange={(event) =>
-                            setLastName(event.target.value.toLowerCase())
-                        }
-                    />
-                </InputGroup>
+                    <InputGroup className="mb-3">
+                        <Form.Control
+                            aria-label="Example text with button addon"
+                            aria-describedby="basic-addon1"
+                            id="lastName"
+                            type="text"
+                            value={lastName}
+                            placeholder="Filtrar por apellido"
+                            onChange={(event) =>
+                                setLastName(event.target.value.toLowerCase())
+                            }
+                        />
+                    </InputGroup>
 
-                <InputGroup className="mb-3">
-                    <Form.Control
-                        aria-label="Example text with button addon"
-                        aria-describedby="basic-addon1"
-                        id="identificationDocument"
-                        type="text"
-                        value={identificationDocument}
-                        placeholder="Filtrar por cédula"
-                        onChange={(event) =>
-                            setIdentificationDocument(
-                                event.target.value.toLowerCase()
-                            )
-                        }
-                    />
-                </InputGroup>
-
-                <Button
-                    size="sm"
-                    variant="outline-primary"
-                    onClick={handleFilter}
+                    <InputGroup className="mb-3">
+                        <Form.Control
+                            aria-label="Example text with button addon"
+                            aria-describedby="basic-addon1"
+                            id="identificationDocument"
+                            type="text"
+                            value={identificationDocument}
+                            placeholder="Filtrar por cédula"
+                            onChange={(event) =>
+                                setIdentificationDocument(
+                                    event.target.value.toLowerCase()
+                                )
+                            }
+                        />
+                    </InputGroup>
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Button
+                            size="sm"
+                            variant="primary"
+                            onClick={handleFilter}
+                        >
+                            Buscar
+                        </Button>
+                        <br />
+                        <br />
+                        <br />
+                    </div>
+                </Col>
+                <Col
+                    lg={5}
+                    style={{
+                        display: "flex",
+                        // justifyContent: "center",
+                        flexDirection: "column",
+                        alignItems: "center",
+                    }}
                 >
-                    Buscar
-                </Button>
-            </Col>
+                    {" "}
+                    <h3>Registrar nuevo cliente</h3>
+                    <h5>Por favor llenar el siguiente formulario</h5>
+                    <Button
+                        type="button"
+                        style={{
+                            backgroundColor: "transparent",
+                        }}
+                        onClick={handleShowForm}
+                    >
+                        <i className="bx bx-user-plus"></i>
+                    </Button>
+                </Col>
+            </Row>
             <br />
             <hr />
             <h3>Resultados</h3>
             <br />
             {/* Tabla de clientes */}
-            {customerData.length > 0 ? (
+            {customers && customers.length > 0 ? (
                 <Table striped bordered hover responsive>
                     <thead>
                         <tr>
@@ -103,7 +153,7 @@ const Searcher = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {customerData.map((customer) => (
+                        {customers.map((customer) => (
                             <tr key={customer.id}>
                                 <td>{customer.firstName}</td>
                                 <td>{customer.lastName}</td>
@@ -113,7 +163,14 @@ const Searcher = () => {
                                     <Button variant="primary" size="sm">
                                         Comprar
                                     </Button>{" "}
-                                    {/* El botón de editar se puede implementar aquí */}
+                                    <Button
+                                        variant="primary"
+                                        size="sm"
+                                        type="button"
+                                        onClick={() => handleShow(customer)}
+                                    >
+                                        ver detalles
+                                    </Button>
                                 </td>
                             </tr>
                         ))}
@@ -122,6 +179,16 @@ const Searcher = () => {
             ) : (
                 <p>No se encontraron resultados.</p>
             )}
+
+            <ShowDetailsCustomer
+                show={show}
+                handleClose={handleClose}
+                data={dataSelected}
+            />
+            <CustomerForm
+                showForm={showForm}
+                handleCloseForm={handleCloseForm}
+            />
         </div>
     );
 };

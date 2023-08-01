@@ -38,7 +38,7 @@ img {
     width: 6px;
     height: 18px;
     border-radius: 20%;
-    background: #fff;
+    background: #0e0d0d;
 }
 .lds-spinner div:nth-child(1) {
     transform: rotate(0deg);
@@ -101,4 +101,14 @@ img {
     margin: 0 auto;
     font-size: 6rem;
     margin-bottom: 1rem;
+}
+/* estilos icono crear cliente */
+.bx-user-plus {
+    margin: 0 auto;
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    color: royalblue;
+}
+.bx-user-plus:hover {
+    color: red;
 }
