@@ -13,9 +13,9 @@ function AlertError({ isVisible, dismiss }) {
         return (
             <Alert variant="danger" onClose={() => dismiss()} dismissible>
                 <Alert.Heading>
-                    oops!!! your username or password is incorrect!
+                    oops!!! Tu correo o contraseña son incorrectos!
                 </Alert.Heading>
-                <p>please check and try again.</p>
+                <p>Por favor revisa e intenta de nuevo.</p>
             </Alert>
         );
     }

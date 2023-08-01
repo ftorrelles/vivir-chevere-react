@@ -1,55 +1,55 @@
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {
-    getProductsThunk,
-    filterCategoriesThunk,
-} from "../store/slices/products.slice";
-import { addCartThunk } from "../store/slices/cart.slice";
-import { Row, Col, Button, Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import Carousel from "react-bootstrap/Carousel";
-import { Cart } from "react-bootstrap-icons";
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
+// import { useEffect, useState } from "react";
+// import { useSelector, useDispatch } from "react-redux";
+// import {
+//     getProductsThunk,
+//     filterCategoriesThunk,
+// } from "../store/slices/products.slice";
+// import { addCartThunk } from "../store/slices/cart.slice";
+// import { Row, Col, Button, Card } from "react-bootstrap";
+// import { Link } from "react-router-dom";
+// import axios from "axios";
+// import Carousel from "react-bootstrap/Carousel";
+// import { Cart } from "react-bootstrap-icons";
+// import Form from "react-bootstrap/Form";
+// import InputGroup from "react-bootstrap/InputGroup";
 
 const Home = () => {
-    const dispatch = useDispatch();
-    const products = useSelector((state) => state.products);
-    const [categories, setCategories] = useState([]);
-    const [input, setInput] = useState("");
-    const [productsFiltered, setProductsFiltered] = useState([]);
+    // const dispatch = useDispatch();
+    // const products = useSelector((state) => state.products);
+    // const [categories, setCategories] = useState([]);
+    // const [input, setInput] = useState("");
+    // const [productsFiltered, setProductsFiltered] = useState([]);
 
-    useEffect(() => {
-        dispatch(getProductsThunk());
-        axios
-            .get("https://friend-shop-app-back.onrender.com/api/v1/categories")
-            .then((resp) => setCategories(resp.data))
-            .catch((error) => console.error(error));
-    }, []);
+    // useEffect(() => {
+    //     dispatch(getProductsThunk());
+    //     axios
+    //         .get("https://friend-shop-app-back.onrender.com/api/v1/categories")
+    //         .then((resp) => setCategories(resp.data))
+    //         .catch((error) => console.error(error));
+    // }, []);
 
-    useEffect(() => {
-        setProductsFiltered(products);
-    }, [products]);
+    // useEffect(() => {
+    //     setProductsFiltered(products);
+    // }, [products]);
 
-    const filterByName = () => {
-        const productsFiltered = products.filter((product) =>
-            product.title.toLowerCase().includes(input)
-        );
-        setProductsFiltered(productsFiltered);
-    };
-    const addToCart = (product) => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            dispatch(addCartThunk(product, 1));
-        } else {
-            navigate("/login");
-        }
-    };
+    // const filterByName = () => {
+    //     const productsFiltered = products.filter((product) =>
+    //         product.title.toLowerCase().includes(input)
+    //     );
+    //     setProductsFiltered(productsFiltered);
+    // };
+    // const addToCart = (product) => {
+    //     const token = localStorage.getItem("token");
+    //     if (token) {
+    //         dispatch(addCartThunk(product, 1));
+    //     } else {
+    //         navigate("/login");
+    //     }
+    // };
 
     return (
         <div>
-            <Row xs={1} md={2} lg={2}>
+            {/* <Row xs={1} md={2} lg={2}>
                 <Col>
                     <h4 style={{ color: "#456268" }}>
                         Your favorite categories!!
@@ -190,7 +190,7 @@ const Home = () => {
                         </Card>
                     </Col>
                 ))}
-            </Row>
+            </Row> */}
         </div>
     );
 };
