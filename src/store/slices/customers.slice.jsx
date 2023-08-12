@@ -42,7 +42,10 @@ export const createCustomerThunk = (data) => (dispatch) => {
     dispatch(setIsLoading(true));
     return axios
         .post("http://localhost:3000/api/v1/customers", data)
-        .then(() => dispatch(getCustomersThunk()))
+        .then((resp) => {
+            console.log(resp);
+            dispatch(getCustomersThunk());
+        })
         .catch((error) => console.error(error))
         .finally(() => dispatch(setIsLoading(false)));
 };

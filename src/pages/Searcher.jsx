@@ -42,7 +42,7 @@ const Searcher = () => {
     //modal crear cliente
     //Show form
     const [showForm, setShowForm] = useState(false);
-    const handleCloseForm = () => setShow(false);
+    const handleCloseForm = () => setShowForm(false);
     const handleShowForm = () => setShowForm(true);
 
     return (

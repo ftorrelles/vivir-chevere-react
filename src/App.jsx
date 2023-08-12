@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import NavBar from "./components/NavBar";
 import Container from "react-bootstrap/Container";
 import Loader from "./components/Loader";
+import VerifyCode from "./components/VerifyCode";
 import { useSelector } from "react-redux";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 
@@ -20,6 +21,10 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/login" element={<Login />} />
+                        <Route
+                            path="/verify_email/:code"
+                            element={<VerifyCode />}
+                        />
                         <Route element={<ProtectedRoutes />}>
                             <Route path="/searcher" element={<Searcher />} />
                         </Route>

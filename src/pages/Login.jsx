@@ -22,10 +22,7 @@ const Login = () => {
 
         axios
 
-            .post(
-                "http://localhost:3000/api/v1/customers/login",
-                data
-            )
+            .post("http://localhost:3000/api/v1/customers/login", data)
             .then((resp) => {
                 localStorage.setItem("token", resp.data.token);
                 navigate("/");
@@ -68,7 +65,7 @@ const Login = () => {
                                 Correo electronico
                                 <strong>
                                     {" "}
-                                    correo prueba: 'miguel@gmail.com'
+                                    correo prueba: 'torrellef93@gmail.com'
                                 </strong>
                             </Form.Label>
                             <Form.Control
@@ -85,7 +82,7 @@ const Login = () => {
                         >
                             <Form.Label>
                                 Contraseña{" "}
-                                <strong> test data: 'miguel1234'</strong>
+                                <strong> test data: 'Francisco1234'</strong>
                             </Form.Label>
                             <Form.Control
                                 type="password"

@@ -1,45 +1,70 @@
-import { Col, Row, Modal, Form, Button } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Col, Row, Modal, Form, Button, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
     createCustomerThunk,
     updateCustomerThunk,
 } from "../store/slices/customers.slice";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 
 const CustomerForm = ({ showForm, handleCloseForm }) => {
-    const { register, handleSubmit, reset } = useForm();
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm();
     const dispatch = useDispatch();
     const customerSelected = useSelector((state) => state.selectedCustomer);
 
-    const submit = (data) => {
+    const submit = async (data) => {
+        // if (Object.keys(errors).length > 0) {
+        //     return; // No continuar con el envío del formulario
+        // }
+
+        const frontBaseUrl = window.location.origin + "/#";
+
+        // Establecer valores por defecto si no se ingresaron en el formulario
+        const defaultTypeCustomerId = "2"; // Cambiar al valor correcto para "Público"
+        const defaultRoleId = "2"; // Cambiar al valor correcto para "Sin rol"
+        const defaultRef = "1";
+        const defaultStatus = "true";
+
+        const formDataWithDefaults = {
+            ...data,
+            typecustomerId: data.typecustomerId || defaultTypeCustomerId,
+            roleId: data.roleId || defaultRoleId,
+            ref: data.ref || defaultRef,
+            frontBaseUrl: frontBaseUrl,
+            username: data.username || `${data.firstName || ""}1234`,
+            password: data.password || `${data.firstName || ""}1234`,
+            status: data.status || defaultStatus,
+        };
+
         if (customerSelected) {
-            dispatch(updateCustomerThunk(data));
+            dispatch(updateCustomerThunk(formDataWithDefaults));
+            // handleCloseForm();
         } else {
-            dispatch(createCustomerThunk(data));
-            reset(resetForm);
+            dispatch(createCustomerThunk(formDataWithDefaults));
+            resetForm();
+            // handleCloseForm();
         }
+        console.log(formDataWithDefaults);
+        handleCloseForm();
     };
 
     useEffect(() => {
-        customerSelected ? reset(customerSelected) : reset(resetForm);
+        customerSelected ? reset(customerSelected) : reset(resetForm());
     }, [customerSelected]);
 
     const resetForm = () => {
         return {
-            firstName: "Daniel",
-            lastName: "Torrelles",
-            identificationDocument: "21241642",
-            email: "danieltorrellesg@gmail.com",
-            phone: "04243355115",
-            birthdate: "1991-04-28",
-            typecustomerId: "2",
-            roleId: "2",
-            password: "daniel1234",
-            ref: "4",
-            username: "daniel1234",
-            status: "true",
-            frontBaseUrl: "http://localhost:3000",
+            firstName: "",
+            lastName: "",
+            identificationDocument: "",
+            email: "",
+            phone: "",
+            birthdate: "",
         };
     };
 
@@ -61,6 +86,11 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
                                             required: true,
                                         })}
                                     />
+                                    {errors.firstName && (
+                                        <p className="error-message">
+                                            El nombre es requerido.
+                                        </p>
+                                    )}
                                 </Form.Group>
                             </Col>
                             <Col>
@@ -72,18 +102,27 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
                                             required: true,
                                         })}
                                     />
+                                    {errors.lastName && (
+                                        <p className="error-message">
+                                            El apellido es requerido.
+                                        </p>
+                                    )}
                                 </Form.Group>
                             </Col>
                         </Row>
                         <Form.Group>
                             <Form.Label>Documento de identidad</Form.Label>
                             <Form.Control
-                                type="number"
                                 placeholder="Cedula"
                                 {...register("identificationDocument", {
                                     required: true,
                                 })}
                             />
+                            {errors.identificationDocument && (
+                                <p className="error-message">
+                                    La cédula es requerida.
+                                </p>
+                            )}
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Correo electronico</Form.Label>
@@ -92,20 +131,13 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
                                 placeholder="email"
                                 {...register("email", { required: true })}
                             />
+                            {errors.email && (
+                                <p className="error-message">
+                                    El correo electrónico es requerido.
+                                </p>
+                            )}
                         </Form.Group>
                         <Row>
-                            {/* <Col>
-                                <Form.Group controlId="formBasicPassword">
-                                    <Form.Label>Password</Form.Label>
-                                    <Form.Control
-                                        type="password"
-                                        placeholder="Password"
-                                        {...register("password", {
-                                            required: true,
-                                        })}
-                                    />
-                                </Form.Group>
-                            </Col> */}
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Telefono</Form.Label>
@@ -115,6 +147,11 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
                                             required: true,
                                         })}
                                     />
+                                    {errors.phone && (
+                                        <p className="error-message">
+                                            El teléfono es requerido.
+                                        </p>
+                                    )}
                                 </Form.Group>
                             </Col>
                             <Col>
@@ -123,16 +160,21 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
                                     <Form.Control
                                         type="date"
                                         placeholder="Fecha de nacimiento"
-                                        {...register("birthdadate", {
+                                        {...register("birthdate", {
                                             required: true,
                                         })}
                                     />
+                                    {errors.birthdate && (
+                                        <p className="error-message">
+                                            La fecha de nacimiento es requerida.
+                                        </p>
+                                    )}
                                 </Form.Group>
                             </Col>
                         </Row>
                         <br />
                         <hr />
-                        <br />
+
                         <Row>
                             <Col
                                 style={{
@@ -140,12 +182,11 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
                                     justifyContent: "center",
                                 }}
                             >
-                                {" "}
                                 <Button
                                     variant="secondary"
                                     onClick={handleCloseForm}
                                 >
-                                    Close
+                                    Cerrar
                                 </Button>
                             </Col>
                             <Col
@@ -157,9 +198,9 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
                                 <Button
                                     type="submit"
                                     variant="primary"
-                                    onClick={handleCloseForm}
+                                    // onClick={handleCloseForm}
                                 >
-                                    Save user
+                                    Enviar
                                 </Button>
                             </Col>
                         </Row>

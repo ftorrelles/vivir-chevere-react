@@ -27,8 +27,11 @@ const ShowDetailsCustomer = ({ show, handleClose, data }) => {
                             {data.birthdate}
                         </li>
                         <li>
-                            <strong>Cedula verificada: </strong>{" "}
-                            {String(data.isVerified)}
+                            <strong>Email verificado: </strong>{" "}
+                            {data.isVerified
+                                ? "Si fue verificado"
+                                : "No fue verificado"}
+                            {}
                         </li>
                     </ul>
                     <div
