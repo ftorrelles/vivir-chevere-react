@@ -1,7 +1,21 @@
 import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
+import { useDispatch } from "react-redux";
+import { setSelectedCustomer } from "../store/slices/selectedCustomer.slice";
+import { useState } from "react";
+import CustomerForm from "./CustomerForm";
 
 const ShowDetailsCustomer = ({ show, handleClose, data }) => {
+    const dispatch = useDispatch();
+    const [showForm, setShowForm] = useState(false);
+    const handleCloseForm = () => setShowForm(false);
+    const selected = (data) => {
+        console.log(data);
+        dispatch(setSelectedCustomer(data));
+        setShowForm(true);
+        handleClose();
+    };
+
     return (
         <>
             <Modal className="modal-lg" show={show} onHide={handleClose}>
@@ -41,12 +55,20 @@ const ShowDetailsCustomer = ({ show, handleClose, data }) => {
                             alignItems: "center",
                         }}
                     >
-                        <Button variant="primary" size="sm">
+                        <Button
+                            onClick={() => selected(data)}
+                            variant="primary"
+                            size="sm"
+                        >
                             Editar
                         </Button>
                     </div>
                 </Modal.Body>
             </Modal>
+            <CustomerForm
+                showForm={showForm}
+                handleCloseForm={handleCloseForm}
+            />
         </>
     );
 };

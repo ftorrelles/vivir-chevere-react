@@ -15,6 +15,8 @@ const Searcher = () => {
     const [identificationDocument, setIdentificationDocument] = useState("");
 
     // Acceder a los clientes desde el estado de Redux.
+
+    const loggedUser = useSelector((state) => state.loggedUser);
     const customers = useSelector((state) => state.customers);
 
     useEffect(() => {
@@ -47,6 +49,20 @@ const Searcher = () => {
 
     return (
         <div>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                    // margin: "2rem",
+                }}
+            >
+                <span>
+                    Bienvenido{" "}
+                    {loggedUser.firstName + " " + loggedUser.lastName}
+                </span>
+                <span>Tipo de cuenta: {loggedUser?.Role?.name_role}</span>
+            </div>
             <h2>Buscar cliente</h2>
             <br />
             <Row xs={1} md={2} lg={2}>

@@ -54,10 +54,15 @@ export const updateCustomerThunk = (data) => (dispatch) => {
     const config = getConfig();
     dispatch(setIsLoading(true));
     return axios
-        .put(`http://localhost:3000/api/v1/customers/${data.id}`, data, config)
-        .then(() =>
-            dispatch(getCustomersThunk(), dispatch(setSelectedCustomer(null)))
+        .patch(
+            `http://localhost:3000/api/v1/customers/${data.id}`,
+            data,
+            config
         )
+        .then((resp) => {
+            console.log(resp);
+            dispatch(getCustomersThunk(), dispatch(setSelectedCustomer(null)));
+        })
         .catch((error) => console.error(error))
         .finally(() => dispatch(setIsLoading(false)));
 };

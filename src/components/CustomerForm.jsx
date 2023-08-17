@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Col, Row, Modal, Form, Button, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -6,57 +6,27 @@ import {
     updateCustomerThunk,
 } from "../store/slices/customers.slice";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 const CustomerForm = ({ showForm, handleCloseForm }) => {
     const {
         register,
         handleSubmit,
+        setValue,
         reset,
         formState: { errors },
     } = useForm();
     const dispatch = useDispatch();
     const customerSelected = useSelector((state) => state.selectedCustomer);
-
-    const submit = async (data) => {
-        // if (Object.keys(errors).length > 0) {
-        //     return; // No continuar con el envío del formulario
-        // }
-
-        const frontBaseUrl = window.location.origin + "/#";
-
-        // Establecer valores por defecto si no se ingresaron en el formulario
-        const defaultTypeCustomerId = "2"; // Cambiar al valor correcto para "Público"
-        const defaultRoleId = "2"; // Cambiar al valor correcto para "Sin rol"
-        const defaultRef = "1";
-        const defaultStatus = "true";
-
-        const formDataWithDefaults = {
-            ...data,
-            typecustomerId: data.typecustomerId || defaultTypeCustomerId,
-            roleId: data.roleId || defaultRoleId,
-            ref: data.ref || defaultRef,
-            frontBaseUrl: frontBaseUrl,
-            username: data.username || `${data.firstName || ""}1234`,
-            password: data.password || `${data.firstName || ""}1234`,
-            status: data.status || defaultStatus,
-        };
-
-        if (customerSelected) {
-            dispatch(updateCustomerThunk(formDataWithDefaults));
-            // handleCloseForm();
-        } else {
-            dispatch(createCustomerThunk(formDataWithDefaults));
-            resetForm();
-            // handleCloseForm();
-        }
-        console.log(formDataWithDefaults);
-        handleCloseForm();
-    };
-
+    const loggedUser = useSelector((state) => state.loggedUser);
+    const [roles, setRoles] = useState([]);
     useEffect(() => {
-        customerSelected ? reset(customerSelected) : reset(resetForm());
-    }, [customerSelected]);
-
+        axios
+            .get("http://localhost:3000/api/v1/roles")
+            .then((resp) => setRoles(resp.data.roles))
+            .catch((error) => console.error(error));
+    }, []);
+    console.log(roles);
     const resetForm = () => {
         return {
             firstName: "",
@@ -67,12 +37,76 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
             birthdate: "",
         };
     };
+    console.log(customerSelected);
+    useEffect(() => {
+        if (customerSelected) {
+            setValue("firstName", customerSelected.firstName);
+            setValue("lastName", customerSelected.lastName);
+            setValue(
+                "identificationDocument",
+                customerSelected.identificationDocument
+            );
+            setValue("phone", customerSelected.phone);
+            setValue("birthdate", customerSelected.birthdate);
+            setValue("email", customerSelected.email);
+            setValue("id", customerSelected.id);
+            setValue("roleId", customerSelected.roleId);
+        } else {
+            reset(resetForm());
+        }
+    }, [customerSelected, setValue]);
+
+    const submit = async (data) => {
+        const allowedFieldsForUpdate = [
+            "id",
+            "firstName",
+            "lastName",
+            "identificationDocument",
+            "phone",
+            "birthdate",
+            "roleId",
+        ];
+
+        const formDataForUpdate = Object.keys(data)
+            .filter((field) => allowedFieldsForUpdate.includes(field))
+            .reduce((obj, key) => {
+                obj[key] = data[key];
+                return obj;
+            }, {});
+
+        if (customerSelected) {
+            console.log(formDataForUpdate);
+            dispatch(updateCustomerThunk(formDataForUpdate));
+        } else {
+            const frontBaseUrl = window.location.origin + "/#";
+            const defaultTypeCustomerId = "2";
+            const defaultRef = "1";
+            const defaultStatus = "true";
+
+            const formDataWithDefaults = {
+                ...data,
+                typecustomerId: data.typecustomerId || defaultTypeCustomerId,
+                ref: data.ref || defaultRef,
+                frontBaseUrl: frontBaseUrl,
+                username: data.username || `${data.firstName || ""}1234`,
+                password: data.password || `${data.firstName || ""}1234`,
+                status: data.status || defaultStatus,
+            };
+            dispatch(createCustomerThunk(formDataWithDefaults));
+        }
+        reset(resetForm());
+        handleCloseForm();
+    };
 
     return (
         <>
             <Modal show={showForm} onHide={handleCloseForm}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Formulario de registro</Modal.Title>
+                    <Modal.Title>
+                        {customerSelected
+                            ? "Formulario de actualización"
+                            : "Formulario de registro"}{" "}
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={handleSubmit(submit)}>
@@ -129,6 +163,7 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
                             <Form.Control
                                 type="email"
                                 placeholder="email"
+                                disabled={customerSelected ? true : false}
                                 {...register("email", { required: true })}
                             />
                             {errors.email && (
@@ -172,6 +207,31 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
                                 </Form.Group>
                             </Col>
                         </Row>
+                        <hr />
+                        <Col>
+                            {/* habilitar el campo de roles solo si el rol es "administrador" */}
+                            <Form.Group>
+                                <Form.Label>Rol</Form.Label>
+                                <Form.Control
+                                    as="select"
+                                    disabled={
+                                        loggedUser?.Role?.name_role ===
+                                        "Administrador"
+                                            ? false
+                                            : true
+                                    }
+                                    {...register("roleId")}
+                                    defaultValue="1"
+                                >
+                                    {/* Aquí renderizar las opciones de roles */}
+                                    {roles.map((role) => (
+                                        <option key={role.id} value={role?.id}>
+                                            {role?.name_role}
+                                        </option>
+                                    ))}
+                                </Form.Control>
+                            </Form.Group>
+                        </Col>
                         <br />
                         <hr />
 
@@ -195,13 +255,15 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
                                     justifyContent: "center",
                                 }}
                             >
-                                <Button
-                                    type="submit"
-                                    variant="primary"
-                                    // onClick={handleCloseForm}
-                                >
-                                    Enviar
-                                </Button>
+                                {customerSelected ? (
+                                    <Button type="submit" variant="primary">
+                                        Actualizar
+                                    </Button>
+                                ) : (
+                                    <Button type="submit" variant="primary">
+                                        Crear
+                                    </Button>
+                                )}
                             </Col>
                         </Row>
                     </Form>

@@ -5,12 +5,15 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AlertError from "../components/AlertError";
+import { setloggedUser } from "../store/slices/loggedUser.slice";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const [alert, setAlert] = useState(false);
+    const dispatch = useDispatch();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -21,10 +24,14 @@ const Login = () => {
         };
 
         axios
-
             .post("http://localhost:3000/api/v1/customers/login", data)
             .then((resp) => {
+                dispatch(setloggedUser(resp.data.customer));
                 localStorage.setItem("token", resp.data.token);
+                localStorage.setItem(
+                    "loggedUser",
+                    JSON.stringify(resp.data.customer)
+                ); // Guardar el usuario logueado
                 navigate("/");
             })
             .catch((error) => {
