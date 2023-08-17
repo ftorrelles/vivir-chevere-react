@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Col, Row, Modal, Form, Button, Alert } from "react-bootstrap";
+import { Col, Row, Modal, Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
     createCustomerThunk,
@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 
 const CustomerForm = ({ showForm, handleCloseForm }) => {
+    //funciones de de react hook form
     const {
         register,
         handleSubmit,
@@ -16,17 +17,23 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
         reset,
         formState: { errors },
     } = useForm();
+    // funciones de redux
     const dispatch = useDispatch();
     const customerSelected = useSelector((state) => state.selectedCustomer);
     const loggedUser = useSelector((state) => state.loggedUser);
+
     const [roles, setRoles] = useState([]);
+
+    //obtencion de los datos de los roles
     useEffect(() => {
         axios
             .get("http://localhost:3000/api/v1/roles")
             .then((resp) => setRoles(resp.data.roles))
             .catch((error) => console.error(error));
     }, []);
-    console.log(roles);
+    // console.log(roles);
+
+    //reseteo del formulario
     const resetForm = () => {
         return {
             firstName: "",
@@ -37,7 +44,9 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
             birthdate: "",
         };
     };
-    console.log(customerSelected);
+    // console.log(customerSelected);
+
+    //obtencion de los datos del cliente a modificar
     useEffect(() => {
         if (customerSelected) {
             setValue("firstName", customerSelected.firstName);
@@ -56,6 +65,7 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
         }
     }, [customerSelected, setValue]);
 
+    //funcion de cargar los datos del fomulario (envio a las peticiones)
     const submit = async (data) => {
         const allowedFieldsForUpdate = [
             "id",
@@ -75,23 +85,41 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
             }, {});
 
         if (customerSelected) {
-            console.log(formDataForUpdate);
+            // console.log(formDataForUpdate);
+            // // Convertir el correo electrónico a minúsculas usar cuando se necesite
+            // const emailLowerCase = data.email ? data.email.toLowerCase() : "";
+
+            // const formDataWithUpdate = {
+            //     ...formDataForUpdate,
+            //     email: emailLowerCase, // Usar el correo electrónico en minúsculas
+            // };
             dispatch(updateCustomerThunk(formDataForUpdate));
         } else {
             const frontBaseUrl = window.location.origin + "/#";
             const defaultTypeCustomerId = "2";
             const defaultRef = "1";
             const defaultStatus = "true";
+            const firstNameFirstLetter = data.firstName
+                ? data.firstName.charAt(0)
+                : "";
+            // Convertir el correo electrónico a minúsculas
+            const emailLowerCase = data.email ? data.email.toLowerCase() : "";
 
             const formDataWithDefaults = {
                 ...data,
                 typecustomerId: data.typecustomerId || defaultTypeCustomerId,
                 ref: data.ref || defaultRef,
                 frontBaseUrl: frontBaseUrl,
-                username: data.username || `${data.firstName || ""}1234`,
-                password: data.password || `${data.firstName || ""}1234`,
+                username:
+                    data.username ||
+                    `${firstNameFirstLetter}${Date.now().toString()}`,
+                password:
+                    data.password ||
+                    `${firstNameFirstLetter}${Date.now().toString()}`,
                 status: data.status || defaultStatus,
+                email: emailLowerCase,
             };
+            // console.log(formDataWithDefaults);
             dispatch(createCustomerThunk(formDataWithDefaults));
         }
         reset(resetForm());

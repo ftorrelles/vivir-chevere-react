@@ -1,12 +1,13 @@
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
+import InputGroup from "react-bootstrap/InputGroup";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AlertError from "../components/AlertError";
 import { setloggedUser } from "../store/slices/loggedUser.slice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -14,12 +15,18 @@ const Login = () => {
     const navigate = useNavigate();
     const [alert, setAlert] = useState(false);
     const dispatch = useDispatch();
+    const logged = useSelector((state) => state.loggedUser);
+
+    const [showPassword, setShowPassword] = useState(false); // visibilidad de la contraseña
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        // Convertir el correo electrónico a minúsculas
+        const lowerCaseEmail = email.toLowerCase();
+
         const data = {
-            email,
+            email: lowerCaseEmail, // Usar el correo electrónico en minúsculas
             password,
         };
 
@@ -39,71 +46,68 @@ const Login = () => {
                 setAlert(true);
             });
     };
-    const [isLogged, setIsLogged] = useState(localStorage.getItem("token"));
-    const logout = () => {
-        localStorage.clear();
-        setIsLogged(false);
-    };
+    // const [isLogged, setIsLogged] = useState(localStorage.getItem("token"));
+    // const logout = () => {
+    //     localStorage.clear();
+    //     dispatch(setloggedUser(null));
+    //     setIsLogged(false);
+    // };
     return (
         <>
-            {isLogged ? (
-                <Card
-                    style={{
-                        maxWidth: 500,
-                        margin: "3rem auto",
-                        padding: "2rem",
-                    }}
-                >
-                    <i className="bx bx-user"></i>
-                    <Button onClick={logout}>Cerrar sesión</Button>
-                </Card>
-            ) : (
-                <Card
-                    style={{
-                        maxWidth: 500,
-                        margin: "3rem auto",
-                        padding: "2rem",
-                    }}
-                >
-                    <Form onSubmit={(e) => handleSubmit(e)}>
-                        <h1>Inicio de sesión</h1>
-                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                            <Form.Label>
-                                Correo electronico
-                                <strong>
-                                    {" "}
-                                    correo prueba: 'torrellef93@gmail.com'
-                                </strong>
-                            </Form.Label>
+            <Card
+                style={{
+                    maxWidth: 500,
+                    margin: "3rem auto",
+                    padding: "2rem",
+                }}
+            >
+                <Form onSubmit={(e) => handleSubmit(e)}>
+                    <h1>Inicio de sesión</h1>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label>
+                            Correo electronico
+                            <strong>
+                                {" "}
+                                correo prueba: 'torrellef93@gmail.com'
+                            </strong>
+                        </Form.Label>
+                        <Form.Control
+                            type="email"
+                            placeholder="Enter email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Label>
+                            Contraseña{" "}
+                            <strong> test data: 'Francisco1234'</strong>
+                        </Form.Label>
+                        <InputGroup>
                             <Form.Control
-                                type="email"
-                                placeholder="Enter email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </Form.Group>
-
-                        <Form.Group
-                            className="mb-3"
-                            controlId="formBasicPassword"
-                        >
-                            <Form.Label>
-                                Contraseña{" "}
-                                <strong> test data: 'Francisco1234'</strong>
-                            </Form.Label>
-                            <Form.Control
-                                type="password"
+                                type={showPassword ? "text" : "password"} // Mostrar contraseña como texto o contraseña
                                 placeholder="Password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
-                        </Form.Group>
-                        <Button variant="primary" type="submit">
-                            Iniciar
-                        </Button>
-                    </Form>
-                </Card>
-            )}
+                            <Button
+                                variant="outline-secondary"
+                                onClick={() => setShowPassword(!showPassword)} // Alternar la visibilidad de la contraseña
+                            >
+                                {showPassword ? (
+                                    <i className="bx bx-low-vision"></i>
+                                ) : (
+                                    <i className="bx bx-show"></i>
+                                )}{" "}
+                                {/* Cambiar el texto del botón */}
+                            </Button>
+                        </InputGroup>
+                    </Form.Group>
+                    <Button variant="primary" type="submit">
+                        Iniciar
+                    </Button>
+                </Form>
+            </Card>
 
             <AlertError isVisible={alert} dismiss={() => setAlert(false)} />
         </>
@@ -111,3 +115,72 @@ const Login = () => {
 };
 
 export default Login;
+
+// {
+//     isLogged ? (
+//         <Card
+//             style={{
+//                 maxWidth: 500,
+//                 margin: "3rem auto",
+//                 padding: "2rem",
+//             }}
+//         >
+//             <i
+//                 className="bx bx-user"
+//                 title={logged ? `${logged.firstName} ${logged.lastName}` : ""}
+//             ></i>
+//             <Button onClick={logout}>Cerrar sesión</Button>
+//         </Card>
+//     ) : (
+//         <Card
+//             style={{
+//                 maxWidth: 500,
+//                 margin: "3rem auto",
+//                 padding: "2rem",
+//             }}
+//         >
+//             <Form onSubmit={(e) => handleSubmit(e)}>
+//                 <h1>Inicio de sesión</h1>
+//                 <Form.Group className="mb-3" controlId="formBasicEmail">
+//                     <Form.Label>
+//                         Correo electronico
+//                         <strong> correo prueba: 'torrellef93@gmail.com'</strong>
+//                     </Form.Label>
+//                     <Form.Control
+//                         type="email"
+//                         placeholder="Enter email"
+//                         value={email}
+//                         onChange={(e) => setEmail(e.target.value)}
+//                     />
+//                 </Form.Group>
+//                 <Form.Group className="mb-3" controlId="formBasicPassword">
+//                     <Form.Label>
+//                         Contraseña <strong> test data: 'Francisco1234'</strong>
+//                     </Form.Label>
+//                     <InputGroup>
+//                         <Form.Control
+//                             type={showPassword ? "text" : "password"} // Mostrar contraseña como texto o contraseña
+//                             placeholder="Password"
+//                             value={password}
+//                             onChange={(e) => setPassword(e.target.value)}
+//                         />
+//                         <Button
+//                             variant="outline-secondary"
+//                             onClick={() => setShowPassword(!showPassword)} // Alternar la visibilidad de la contraseña
+//                         >
+//                             {showPassword ? (
+//                                 <i className="bx bx-low-vision"></i>
+//                             ) : (
+//                                 <i className="bx bx-show"></i>
+//                             )}{" "}
+//                             {/* Cambiar el texto del botón */}
+//                         </Button>
+//                     </InputGroup>
+//                 </Form.Group>
+//                 <Button variant="primary" type="submit">
+//                     Iniciar
+//                 </Button>
+//             </Form>
+//         </Card>
+//     );
+// }

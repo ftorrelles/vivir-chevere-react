@@ -59,7 +59,7 @@ const Searcher = () => {
             >
                 <span>
                     Bienvenido{" "}
-                    {loggedUser.firstName + " " + loggedUser.lastName}
+                    {loggedUser?.firstName + " " + loggedUser?.lastName}
                 </span>
                 <span>Tipo de cuenta: {loggedUser?.Role?.name_role}</span>
             </div>

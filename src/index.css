@@ -112,3 +112,19 @@ img {
 .bx-user-plus:hover {
     color: red;
 }
+
+/* estulos del Dropdown del icono login */
+
+/* Agrega estilos para el Dropdown.Toggle */
+.user-dropdown-toggle {
+    font-size: 2rem;
+    display: inline-block;
+}
+
+/* Agrega estilos para el Dropdown.Menu */
+.user-dropdown-menu {
+    width: max-content; /* Ajusta el ancho según el contenido */
+    position: absolute;
+    left: 0; /* Alinea el menú a la izquierda */
+    transform: translateX(-100%); /* Desplaza el menú hacia la izquierda */
+}

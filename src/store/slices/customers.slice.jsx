@@ -43,7 +43,7 @@ export const createCustomerThunk = (data) => (dispatch) => {
     return axios
         .post("http://localhost:3000/api/v1/customers", data)
         .then((resp) => {
-            console.log(resp);
+            // console.log(resp);
             dispatch(getCustomersThunk());
         })
         .catch((error) => console.error(error))
@@ -60,7 +60,7 @@ export const updateCustomerThunk = (data) => (dispatch) => {
             config
         )
         .then((resp) => {
-            console.log(resp);
+            // console.log(resp);
             dispatch(getCustomersThunk(), dispatch(setSelectedCustomer(null)));
         })
         .catch((error) => console.error(error))

@@ -16,9 +16,7 @@ const VerifyCode = () => {
     }, [dispatch, code]);
 
     const verificationStatus = useSelector((state) => state.statusEmailCode);
-
-    console.log(verificationStatus);
-
+    // console.log(verificationStatus);
     return (
         <div>
             {verificationStatus === "Success" ? (
