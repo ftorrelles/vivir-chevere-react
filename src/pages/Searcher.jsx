@@ -161,32 +161,51 @@ const Searcher = () => {
                 <Table striped bordered hover responsive>
                     <thead>
                         <tr>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
+                            <th>Nombre y apellido</th>
+
                             <th>Número de Identificación</th>
-                            <th>Tipo de Cliente</th>
-                            <th>Acciones</th>
+                            <th>Comprar</th>
+                            <th>Detalles cliente</th>
                         </tr>
                     </thead>
                     <tbody>
                         {customers.map((customer) => (
                             <tr key={customer.id}>
-                                <td>{customer.firstName}</td>
-                                <td>{customer.lastName}</td>
-                                <td>{customer.identificationDocument}</td>
-                                <td>{customer?.typeCustomer?.name}</td>
                                 <td>
-                                    <Button variant="primary" size="sm">
-                                        Comprar
-                                    </Button>{" "}
-                                    <Button
-                                        variant="primary"
-                                        size="sm"
-                                        type="button"
-                                        onClick={() => handleShow(customer)}
+                                    {customer.firstName} {customer.lastName}
+                                </td>
+                                <td>{customer.identificationDocument}</td>
+                                <td>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                        }}
                                     >
-                                        ver detalles
-                                    </Button>
+                                        <Button variant="primary" size="sm">
+                                            <i className="bx bx-cart"></i>
+                                        </Button>
+                                    </div>
+                                </td>
+                                <td>
+                                    {" "}
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <Button
+                                            variant="primary"
+                                            size="sm"
+                                            type="button"
+                                            onClick={() => handleShow(customer)}
+                                        >
+                                            <i className="bx bx-search-alt"></i>
+                                        </Button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}

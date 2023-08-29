@@ -4,21 +4,25 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { Link } from "react-router-dom";
-// import { useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setloggedUser } from "../store/slices/loggedUser.slice";
 
 const NavBar = () => {
     const logged = useSelector((state) => state.loggedUser);
     const dispatch = useDispatch();
-    // const history = useHistory();
+    const navigate = useNavigate();
 
     // console.log(logged);
     const handleLogout = () => {
         localStorage.clear();
         dispatch(setloggedUser(null));
-        // history.push("/"); // Redirige a la página de inicios
+        navigate("/");
+    };
+    const handleChangePass = () => {
+        localStorage.clear();
+        dispatch(setloggedUser(null));
+        navigate("/password_recovery");
     };
     return (
         <>
@@ -53,8 +57,10 @@ const NavBar = () => {
                                     </Dropdown.Toggle>
 
                                     <Dropdown.Menu className="user-dropdown-menu">
-                                        <Dropdown.Item href="/account-settings">
-                                            Configuración de la cuenta
+                                        <Dropdown.Item
+                                            onClick={handleChangePass}
+                                        >
+                                            Cambiar contraseña
                                         </Dropdown.Item>
                                         <Dropdown.Item onClick={handleLogout}>
                                             Cerrar sesión

@@ -1,15 +1,17 @@
 import "./App.css";
+import { useEffect } from "react";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Searcher from "./pages/Searcher";
 import Login from "./pages/Login";
+import VerifyCode from "./pages/VerifyCode";
+import PasswordRecoveryStep1 from "./pages/PasswordRecoveryStep1";
+import PasswordRecoveryStep2 from "./pages/PasswordRecoveryStep2";
 import NavBar from "./components/NavBar";
-import Container from "react-bootstrap/Container";
 import Loader from "./components/Loader";
-import VerifyCode from "./components/VerifyCode";
-import { useSelector, useDispatch } from "react-redux";
 import ProtectedRoutes from "./components/ProtectedRoutes";
-import { useEffect } from "react";
+import Container from "react-bootstrap/Container";
+import { useSelector, useDispatch } from "react-redux";
 import { setloggedUser } from "./store/slices/loggedUser.slice";
 
 function App() {
@@ -36,6 +38,14 @@ function App() {
                         <Route
                             path="/verify_email/:code"
                             element={<VerifyCode />}
+                        />
+                        <Route
+                            path="/password_recovery"
+                            element={<PasswordRecoveryStep1 />}
+                        />
+                        <Route
+                            path="/reset_password/:code"
+                            element={<PasswordRecoveryStep2 />}
                         />
                         <Route element={<ProtectedRoutes />}>
                             <Route path="/searcher" element={<Searcher />} />

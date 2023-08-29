@@ -31,6 +31,10 @@ const ShowDetailsCustomer = ({ show, handleClose, data }) => {
                             {data.identificationDocument}
                         </li>
                         <li>
+                            <strong>Tipo de cliente: </strong>{" "}
+                            {data?.typeCustomer?.name}
+                        </li>
+                        <li>
                             <strong>Correo Electronico: </strong> {data.email}
                         </li>
                         <li>
