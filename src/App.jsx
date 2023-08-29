@@ -31,30 +31,31 @@ function App() {
             <div className="App">
                 <NavBar />
                 {isLoading && <Loader />}
-                <Container className="my-5">
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route
-                            path="/verify_email/:code"
-                            element={<VerifyCode />}
-                        />
-                        <Route
-                            path="/password_recovery"
-                            element={<PasswordRecoveryStep1 />}
-                        />
-                        <Route
-                            path="/reset_password/:code"
-                            element={<PasswordRecoveryStep2 />}
-                        />
-                        <Route element={<ProtectedRoutes />}>
-                            <Route path="/searcher" element={<Searcher />} />
-                        </Route>
-                    </Routes>
-                </Container>
+
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route
+                        path="/verify_email/:code"
+                        element={<VerifyCode />}
+                    />
+                    <Route
+                        path="/password_recovery"
+                        element={<PasswordRecoveryStep1 />}
+                    />
+                    <Route
+                        path="/reset_password/:code"
+                        element={<PasswordRecoveryStep2 />}
+                    />
+                    <Route element={<ProtectedRoutes />}>
+                        <Route path="/searcher" element={<Searcher />} />
+                    </Route>
+                </Routes>
             </div>
         </HashRouter>
     );
 }
 
 export default App;
+
+//className="my-5"

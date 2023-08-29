@@ -104,9 +104,7 @@ img {
 }
 /* estilos icono crear cliente */
 .bx-user-plus {
-    margin: 0 auto;
-    font-size: 4rem;
-    margin-bottom: 1rem;
+    font-size: 2rem;
     color: royalblue;
 }
 .bx-user-plus:hover {
@@ -127,4 +125,29 @@ img {
     position: absolute;
     left: 0; /* Alinea el menú a la izquierda */
     transform: translateX(-100%); /* Desplaza el menú hacia la izquierda */
+}
+
+/* estilos para el componente searcher */
+.searcher {
+    display: grid;
+    grid-template-columns: 20% 80%;
+}
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    /* gap: 1rem; */
+    background-color: #f2f2f2;
+    height: 100vh;
+    padding: 1rem;
+}
+
+.bodySearcher {
+    padding: 1rem;
+}
+
+.bodySearcher_input {
+    display: flex;
+    gap: 1rem;
+}
+.infoUserLoged {
 }
