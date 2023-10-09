@@ -36,9 +36,9 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
     //reseteo del formulario
     const resetForm = () => {
         return {
-            firstName: "",
-            lastName: "",
-            identificationDocument: "",
+            first_name: "",
+            last_name: "",
+            identification_document: "",
             email: "",
             phone: "",
             birthdate: "",
@@ -49,17 +49,17 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
     //obtencion de los datos del cliente a modificar
     useEffect(() => {
         if (customerSelected) {
-            setValue("firstName", customerSelected.firstName);
-            setValue("lastName", customerSelected.lastName);
+            setValue("first_name", customerSelected.first_name);
+            setValue("last_name", customerSelected.last_name);
             setValue(
-                "identificationDocument",
-                customerSelected.identificationDocument
+                "identification_document",
+                customerSelected.identification_document
             );
             setValue("phone", customerSelected.phone);
             setValue("birthdate", customerSelected.birthdate);
             setValue("email", customerSelected.email);
             setValue("id", customerSelected.id);
-            setValue("roleId", customerSelected.roleId);
+            setValue("role_id", customerSelected.role_id);
         } else {
             reset(resetForm());
         }
@@ -69,12 +69,12 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
     const submit = async (data) => {
         const allowedFieldsForUpdate = [
             "id",
-            "firstName",
-            "lastName",
-            "identificationDocument",
+            "first_name",
+            "last_name",
+            "identification_document",
             "phone",
             "birthdate",
-            "roleId",
+            "role_id",
         ];
 
         const formDataForUpdate = Object.keys(data)
@@ -96,28 +96,34 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
             dispatch(updateCustomerThunk(formDataForUpdate));
         } else {
             const frontBaseUrl = window.location.origin + "/#";
-            const defaultTypeCustomerId = "2";
+            const defaultType_customer_id = "2";
             const defaultRef = "1";
             const defaultStatus = "true";
-            const firstNameFirstLetter = data.firstName
-                ? data.firstName.charAt(0)
+            const first_nameFirstLetter = data.first_name
+                ? data.first_name.charAt(0)
                 : "";
             // Convertir el correo electrónico a minúsculas
             const emailLowerCase = data.email ? data.email.toLowerCase() : "";
-
+            // Verificar si role_id está definido, si no, establecerlo en "1"
+            const role_id =
+                data.role_id !== null && data.role_id !== undefined
+                    ? data.role_id
+                    : "1";
             const formDataWithDefaults = {
                 ...data,
-                typecustomerId: data.typecustomerId || defaultTypeCustomerId,
+                type_customer_id:
+                    data.type_customer_id || defaultType_customer_id,
                 ref: data.ref || defaultRef,
                 frontBaseUrl: frontBaseUrl,
-                username:
-                    data.username ||
-                    `${firstNameFirstLetter}${Date.now().toString()}`,
+                user_name:
+                    data.user_name ||
+                    `${first_nameFirstLetter}${Date.now().toString()}`,
                 password:
                     data.password ||
-                    `${firstNameFirstLetter}${Date.now().toString()}`,
+                    `${first_nameFirstLetter}${Date.now().toString()}`,
                 status: data.status || defaultStatus,
                 email: emailLowerCase,
+                role_id: role_id,
             };
             // console.log(formDataWithDefaults);
             dispatch(createCustomerThunk(formDataWithDefaults));
@@ -144,11 +150,11 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
                                     <Form.Label>Nombre</Form.Label>
                                     <Form.Control
                                         placeholder="Nombre"
-                                        {...register("firstName", {
+                                        {...register("first_name", {
                                             required: true,
                                         })}
                                     />
-                                    {errors.firstName && (
+                                    {errors.first_name && (
                                         <p className="error-message">
                                             El nombre es requerido.
                                         </p>
@@ -160,11 +166,11 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
                                     <Form.Label>Apellido</Form.Label>
                                     <Form.Control
                                         placeholder="Apellido"
-                                        {...register("lastName", {
+                                        {...register("last_name", {
                                             required: true,
                                         })}
                                     />
-                                    {errors.lastName && (
+                                    {errors.last_name && (
                                         <p className="error-message">
                                             El apellido es requerido.
                                         </p>
@@ -176,11 +182,11 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
                             <Form.Label>Documento de identidad</Form.Label>
                             <Form.Control
                                 placeholder="Cedula"
-                                {...register("identificationDocument", {
+                                {...register("identification_document", {
                                     required: true,
                                 })}
                             />
-                            {errors.identificationDocument && (
+                            {errors.identification_document && (
                                 <p className="error-message">
                                     La cédula es requerida.
                                 </p>
@@ -248,7 +254,7 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
                                             ? false
                                             : true
                                     }
-                                    {...register("roleId")}
+                                    {...register("role_id")}
                                     defaultValue="1"
                                 >
                                     {/* Aquí renderizar las opciones de roles */}

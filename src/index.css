@@ -6,6 +6,15 @@
 img {
     max-width: 100%;
 }
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
 /* estilos loader */
 .loader-overlay {
     background: rgba(0, 0, 0, 0.3);
@@ -149,5 +158,27 @@ img {
     display: flex;
     gap: 1rem;
 }
-.infoUserLoged {
+
+/* ---------estilos pages order------------ */
+
+.container_orders {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+.container_orders .section_forms {
+    display: flex;
+    flex-direction: column;
+    background-color: #f2f2f2;
+    padding: 2rem 3rem 0.5rem 3rem;
+}
+.container_orders .section_table {
+    padding: 1rem 3rem;
+}
+.bx-cart-add {
+    font-size: 2.5rem;
+    color: blue;
+}
+.bx-cart-add:hover {
+    color: red;
 }

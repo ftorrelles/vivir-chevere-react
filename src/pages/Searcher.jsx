@@ -14,12 +14,16 @@ import {
 } from "../store/slices/customers.slice";
 import ShowDetailsCustomer from "../components/ShowDetailsCustomer";
 import CustomerForm from "../components/CustomerForm";
+import { useNavigate } from "react-router-dom";
+import { setSelectedCustomerForMovements } from "../store/slices/selectedCustomerForMovements.slice";
 
 const Searcher = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [identificationDocument, setIdentificationDocument] = useState("");
+    //estados de filtro
+    const [first_name, setFirst_name] = useState("");
+    const [last_name, setLast_name] = useState("");
+    const [identification_document, setIdentification_document] = useState("");
 
     // Acceder a los clientes desde el estado de Redux.
 
@@ -32,9 +36,9 @@ const Searcher = () => {
 
     const handleFilter = () => {
         const filterOptions = {
-            firstName,
-            lastName,
-            identificationDocument,
+            first_name,
+            last_name,
+            identification_document,
         };
         dispatch(filterCustomersThunk(filterOptions));
     };
@@ -46,6 +50,12 @@ const Searcher = () => {
     const handleShow = (info) => {
         setShow(true);
         setDataSelected(info);
+    };
+
+    //pages Order
+    const handleOrder = (customerOrderName) => {
+        dispatch(setSelectedCustomerForMovements(customerOrderName));
+        navigate("/orders");
     };
 
     //modal crear cliente
@@ -74,11 +84,13 @@ const Searcher = () => {
                 <div className="infoUserLoged">
                     <h6>
                         Bienvenido{" "}
-                        {loggedUser?.firstName + " " + loggedUser?.lastName}
+                        {loggedUser?.first_name + " " + loggedUser?.last_name}
                     </h6>
                     <h6>Tipo de cuenta: {loggedUser?.Role?.name_role}</h6>
+                    <h6>Sede: {loggedUser?.Branches[0]?.name}</h6>
                 </div>{" "}
                 <hr />
+                <br />
                 <h5>Registrar nuevo cliente</h5>
                 <div>
                     <span>Formulario aqui</span>
@@ -94,6 +106,7 @@ const Searcher = () => {
                     </Button>
                 </div>
                 <hr />
+                <br />
                 <h5>Detalles inventario y facturación</h5>
                 <p>Invetario sede</p>
                 <p>Control de facturacion</p>
@@ -107,12 +120,12 @@ const Searcher = () => {
                             <Form.Control
                                 aria-label="Example text with button addon"
                                 aria-describedby="basic-addon1"
-                                id="firstName"
+                                id="first_name"
                                 type="text"
-                                value={firstName}
+                                value={first_name}
                                 placeholder="Filtrar por nombre"
                                 onChange={(event) =>
-                                    setFirstName(
+                                    setFirst_name(
                                         event.target.value.toLowerCase()
                                     )
                                 }
@@ -124,12 +137,12 @@ const Searcher = () => {
                             <Form.Control
                                 aria-label="Example text with button addon"
                                 aria-describedby="basic-addon1"
-                                id="lastName"
+                                id="last_name"
                                 type="text"
-                                value={lastName}
+                                value={last_name}
                                 placeholder="Filtrar por apellido"
                                 onChange={(event) =>
-                                    setLastName(
+                                    setLast_name(
                                         event.target.value.toLowerCase()
                                     )
                                 }
@@ -142,12 +155,12 @@ const Searcher = () => {
                     <Form.Control
                         aria-label="Example text with button addon"
                         aria-describedby="basic-addon1"
-                        id="identificationDocument"
+                        id="identification_document"
                         type="text"
-                        value={identificationDocument}
+                        value={identification_document}
                         placeholder="Filtrar por cédula"
                         onChange={(event) =>
-                            setIdentificationDocument(
+                            setIdentification_document(
                                 event.target.value.toLowerCase()
                             )
                         }
@@ -187,9 +200,10 @@ const Searcher = () => {
                             {currentCustomers.map((customer) => (
                                 <tr key={customer.id}>
                                     <td>
-                                        {customer.firstName} {customer.lastName}
+                                        {customer.first_name}{" "}
+                                        {customer.last_name}
                                     </td>
-                                    <td>{customer.identificationDocument}</td>
+                                    <td>{customer.identification_document}</td>
                                     <td>
                                         <div
                                             style={{
@@ -198,7 +212,13 @@ const Searcher = () => {
                                                 alignItems: "center",
                                             }}
                                         >
-                                            <Button variant="primary" size="sm">
+                                            <Button
+                                                variant="primary"
+                                                size="sm"
+                                                onClick={() =>
+                                                    handleOrder(customer)
+                                                }
+                                            >
                                                 <i className="bx bx-cart"></i>
                                             </Button>
                                         </div>

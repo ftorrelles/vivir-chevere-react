@@ -10,29 +10,30 @@ const ShowDetailsCustomer = ({ show, handleClose, data }) => {
     const [showForm, setShowForm] = useState(false);
     const handleCloseForm = () => setShowForm(false);
     const selected = (data) => {
-        console.log(data);
         dispatch(setSelectedCustomer(data));
         setShowForm(true);
         handleClose();
     };
-
     return (
         <>
             <Modal className="modal-lg" show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>
-                        {data.firstName} {data.lastName}
+                        {data.first_name} {data.last_name}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <ul>
                         <li>
                             <strong>Cedula de identidad: </strong>{" "}
-                            {data.identificationDocument}
+                            {data.identification_document}
+                        </li>
+                        <li>
+                            <strong>Rol: </strong> {data?.Role?.name_role}
                         </li>
                         <li>
                             <strong>Tipo de cliente: </strong>{" "}
-                            {data?.typeCustomer?.name}
+                            {data?.TypeCustomer?.name}
                         </li>
                         <li>
                             <strong>Correo Electronico: </strong> {data.email}
@@ -46,7 +47,7 @@ const ShowDetailsCustomer = ({ show, handleClose, data }) => {
                         </li>
                         <li>
                             <strong>Email verificado: </strong>{" "}
-                            {data.isVerified
+                            {data.is_verified
                                 ? "Si fue verificado"
                                 : "No fue verificado"}
                             {}

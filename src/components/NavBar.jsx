@@ -50,7 +50,7 @@ const NavBar = () => {
                                                 fontSize: "2rem",
                                                 display: "inline-block", // Agregar esta propiedad para evitar la flecha hacia abajo
                                             }}
-                                            title={`${logged.firstName} ${logged.lastName}`}
+                                            title={`${logged.first_name} ${logged.last_name}`}
                                         >
                                             <i className="bx bxs-user"></i>
                                         </div>
@@ -80,7 +80,7 @@ const NavBar = () => {
                                     style={{ fontSize: "2rem" }}
                                     title={
                                         logged
-                                            ? `${logged.firstName} ${logged.lastName}`
+                                            ? `${logged.first_name} ${logged.last_name}`
                                             : null
                                     }
                                 >

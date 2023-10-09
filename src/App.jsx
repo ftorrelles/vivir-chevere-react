@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import VerifyCode from "./pages/VerifyCode";
 import PasswordRecoveryStep1 from "./pages/PasswordRecoveryStep1";
 import PasswordRecoveryStep2 from "./pages/PasswordRecoveryStep2";
+import Orders from "./pages/Orders";
 import NavBar from "./components/NavBar";
 import Loader from "./components/Loader";
 import ProtectedRoutes from "./components/ProtectedRoutes";
@@ -49,6 +50,7 @@ function App() {
                     />
                     <Route element={<ProtectedRoutes />}>
                         <Route path="/searcher" element={<Searcher />} />
+                        <Route path="/orders" element={<Orders />} />
                     </Route>
                 </Routes>
             </div>
