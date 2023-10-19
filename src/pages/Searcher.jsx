@@ -16,6 +16,7 @@ import ShowDetailsCustomer from "../components/ShowDetailsCustomer";
 import CustomerForm from "../components/CustomerForm";
 import { useNavigate } from "react-router-dom";
 import { setSelectedCustomerForMovements } from "../store/slices/selectedCustomerForMovements.slice";
+import { Link } from "react-router-dom";
 
 const Searcher = () => {
     const navigate = useNavigate();
@@ -108,8 +109,8 @@ const Searcher = () => {
                 <hr />
                 <br />
                 <h5>Detalles inventario y facturación</h5>
-                <p>Invetario sede</p>
-                <p>Control de facturacion</p>
+                <Link to="/warehouse">Control de almacen</Link>
+                <Link to="/movementControl">Control de movimiento</Link>
             </div>
 
             <div className="bodySearcher">

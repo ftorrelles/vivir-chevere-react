@@ -4,11 +4,12 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import ModalWarehouse from "../components/modalWarehouse";
+import ModalProducts from "../components/ModalProducts";
 import { setAddToCart } from "../store/slices/addToCart.slice";
 import { useNavigate } from "react-router-dom";
 import { setIsLoading } from "../store/slices/isLoading.slice";
 
-const Orders = () => {
+const Warehouse = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [productsCart, setProductsCart] = useState([]);
@@ -30,6 +31,8 @@ const Orders = () => {
     );
     const loggedUser = useSelector((state) => state.loggedUser);
     const addToCart = useSelector((state) => state.addToCart);
+
+    const customers = useSelector((state) => state.customers);
 
     // Obtener tipos de movimientos y almacenes
     useEffect(() => {
@@ -60,6 +63,12 @@ const Orders = () => {
     const handleShowWarehouse = () => {
         setShowWarehouse(true);
     };
+    // Modal de productos
+    const [showProducts, setShowProducts] = useState(false);
+    const handleCloseProducts = () => setShowProducts(false);
+    const handleShowProducts = () => {
+        setShowProducts(true);
+    };
 
     // Agregar productos al carrito
     useEffect(() => {
@@ -69,19 +78,17 @@ const Orders = () => {
             );
             const availableQuantity = addToCart?.quantity || 0;
 
-            if (!productExists && availableQuantity > 0) {
+            if (!productExists) {
                 let newCart = {
                     product_id: addToCart.product_id,
                     name: addToCart?.Product?.name,
                     price:
-                        selectedCustomerForMovements?.TypeCustomer?.name ===
-                        "Afiliado"
+                        loggedUser?.TypeCustomer?.name === "Afiliado"
                             ? addToCart?.Product?.price_afiliate
                             : addToCart?.Product?.price_general,
                     quantity: 1,
                     total_line:
-                        (selectedCustomerForMovements?.TypeCustomer?.name ===
-                        "Afiliado"
+                        (loggedUser?.TypeCustomer?.name === "Afiliado"
                             ? Number(addToCart?.Product?.price_afiliate)
                             : Number(addToCart?.Product?.price_general)) * 1,
                     availableQuantity,
@@ -89,8 +96,6 @@ const Orders = () => {
 
                 setProductsCart((prevProducts) => [...prevProducts, newCart]);
                 dispatch(setAddToCart({}));
-            } else if (availableQuantity <= 0) {
-                alert("No hay disponibilidad de este producto en el almacén.");
             }
         }
     }, [addToCart, productsCart, selectedCustomerForMovements]);
@@ -99,14 +104,9 @@ const Orders = () => {
         const updatedProducts = [...productsCart];
         const product = updatedProducts[index];
 
-        if (product.availableQuantity > product.quantity) {
-            // Verificar si la cantidad deseada es menor que la cantidad disponible antes de incrementar
-            product.quantity += 1;
-            product.total_line = product.quantity * product.price; // Actualiza total_line
-            setProductsCart(updatedProducts);
-        } else {
-            alert("No hay suficiente cantidad disponible de este producto.");
-        }
+        product.quantity += 1;
+        product.total_line = product.quantity * product.price; // Actualiza total_line
+        setProductsCart(updatedProducts);
     };
 
     // Función para decrementar la cantidad del producto
@@ -177,22 +177,25 @@ const Orders = () => {
             );
         }
     };
-
+    console.log(typeMovements);
+    console.log(filteredWarehouses);
+    console.log(loggedUser);
     return (
         <>
             <div className="container_orders">
                 <div className="section_forms">
                     <div>
-                        <h4>Detalles de la operación</h4>
+                        <h4>ingreso al almacen</h4>
                         <ul>
                             <li>Sede: {loggedUser?.Branches[0]?.name}</li>
+
                             <li>
-                                Quien despacha:{" "}
+                                Quien recibe:{" "}
                                 {`${loggedUser?.first_name} ${loggedUser?.last_name} (${loggedUser?.Role?.name_role})`}
                             </li>
                             <li>
-                                Quien recibe:{" "}
-                                {`${selectedCustomerForMovements?.first_name} ${selectedCustomerForMovements?.last_name} (${selectedCustomerForMovements?.TypeCustomer?.name})`}
+                                Tipo de movimiento:{" "}
+                                {`${typeMovements[1]?.name} `}
                             </li>
                         </ul>
                     </div>
@@ -201,20 +204,20 @@ const Orders = () => {
                         <Form onSubmit={handleSubmit(submit)}>
                             <input
                                 type="hidden"
-                                {...register("dispatcher_id", {
-                                    value: loggedUser?.id,
-                                })}
-                            />
-                            <input
-                                type="hidden"
                                 {...register("customer_id", {
-                                    value: selectedCustomerForMovements?.id,
+                                    value: loggedUser?.id,
                                 })}
                             />
                             <input
                                 type="hidden"
                                 {...register("branch_id", {
                                     value: loggedUser?.Branches[0]?.id,
+                                })}
+                            />
+                            <input
+                                type="hidden"
+                                {...register("typemovement_id", {
+                                    value: 2,
                                 })}
                             />
                             <div
@@ -233,38 +236,32 @@ const Orders = () => {
                                     }}
                                 >
                                     <div style={{ width: "25%" }}>
-                                        <Form.Group controlId="typemovementId">
+                                        <Form.Group controlId="dispatcher_id">
                                             <Form.Label>
-                                                Tipo de movimiento
+                                                Quien despacha
                                             </Form.Label>
                                             <Form.Control
                                                 as="select"
-                                                placeholder="Tipo de movimiento"
+                                                placeholder="Nombre de quien despacha"
                                                 {...register(
-                                                    "typemovement_id",
+                                                    "dispatcher_id",
+
                                                     {
                                                         required: true,
                                                     }
                                                 )}
                                             >
                                                 <option value="">
-                                                    Seleccione un tipo de
-                                                    movimiento
+                                                    quien despacha
                                                 </option>
-                                                {typeMovements.map(
-                                                    (typeMovement) => (
-                                                        <option
-                                                            key={
-                                                                typeMovement?.id
-                                                            }
-                                                            value={
-                                                                typeMovement?.id
-                                                            }
-                                                        >
-                                                            {typeMovement?.name}
-                                                        </option>
-                                                    )
-                                                )}
+                                                {customers.map((customer) => (
+                                                    <option
+                                                        key={customer?.id}
+                                                        value={customer?.id}
+                                                    >
+                                                        {`${customer?.first_name} ${customer?.last_name}`}
+                                                    </option>
+                                                ))}
                                             </Form.Control>
                                             {errors.typemovementId && (
                                                 <p className="error-message">
@@ -316,25 +313,37 @@ const Orders = () => {
                                 </div>
                             </div>
                             <br />
-                            <h6>
-                                Agregar producto{" "}
-                                <Button
-                                    onClick={handleShowWarehouse}
-                                    type="button"
-                                    style={{
-                                        backgroundColor: "transparent",
-                                        border: "none",
-                                    }}
-                                >
-                                    <i className="bx bx-cart-add"></i>
-                                </Button>
-                            </h6>
-
+                            <ul>
+                                <li>
+                                    Aumentar almacen{" "}
+                                    <Button
+                                        onClick={handleShowWarehouse}
+                                        type="button"
+                                        style={{
+                                            backgroundColor: "transparent",
+                                            border: "none",
+                                        }}
+                                    >
+                                        <i className="bx bx-cart-add"></i>
+                                    </Button>
+                                </li>
+                                <li>
+                                    Agregar nuevo producto{" "}
+                                    <Button
+                                        onClick={handleShowProducts}
+                                        type="button"
+                                        style={{
+                                            backgroundColor: "transparent",
+                                            border: "none",
+                                        }}
+                                    >
+                                        <i className="bx bx-cart-add"></i>
+                                    </Button>
+                                </li>
+                            </ul>
                             <Col>
-                                <p>Total a pagar: ${total.toFixed(2)}</p>
-
                                 <Button type="submit" variant="primary">
-                                    Confirmar compra
+                                    Confirmar ingreso
                                 </Button>
                             </Col>
                         </Form>
@@ -417,8 +426,13 @@ const Orders = () => {
                 handleCloseWarehouse={handleCloseWarehouse}
                 dataWarehouse={filteredWarehouses}
             />
+            <ModalProducts
+                showProducts={showProducts}
+                handleCloseProducts={handleCloseProducts}
+                dataWarehouse={filteredWarehouses}
+            />
         </>
     );
 };
 
-export default Orders;
+export default Warehouse;

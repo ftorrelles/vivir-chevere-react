@@ -8,10 +8,12 @@ import VerifyCode from "./pages/VerifyCode";
 import PasswordRecoveryStep1 from "./pages/PasswordRecoveryStep1";
 import PasswordRecoveryStep2 from "./pages/PasswordRecoveryStep2";
 import Orders from "./pages/Orders";
+import MovementControl from "./pages/MovementControl";
+import Warehouse from "./pages/Warehouse";
 import NavBar from "./components/NavBar";
 import Loader from "./components/Loader";
 import ProtectedRoutes from "./components/ProtectedRoutes";
-import Container from "react-bootstrap/Container";
+// import Container from "react-bootstrap/Container";
 import { useSelector, useDispatch } from "react-redux";
 import { setloggedUser } from "./store/slices/loggedUser.slice";
 
@@ -51,6 +53,11 @@ function App() {
                     <Route element={<ProtectedRoutes />}>
                         <Route path="/searcher" element={<Searcher />} />
                         <Route path="/orders" element={<Orders />} />
+                        <Route
+                            path="/movementControl"
+                            element={<MovementControl />}
+                        />
+                        <Route path="/warehouse" element={<Warehouse />} />
                     </Route>
                 </Routes>
             </div>
