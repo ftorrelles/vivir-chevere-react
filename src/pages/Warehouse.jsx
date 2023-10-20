@@ -8,6 +8,7 @@ import ModalProducts from "../components/ModalProducts";
 import { setAddToCart } from "../store/slices/addToCart.slice";
 import { useNavigate } from "react-router-dom";
 import { setIsLoading } from "../store/slices/isLoading.slice";
+import { getCustomersThunk } from "../store/slices/customers.slice";
 
 const Warehouse = () => {
     const dispatch = useDispatch();
@@ -26,27 +27,36 @@ const Warehouse = () => {
     } = useForm();
 
     // Obtener datos de los estados de Redux
-    const selectedCustomerForMovements = useSelector(
-        (state) => state.selectedCustomerForMovements
-    );
     const loggedUser = useSelector((state) => state.loggedUser);
     const addToCart = useSelector((state) => state.addToCart);
 
     const customers = useSelector((state) => state.customers);
+    useEffect(() => {
+        dispatch(getCustomersThunk()); // Cargar los datos iniciales de los clientes
+    }, []);
 
     // Obtener tipos de movimientos y almacenes
-    useEffect(() => {
+    const getTypeMovements = () => {
+        dispatch(setIsLoading(true));
         axios
             .get("http://localhost:3000/api/v1/typeMovements")
             .then((resp) => setTypeMovements(resp.data?.typeMovements))
-            .catch((error) => console.error(error));
-
+            .catch((error) => console.error(error))
+            .finally(() => dispatch(setIsLoading(false)));
+    };
+    const getWarehouses = () => {
+        dispatch(setIsLoading(true));
         axios
             .get("http://localhost:3000/api/v1/warehouses")
             .then((resp) => {
                 setWarehouses(resp.data.warehouses);
             })
-            .catch((error) => console.error(error));
+            .catch((error) => console.error(error))
+            .finally(() => dispatch(setIsLoading(false)));
+    };
+    useEffect(() => {
+        getTypeMovements();
+        getWarehouses();
     }, []);
 
     // Filtrar almacenes por sede del usuario autenticado
@@ -69,6 +79,10 @@ const Warehouse = () => {
     const handleShowProducts = () => {
         setShowProducts(true);
     };
+    //useEffect usado para recargar el almacen filtrado
+    useEffect(() => {
+        getWarehouses();
+    }, [showProducts]);
 
     // Agregar productos al carrito
     useEffect(() => {
@@ -98,7 +112,7 @@ const Warehouse = () => {
                 dispatch(setAddToCart({}));
             }
         }
-    }, [addToCart, productsCart, selectedCustomerForMovements]);
+    }, [addToCart, productsCart]);
 
     const incrementQuantityHandler = (index) => {
         const updatedProducts = [...productsCart];
@@ -163,8 +177,6 @@ const Warehouse = () => {
                 .then((response) => {
                     setProductsCart([]);
                     navigate("/searcher");
-                    // Maneja la respuesta si es necesario
-                    console.log(response.data);
                 })
                 .catch((error) => {
                     // Maneja errores si ocurren
@@ -177,9 +189,6 @@ const Warehouse = () => {
             );
         }
     };
-    console.log(typeMovements);
-    console.log(filteredWarehouses);
-    console.log(loggedUser);
     return (
         <>
             <div className="container_orders">
@@ -263,10 +272,9 @@ const Warehouse = () => {
                                                     </option>
                                                 ))}
                                             </Form.Control>
-                                            {errors.typemovementId && (
+                                            {errors.dispatcher_id && (
                                                 <p className="error-message">
-                                                    El tipo de movimiento es
-                                                    requerido.
+                                                    Quien despacha es requerido.
                                                 </p>
                                             )}
                                         </Form.Group>

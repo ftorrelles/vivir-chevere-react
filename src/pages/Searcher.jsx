@@ -56,6 +56,10 @@ const Searcher = () => {
     //pages Order
     const handleOrder = (customerOrderName) => {
         dispatch(setSelectedCustomerForMovements(customerOrderName));
+        localStorage.setItem(
+            "selectedCustomerForMovements",
+            JSON.stringify(customerOrderName)
+        ); // Guardar el usuario seleccionado
         navigate("/orders");
     };
 
@@ -108,8 +112,8 @@ const Searcher = () => {
                 </div>
                 <hr />
                 <br />
-                <h5>Detalles inventario y facturación</h5>
-                <Link to="/warehouse">Control de almacen</Link>
+                <h5>Almacen y facturación</h5>
+                <Link to="/warehouse">Ingreso al almacen</Link>
                 <Link to="/movementControl">Control de movimiento</Link>
             </div>
 

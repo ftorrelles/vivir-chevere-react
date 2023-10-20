@@ -16,17 +16,31 @@ import ProtectedRoutes from "./components/ProtectedRoutes";
 // import Container from "react-bootstrap/Container";
 import { useSelector, useDispatch } from "react-redux";
 import { setloggedUser } from "./store/slices/loggedUser.slice";
+import { setSelectedCustomerForMovements } from "./store/slices/selectedCustomerForMovements.slice";
 
 function App() {
     const dispatch = useDispatch();
     const isLoading = useSelector((state) => state.isLoading);
-    ///guardar informacion del usuario logueado si se recarga la pagina
+    ///guardar informacion del usuario logueado y del cliente seleccionado para movimiento si se recarga la pagina
     useEffect(() => {
         // Verificar si hay información de usuario logueado en localStorage
         const storedLoggedUser = localStorage.getItem("loggedUser");
         if (storedLoggedUser) {
             const parsedLoggedUser = JSON.parse(storedLoggedUser);
             dispatch(setloggedUser(parsedLoggedUser));
+        }
+        const storedSelectedCustomerForMovements = localStorage.getItem(
+            "selectedCustomerForMovements"
+        );
+        if (storedSelectedCustomerForMovements) {
+            const parsedSelectedCustomerForMovements = JSON.parse(
+                storedSelectedCustomerForMovements
+            );
+            dispatch(
+                setSelectedCustomerForMovements(
+                    parsedSelectedCustomerForMovements
+                )
+            );
         }
     }, [dispatch]);
     return (

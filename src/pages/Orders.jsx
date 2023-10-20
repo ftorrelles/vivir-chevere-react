@@ -32,20 +32,28 @@ const Orders = () => {
     const addToCart = useSelector((state) => state.addToCart);
 
     // Obtener tipos de movimientos y almacenes
-    useEffect(() => {
+    const getTypeMovements = () => {
+        dispatch(setIsLoading(true));
         axios
             .get("http://localhost:3000/api/v1/typeMovements")
             .then((resp) => setTypeMovements(resp.data?.typeMovements))
-            .catch((error) => console.error(error));
-
+            .catch((error) => console.error(error))
+            .finally(() => dispatch(setIsLoading(false)));
+    };
+    const getWarehouses = () => {
+        dispatch(setIsLoading(true));
         axios
             .get("http://localhost:3000/api/v1/warehouses")
             .then((resp) => {
                 setWarehouses(resp.data.warehouses);
             })
-            .catch((error) => console.error(error));
+            .catch((error) => console.error(error))
+            .finally(() => dispatch(setIsLoading(false)));
+    };
+    useEffect(() => {
+        getTypeMovements();
+        getWarehouses();
     }, []);
-
     // Filtrar almacenes por sede del usuario autenticado
     useEffect(() => {
         const filtered = warehouses.filter((warehouse) => {
@@ -163,8 +171,6 @@ const Orders = () => {
                 .then((response) => {
                     setProductsCart([]);
                     navigate("/searcher");
-                    // Maneja la respuesta si es necesario
-                    console.log(response.data);
                 })
                 .catch((error) => {
                     // Maneja errores si ocurren

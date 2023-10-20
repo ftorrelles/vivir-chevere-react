@@ -36,6 +36,9 @@ const ShowDetailsCustomer = ({ show, handleClose, data }) => {
                             {data?.TypeCustomer?.name}
                         </li>
                         <li>
+                            <strong>Auspiciador: </strong> {data?.ref}
+                        </li>
+                        <li>
                             <strong>Correo Electronico: </strong> {data.email}
                         </li>
                         <li>

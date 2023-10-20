@@ -19,19 +19,14 @@ const ModalProducts = ({
 
     const loggedUser = useSelector((state) => state.loggedUser);
     const branchId = loggedUser?.Branches[0]?.id;
-    console.log(dataWarehouse);
-    console.log(branchId);
     useEffect(() => {
         axios
             .get("http://localhost:3000/api/v1/products")
             .then((resp) => setProducts(resp.data))
             .catch((error) => console.error(error));
     }, []);
-    console.log(loggedUser);
-    console.log(products);
 
     const productSelected = (data) => {
-        console.log(data);
         // Verificar si el producto ya existe en el almacén de la sede
         const existingProductInWarehouse = dataWarehouse.find(
             (item) => item.product_id === data.id
@@ -46,7 +41,6 @@ const ModalProducts = ({
                 quantity: 0,
                 status: true,
             };
-            console.log(addToWarehouse);
             dispatch(setIsLoading(true));
             axios
                 .post(`http://localhost:3000/api/v1/warehouses`, addToWarehouse)

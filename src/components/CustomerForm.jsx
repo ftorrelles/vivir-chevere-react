@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     createCustomerThunk,
     updateCustomerThunk,
+    getCustomersThunk,
 } from "../store/slices/customers.slice";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -21,7 +22,10 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
     const dispatch = useDispatch();
     const customerSelected = useSelector((state) => state.selectedCustomer);
     const loggedUser = useSelector((state) => state.loggedUser);
-
+    const customers = useSelector((state) => state.customers);
+    useEffect(() => {
+        dispatch(getCustomersThunk()); // Cargar los datos iniciales de los clientes
+    }, []);
     const [roles, setRoles] = useState([]);
 
     //obtencion de los datos de los roles
@@ -31,7 +35,6 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
             .then((resp) => setRoles(resp.data.roles))
             .catch((error) => console.error(error));
     }, []);
-    // console.log(roles);
 
     //reseteo del formulario
     const resetForm = () => {
@@ -42,9 +45,9 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
             email: "",
             phone: "",
             birthdate: "",
+            ref: "",
         };
     };
-    // console.log(customerSelected);
 
     //obtencion de los datos del cliente a modificar
     useEffect(() => {
@@ -60,6 +63,7 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
             setValue("email", customerSelected.email);
             setValue("id", customerSelected.id);
             setValue("role_id", customerSelected.role_id);
+            setValue("ref", customerSelected.ref);
         } else {
             reset(resetForm());
         }
@@ -75,6 +79,7 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
             "phone",
             "birthdate",
             "role_id",
+            "ref",
         ];
 
         const formDataForUpdate = Object.keys(data)
@@ -97,7 +102,7 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
         } else {
             const frontBaseUrl = window.location.origin + "/#";
             const defaultType_customer_id = "2";
-            const defaultRef = "1";
+            // const defaultRef = "1";
             const defaultStatus = "true";
             const first_nameFirstLetter = data.first_name
                 ? data.first_name.charAt(0)
@@ -125,7 +130,6 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
                 email: emailLowerCase,
                 role_id: role_id,
             };
-            // console.log(formDataWithDefaults);
             dispatch(createCustomerThunk(formDataWithDefaults));
         }
         reset(resetForm());
@@ -242,30 +246,69 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
                             </Col>
                         </Row>
                         <hr />
-                        <Col>
-                            {/* habilitar el campo de roles solo si el rol es "administrador" */}
-                            <Form.Group>
-                                <Form.Label>Rol</Form.Label>
-                                <Form.Control
-                                    as="select"
-                                    disabled={
-                                        loggedUser?.Role?.name_role ===
-                                        "Administrador"
-                                            ? false
-                                            : true
-                                    }
-                                    {...register("role_id")}
-                                    defaultValue="1"
-                                >
-                                    {/* Aquí renderizar las opciones de roles */}
-                                    {roles.map((role) => (
-                                        <option key={role.id} value={role?.id}>
-                                            {role?.name_role}
+                        <Row>
+                            <Col>
+                                <Form.Group controlId="dispatcher_id">
+                                    <Form.Label>Quien recomienda</Form.Label>
+                                    <Form.Control
+                                        as="select"
+                                        placeholder="Nombre de quien recomienda"
+                                        {...register(
+                                            "ref",
+
+                                            {
+                                                required: true,
+                                            }
+                                        )}
+                                    >
+                                        <option value="">
+                                            quien recomienda
                                         </option>
-                                    ))}
-                                </Form.Control>
-                            </Form.Group>
-                        </Col>
+                                        {customers.map((customer) => (
+                                            <option
+                                                key={customer?.id}
+                                                value={customer?.id}
+                                            >
+                                                {`${customer?.first_name} ${customer?.last_name}, ${customer.identification_document}`}
+                                            </option>
+                                        ))}
+                                    </Form.Control>
+                                    {errors.dispatcher_id && (
+                                        <p className="error-message">
+                                            Quien despacha es requerido.
+                                        </p>
+                                    )}
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                {/* habilitar el campo de roles solo si el rol es "administrador" */}
+                                <Form.Group>
+                                    <Form.Label>Rol</Form.Label>
+                                    <Form.Control
+                                        as="select"
+                                        disabled={
+                                            loggedUser?.Role?.name_role ===
+                                            "Administrador"
+                                                ? false
+                                                : true
+                                        }
+                                        {...register("role_id")}
+                                        defaultValue="1"
+                                    >
+                                        {/* Aquí renderizar las opciones de roles */}
+                                        {roles.map((role) => (
+                                            <option
+                                                key={role.id}
+                                                value={role?.id}
+                                            >
+                                                {role?.name_role}
+                                            </option>
+                                        ))}
+                                    </Form.Control>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
                         <br />
                         <hr />
 
