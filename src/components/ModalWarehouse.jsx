@@ -38,7 +38,7 @@ const ModalWarehouse = ({
                             {dataWarehouse?.map((product) => (
                                 <tr key={product?.id}>
                                     <td>{product?.Product?.name}</td>
-                                    <td>{product?.Product?.measure}</td>
+                                    <td>{`${product?.Product?.measure} ${product?.Product?.Specification?.name}`}</td>
                                     <td>{product?.quantity}</td>
                                     <td>{product?.Product?.price_general}</td>
                                     <td>{product?.Product?.price_afiliate}</td>

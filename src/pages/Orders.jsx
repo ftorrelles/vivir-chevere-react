@@ -103,6 +103,7 @@ const Orders = () => {
         }
     }, [addToCart, productsCart, selectedCustomerForMovements]);
 
+    // Función para incrementar la cantidad del producto
     const incrementQuantityHandler = (index) => {
         const updatedProducts = [...productsCart];
         const product = updatedProducts[index];

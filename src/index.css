@@ -159,7 +159,7 @@ a {
     gap: 1rem;
 }
 
-/* ---------estilos pages order------------ */
+/* ---------styls pages order------------ */
 
 .container_orders {
     display: flex;
@@ -181,4 +181,8 @@ a {
 }
 .bx-cart-add:hover {
     color: red;
+}
+/* --- pages MovementsControl */
+.PagesMovementControl {
+    padding: 1rem 2rem;
 }
