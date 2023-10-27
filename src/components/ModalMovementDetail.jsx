@@ -8,26 +8,24 @@ const ModalMovementDetail = ({
     handleCloseMovementDetail,
     dataMovemet,
 }) => {
-    // console.log(dataMovemet);
-    const printModal = (data) => {
+    const printMovement = (data) => {
         const doc = new jsPDF();
-        doc.setFontSize(12);
+        doc.setFontSize(10);
         doc.text("Detalles del Movimiento", 80, 10);
-        doc.text(`Fecha: ${dataMovemet?.movement_date?.slice(0, 10)}`, 10, 20);
+        doc.text(`Fecha: ${dataMovemet?.movement_date?.slice(0, 10)}`, 10, 30);
         doc.text(
             `Quien despacha: ${`${dataMovemet?.dispatcher?.first_name} ${dataMovemet?.dispatcher?.last_name}`}`,
             10,
-            30
+            40
         );
-
         doc.text(
             `Quien recibe: ${`${dataMovemet?.customer?.first_name} ${dataMovemet?.customer?.last_name}`}`,
             10,
-            40
+            50
         );
-        doc.text(`Categoria: ${dataMovemet?.Type_movement?.name}`, 10, 50);
-        doc.text(`Total: ${dataMovemet.total}`, 10, 60);
-
+        doc.text(`Sede: ${dataMovemet?.Branch?.name}`, 10, 60);
+        doc.text(`Categoria: ${dataMovemet?.Type_movement?.name}`, 10, 70);
+        doc.text(`Total: ${dataMovemet.total}`, 10, 80);
         autoTable(doc, {
             theme: "grid",
             head: [["Cant", "Producto", "P.unit", "Total"]],
@@ -40,7 +38,7 @@ const ModalMovementDetail = ({
                 ];
             }),
             margin: {
-                top: 70,
+                top: 90,
             },
         });
 
@@ -119,7 +117,14 @@ const ModalMovementDetail = ({
                         </div>
                     )}
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        gap: "1rem",
+                        alignItems: "center",
+                    }}
+                >
                     <Button
                         variant="secondary"
                         onClick={handleCloseMovementDetail}
@@ -128,7 +133,7 @@ const ModalMovementDetail = ({
                     </Button>
                     <Button
                         variant="primary"
-                        onClick={() => printModal(dataMovemet)}
+                        onClick={() => printMovement(dataMovemet)}
                     >
                         Imprimir PDF
                     </Button>

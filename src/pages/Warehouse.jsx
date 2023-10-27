@@ -176,7 +176,7 @@ const Warehouse = () => {
                 .post("http://localhost:3000/api/v1/movements", dataToSend)
                 .then((response) => {
                     setProductsCart([]);
-                    navigate("/searcher");
+                    navigate("/movementControl");
                 })
                 .catch((error) => {
                     // Maneja errores si ocurren
@@ -191,8 +191,230 @@ const Warehouse = () => {
     };
     return (
         <>
-            <div className="container_orders">
-                <div className="section_forms">
+            <div className="container_warehouse">
+                <div className="sidebarWarehouse">
+                    <ul>
+                        <li>Sede: {loggedUser?.Branches[0]?.name}</li>
+
+                        <li>
+                            Quien recibe:{" "}
+                            {`${loggedUser?.first_name} ${loggedUser?.last_name} (${loggedUser?.Role?.name_role})`}
+                        </li>
+                        <li>
+                            Tipo de movimiento: {`${typeMovements[1]?.name} `}
+                        </li>
+                    </ul>
+                    <hr />
+                    <Form onSubmit={handleSubmit(submit)}>
+                        <input
+                            type="hidden"
+                            {...register("customer_id", {
+                                value: loggedUser?.id,
+                            })}
+                        />
+                        <input
+                            type="hidden"
+                            {...register("branch_id", {
+                                value: loggedUser?.Branches[0]?.id,
+                            })}
+                        />
+                        <input
+                            type="hidden"
+                            {...register("typemovement_id", {
+                                value: 2,
+                            })}
+                        />
+                        <div className="warehouse_date_form">
+                            <Form.Group controlId="dispatcher_id">
+                                <Form.Label>Quien despacha</Form.Label>
+                                <Form.Control
+                                    as="select"
+                                    placeholder="Nombre de quien despacha"
+                                    {...register(
+                                        "dispatcher_id",
+
+                                        {
+                                            required: true,
+                                        }
+                                    )}
+                                >
+                                    <option value="">quien despacha</option>
+                                    {customers.map((customer) => (
+                                        <option
+                                            key={customer?.id}
+                                            value={customer?.id}
+                                        >
+                                            {`${customer?.first_name} ${customer?.last_name}`}
+                                        </option>
+                                    ))}
+                                </Form.Control>
+                                {errors.dispatcher_id && (
+                                    <p className="error-message">
+                                        Quien despacha es requerido.
+                                    </p>
+                                )}
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Fecha</Form.Label>
+                                <Form.Control
+                                    type="date"
+                                    placeholder="Fecha"
+                                    {...register("movement_date", {
+                                        required: true,
+                                    })}
+                                />
+                                {errors.movement_date && (
+                                    <p className="error-message">
+                                        La fecha de movimiento es requerida.
+                                    </p>
+                                )}
+                            </Form.Group>
+                        </div>
+
+                        <Form.Group controlId="description">
+                            <Form.Label>Descripción o Detalles</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows={2}
+                                placeholder="Ingrese una descripción o detalles"
+                                {...register("description", {
+                                    required: true,
+                                })}
+                            />
+                            {errors.description && (
+                                <p className="error-message">
+                                    La descripción o detalles son requeridos.
+                                </p>
+                            )}
+                        </Form.Group>
+                        {/* <div
+                                style={{
+                                    backgroundColor: "white",
+                                    padding: "1rem",
+                                    borderRadius: "1rem",
+                                }}
+                            >
+                                <h5>completar formulario</h5>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "space-around",
+                                        gap: "1rem",
+                                    }}
+                                >
+                                    <div style={{ width: "25%" }}>
+                                        <Form.Group controlId="dispatcher_id">
+                                            <Form.Label>
+                                                Quien despacha
+                                            </Form.Label>
+                                            <Form.Control
+                                                as="select"
+                                                placeholder="Nombre de quien despacha"
+                                                {...register(
+                                                    "dispatcher_id",
+
+                                                    {
+                                                        required: true,
+                                                    }
+                                                )}
+                                            >
+                                                <option value="">
+                                                    quien despacha
+                                                </option>
+                                                {customers.map((customer) => (
+                                                    <option
+                                                        key={customer?.id}
+                                                        value={customer?.id}
+                                                    >
+                                                        {`${customer?.first_name} ${customer?.last_name}`}
+                                                    </option>
+                                                ))}
+                                            </Form.Control>
+                                            {errors.dispatcher_id && (
+                                                <p className="error-message">
+                                                    Quien despacha es requerido.
+                                                </p>
+                                            )}
+                                        </Form.Group>
+                                    </div>
+                                    <div style={{ width: "15%" }}>
+                                        <Form.Group>
+                                            <Form.Label>Fecha</Form.Label>
+                                            <Form.Control
+                                                type="date"
+                                                placeholder="Fecha"
+                                                {...register("movement_date", {
+                                                    required: true,
+                                                })}
+                                            />
+                                            {errors.movement_date && (
+                                                <p className="error-message">
+                                                    La fecha de movimiento es
+                                                    requerida.
+                                                </p>
+                                            )}
+                                        </Form.Group>
+                                    </div>
+                                    <div style={{ width: "50%" }}>
+                                        <Form.Group controlId="description">
+                                            <Form.Label>
+                                                Descripción o Detalles
+                                            </Form.Label>
+                                            <Form.Control
+                                                as="textarea"
+                                                rows={2}
+                                                placeholder="Ingrese una descripción o detalles"
+                                                {...register("description", {
+                                                    required: true,
+                                                })}
+                                            />
+                                            {errors.description && (
+                                                <p className="error-message">
+                                                    La descripción o detalles
+                                                    son requeridos.
+                                                </p>
+                                            )}
+                                        </Form.Group>
+                                    </div>
+                                </div>
+                            </div> */}
+                        <br />
+                        <ul>
+                            <li>
+                                Aumentar almacen{" "}
+                                <Button
+                                    onClick={handleShowWarehouse}
+                                    type="button"
+                                    style={{
+                                        backgroundColor: "transparent",
+                                        border: "none",
+                                    }}
+                                >
+                                    <i className="bx bx-cart-add"></i>
+                                </Button>
+                            </li>
+                            <li>
+                                Agregar nuevo producto{" "}
+                                <Button
+                                    onClick={handleShowProducts}
+                                    type="button"
+                                    style={{
+                                        backgroundColor: "transparent",
+                                        border: "none",
+                                    }}
+                                >
+                                    <i className="bx bx-cart-add"></i>
+                                </Button>
+                            </li>
+                        </ul>
+                        <Col>
+                            <Button type="submit" variant="primary">
+                                Confirmar ingreso
+                            </Button>
+                        </Col>
+                    </Form>
+                </div>
+                {/* <div className="section_forms">
                     <div>
                         <h4>ingreso al almacen</h4>
                         <ul>
@@ -357,76 +579,101 @@ const Warehouse = () => {
                         </Form>
                         <br />
                     </div>
-                </div>
+                </div> */}
                 <div className="section_table">
-                    <Table striped bordered hover>
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Cantidad</th>
-                                <th>Precio</th>
-                                <th>Subtotal</th>
-                                <th>Acciones</th>{" "}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {productsCart.map((product, index) => (
-                                <tr key={index}>
-                                    <td>{product.name}</td>
-                                    <td>{product.quantity}</td>
-                                    <td>{product.price}</td>
-                                    <td>
-                                        {(
-                                            product.quantity * product.price
-                                        ).toFixed(2)}
-                                    </td>
-                                    <td>
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                gap: "1rem",
-                                            }}
-                                        >
-                                            <Button
-                                                variant="success"
-                                                size="sm"
-                                                onClick={() =>
-                                                    incrementQuantityHandler(
-                                                        index
-                                                    )
-                                                }
-                                            >
-                                                <i className="bx bx-plus"></i>
-                                            </Button>
-                                            <Button
-                                                variant="danger"
-                                                size="sm"
-                                                onClick={() =>
-                                                    decrementQuantityHandler(
-                                                        index
-                                                    )
-                                                }
-                                            >
-                                                <i className="bx bx-minus"></i>
-                                            </Button>
-                                            <Button
-                                                variant="warning"
-                                                size="sm"
-                                                onClick={() =>
-                                                    deleteProductHandler(index)
-                                                }
-                                            >
-                                                <i className="bx bxs-trash"></i>
-                                            </Button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                    <h5>Total a pagar: ${total.toFixed(2)}</h5>
-                    {/* <Button type="submit">Realizar compra</Button> */}
+                    {productsCart.length !== 0 ? (
+                        <>
+                            <Table striped bordered hover>
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio</th>
+                                        <th>Subtotal</th>
+                                        <th>Acciones</th>{" "}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {productsCart.map((product, index) => (
+                                        <tr key={index}>
+                                            <td>{product.name}</td>
+                                            <td>{product.quantity}</td>
+                                            <td>{product.price}</td>
+                                            <td>
+                                                {(
+                                                    product.quantity *
+                                                    product.price
+                                                ).toFixed(2)}
+                                            </td>
+                                            <td>
+                                                <div
+                                                    style={{
+                                                        display: "flex",
+                                                        justifyContent:
+                                                            "center",
+                                                        gap: "1rem",
+                                                    }}
+                                                >
+                                                    <Button
+                                                        variant="success"
+                                                        size="sm"
+                                                        onClick={() =>
+                                                            incrementQuantityHandler(
+                                                                index
+                                                            )
+                                                        }
+                                                    >
+                                                        <i className="bx bx-plus"></i>
+                                                    </Button>
+                                                    <Button
+                                                        variant="danger"
+                                                        size="sm"
+                                                        onClick={() =>
+                                                            decrementQuantityHandler(
+                                                                index
+                                                            )
+                                                        }
+                                                    >
+                                                        <i className="bx bx-minus"></i>
+                                                    </Button>
+                                                    <Button
+                                                        variant="warning"
+                                                        size="sm"
+                                                        onClick={() =>
+                                                            deleteProductHandler(
+                                                                index
+                                                            )
+                                                        }
+                                                    >
+                                                        <i className="bx bxs-trash"></i>
+                                                    </Button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                            <h5
+                                style={{
+                                    textAlign: "end",
+                                    paddingRight: "1rem",
+                                }}
+                            >
+                                <strong>
+                                    Total a pagar: ${total?.toFixed(2)}
+                                </strong>
+                            </h5>
+                        </>
+                    ) : (
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <img src="/empty-cart.png" alt="" />
+                        </div>
+                    )}
                 </div>
             </div>
             <ModalWarehouse

@@ -111,14 +111,6 @@ a {
     font-size: 6rem;
     margin-bottom: 1rem;
 }
-/* estilos icono crear cliente */
-.bx-user-plus {
-    font-size: 2rem;
-    color: royalblue;
-}
-.bx-user-plus:hover {
-    color: red;
-}
 
 /* estulos del Dropdown del icono login */
 
@@ -135,6 +127,7 @@ a {
     left: 0; /* Alinea el menú a la izquierda */
     transform: translateX(-100%); /* Desplaza el menú hacia la izquierda */
 }
+/*  */
 
 /* estilos para el componente searcher */
 .searcher {
@@ -149,28 +142,40 @@ a {
     height: 100vh;
     padding: 1rem;
 }
+.btCreateCustomer {
+    background-color: transparent;
+    border: none;
+    color: blue;
+}
 
 .bodySearcher {
     padding: 1rem;
 }
 
-.bodySearcher_input {
+/* .bodySearcher_input {
     display: flex;
     gap: 1rem;
-}
+} */
 
 /* ---------styls pages order------------ */
-
 .container_orders {
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 35% 65%;
 }
-.container_orders .section_forms {
+
+.sidebarOrders {
     display: flex;
     flex-direction: column;
+    /* gap: 1rem; */
     background-color: #f2f2f2;
-    padding: 2rem 3rem 0.5rem 3rem;
+    height: 100%;
+    padding: 1rem 0.5rem;
+}
+.typeMovement_date_form {
+    display: flex;
+    gap: 10px;
+    padding-bottom: 15px;
 }
 .container_orders .section_table {
     padding: 1rem 3rem;
@@ -182,7 +187,72 @@ a {
 .bx-cart-add:hover {
     color: red;
 }
+/* ---------styls pages Warehouse------------ */
+.container_warehouse {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 35% 65%;
+}
+
+.sidebarWarehouse {
+    display: flex;
+    flex-direction: column;
+    /* gap: 1rem; */
+    background-color: #f2f2f2;
+    height: 100%;
+    padding: 1rem 0.5rem;
+}
+.warehouse_date_form {
+    display: flex;
+    gap: 10px;
+    padding-bottom: 15px;
+}
+.container_warehouse .section_table {
+    padding: 1rem 3rem;
+}
+.bx-cart-add {
+    font-size: 2.5rem;
+    color: blue;
+}
+.bx-cart-add:hover {
+    color: red;
+}
 /* --- pages MovementsControl */
-.PagesMovementControl {
-    padding: 1rem 2rem;
+
+.movements {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 20% 80%;
+}
+.sidebarMovement {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: #f2f2f2;
+    height: 100%;
+    padding: 1rem 0.5rem;
+}
+.bodyMovement {
+    padding: 1rem;
+}
+.bx-trash {
+    font-size: 1.5rem;
+    color: blue;
+}
+.bx-trash:hover {
+    color: red;
+}
+
+.selectBranch {
+    width: 100%;
+}
+
+.custom-datepicker {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 2.5rem;
+    width: 100%;
+}
+.selectTypeMovemet {
+    width: 100%;
 }

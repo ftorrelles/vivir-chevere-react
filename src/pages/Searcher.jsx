@@ -43,6 +43,9 @@ const Searcher = () => {
         };
         dispatch(filterCustomersThunk(filterOptions));
     };
+    useEffect(() => {
+        handleFilter();
+    }, [first_name, last_name, identification_document]);
 
     //modal detalles cliente
     const [dataSelected, setDataSelected] = useState({});
@@ -71,7 +74,7 @@ const Searcher = () => {
 
     //pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const customersPerPage = 5; // Cantidad de clientes por página
+    const customersPerPage = 10; // Cantidad de clientes por página
 
     //Calculo de índices del primer y último cliente para cada página
     const indexOfLastCustomer = currentPage * customersPerPage;
@@ -85,7 +88,7 @@ const Searcher = () => {
 
     return (
         <section className="searcher">
-            <div className="sidebar">
+            <div className="sidebarMovement">
                 <div className="infoUserLoged">
                     <h6>
                         Bienvenido{" "}
@@ -95,30 +98,83 @@ const Searcher = () => {
                     <h6>Sede: {loggedUser?.Branches[0]?.name}</h6>
                 </div>{" "}
                 <hr />
-                <br />
-                <h5>Registrar nuevo cliente</h5>
-                <div>
-                    <span>Formulario aqui</span>
-                    <Button
-                        type="button"
-                        style={{
-                            backgroundColor: "transparent",
-                            border: "none",
-                        }}
-                        onClick={handleShowForm}
-                    >
-                        <i className="bx bx-user-plus"></i>
-                    </Button>
+                <div className="sidebarCustomer">
+                    <h5>Clientes</h5>{" "}
+                    <div>
+                        <InputGroup className="mb-3">
+                            <Form.Control
+                                aria-label="Example text with button addon"
+                                aria-describedby="basic-addon1"
+                                id="first_name"
+                                type="text"
+                                value={first_name}
+                                placeholder="Filtrar por nombre"
+                                onChange={(event) =>
+                                    setFirst_name(
+                                        event.target.value.toLowerCase()
+                                    )
+                                }
+                            />
+                        </InputGroup>
+                        <InputGroup className="mb-3">
+                            <Form.Control
+                                aria-label="Example text with button addon"
+                                aria-describedby="basic-addon1"
+                                id="last_name"
+                                type="text"
+                                value={last_name}
+                                placeholder="Filtrar por apellido"
+                                onChange={(event) =>
+                                    setLast_name(
+                                        event.target.value.toLowerCase()
+                                    )
+                                }
+                            />
+                        </InputGroup>
+                        <InputGroup className="mb-3">
+                            <Form.Control
+                                aria-label="Example text with button addon"
+                                aria-describedby="basic-addon1"
+                                id="identification_document"
+                                type="text"
+                                value={identification_document}
+                                placeholder="Filtrar por cédula"
+                                onChange={(event) =>
+                                    setIdentification_document(
+                                        event.target.value.toLowerCase()
+                                    )
+                                }
+                            />
+                        </InputGroup>
+                        {/* <Button
+                            size="sm"
+                            variant="primary"
+                            onClick={handleFilter}
+                        >
+                            Buscar
+                        </Button>
+                       */}
+
+                        <div>
+                            <p>Crear nuevo cliente</p>
+                            <Button
+                                type="button"
+                                className="btCreateCustomer"
+                                onClick={handleShowForm}
+                            >
+                                Formulario aqui +
+                            </Button>
+                        </div>
+                    </div>
                 </div>
                 <hr />
-                <br />
-                <h5>Almacen y facturación</h5>
+                <h5>Detalles almacen</h5>
                 <Link to="/warehouse">Ingreso al almacen</Link>
                 <Link to="/movementControl">Control de movimiento</Link>
             </div>
 
             <div className="bodySearcher">
-                <h2>Buscar cliente</h2>
+                {/* <h2>Buscar cliente</h2>
                 <div className="bodySearcher_input">
                     <Col>
                         <InputGroup className="mb-3">
@@ -186,110 +242,119 @@ const Searcher = () => {
                     <br />
                 </div>
                 <br />
-                <hr />
-                <h3>Resultados</h3>
+                <hr /> */}
+
                 <br />
                 {/* Tabla de clientes */}
                 {currentCustomers && currentCustomers.length > 0 ? (
-                    <Table striped bordered hover responsive>
-                        <thead>
-                            <tr>
-                                <th>Nombre y apellido</th>
-
-                                <th>Número de Identificación</th>
-                                <th>Comprar</th>
-                                <th>Detalles cliente</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentCustomers.map((customer) => (
-                                <tr key={customer.id}>
-                                    <td>
-                                        {customer.first_name}{" "}
-                                        {customer.last_name}
-                                    </td>
-                                    <td>{customer.identification_document}</td>
-                                    <td>
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <Button
-                                                variant="primary"
-                                                size="sm"
-                                                onClick={() =>
-                                                    handleOrder(customer)
-                                                }
-                                            >
-                                                <i className="bx bx-cart"></i>
-                                            </Button>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        {" "}
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <Button
-                                                variant="primary"
-                                                size="sm"
-                                                type="button"
-                                                onClick={() =>
-                                                    handleShow(customer)
-                                                }
-                                            >
-                                                <i className="bx bx-search-alt"></i>
-                                            </Button>
-                                        </div>
-                                    </td>
+                    <>
+                        <h3>Resultados</h3>
+                        <Table striped bordered hover responsive>
+                            <thead>
+                                <tr>
+                                    <th>Nombre y apellido</th>
+                                    <th>Identificación</th>
+                                    <th>Comprar</th>
+                                    <th>Detalles cliente</th>
                                 </tr>
+                            </thead>
+                            <tbody>
+                                {currentCustomers.map((customer) => (
+                                    <tr key={customer.id}>
+                                        <td>
+                                            {customer.first_name}{" "}
+                                            {customer.last_name}
+                                        </td>
+                                        <td>
+                                            {customer.identification_document}
+                                        </td>
+                                        <td>
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                }}
+                                            >
+                                                <Button
+                                                    variant="primary"
+                                                    size="sm"
+                                                    onClick={() =>
+                                                        handleOrder(customer)
+                                                    }
+                                                >
+                                                    <i className="bx bx-cart"></i>
+                                                </Button>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {" "}
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                }}
+                                            >
+                                                <Button
+                                                    variant="primary"
+                                                    size="sm"
+                                                    type="button"
+                                                    onClick={() =>
+                                                        handleShow(customer)
+                                                    }
+                                                >
+                                                    <i className="bx bx-search-alt"></i>
+                                                </Button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                        <Pagination className="justify-content-center">
+                            <Pagination.Prev
+                                onClick={() =>
+                                    setCurrentPage((prevPage) =>
+                                        prevPage > 1 ? prevPage - 1 : prevPage
+                                    )
+                                }
+                                disabled={currentPage === 1}
+                            />
+                            {Array.from({
+                                length: Math.ceil(
+                                    customers.length / customersPerPage
+                                ),
+                            }).map((_, index) => (
+                                <Pagination.Item
+                                    key={index}
+                                    active={index + 1 === currentPage}
+                                    onClick={() => paginate(index + 1)}
+                                >
+                                    {index + 1}
+                                </Pagination.Item>
                             ))}
-                        </tbody>
-                    </Table>
+                            <Pagination.Next
+                                onClick={() =>
+                                    setCurrentPage((prevPage) =>
+                                        prevPage <
+                                        customers.length / customersPerPage
+                                            ? prevPage + 1
+                                            : prevPage
+                                    )
+                                }
+                                disabled={
+                                    currentPage ===
+                                    Math.ceil(
+                                        customers.length / customersPerPage
+                                    )
+                                }
+                            />
+                        </Pagination>
+                    </>
                 ) : (
-                    <p>No se encontraron resultados.</p>
+                    <img src="/noEncontrado.jpg" alt="No encontrado" />
                 )}
-                <Pagination className="justify-content-center">
-                    <Pagination.Prev
-                        onClick={() =>
-                            setCurrentPage((prevPage) =>
-                                prevPage > 1 ? prevPage - 1 : prevPage
-                            )
-                        }
-                        disabled={currentPage === 1}
-                    />
-                    {Array.from({
-                        length: Math.ceil(customers.length / customersPerPage),
-                    }).map((_, index) => (
-                        <Pagination.Item
-                            key={index}
-                            active={index + 1 === currentPage}
-                            onClick={() => paginate(index + 1)}
-                        >
-                            {index + 1}
-                        </Pagination.Item>
-                    ))}
-                    <Pagination.Next
-                        onClick={() =>
-                            setCurrentPage((prevPage) =>
-                                prevPage < customers.length / customersPerPage
-                                    ? prevPage + 1
-                                    : prevPage
-                            )
-                        }
-                        disabled={
-                            currentPage ===
-                            Math.ceil(customers.length / customersPerPage)
-                        }
-                    />
-                </Pagination>
             </div>
 
             <ShowDetailsCustomer
