@@ -142,6 +142,12 @@ a {
     height: 100vh;
     padding: 1rem;
 }
+.linkSidbar {
+    color: #325d88;
+}
+.linkSidbar:hover {
+    color: red;
+}
 .btCreateCustomer {
     background-color: transparent;
     border: none;

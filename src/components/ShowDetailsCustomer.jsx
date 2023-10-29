@@ -14,6 +14,7 @@ const ShowDetailsCustomer = ({ show, handleClose, data }) => {
         setShowForm(true);
         handleClose();
     };
+    console.log(data);
     return (
         <>
             <Modal className="modal-lg" show={show} onHide={handleClose}>
@@ -36,7 +37,8 @@ const ShowDetailsCustomer = ({ show, handleClose, data }) => {
                             {data?.TypeCustomer?.name}
                         </li>
                         <li>
-                            <strong>Auspiciador: </strong> {data?.ref}
+                            <strong>Auspiciador (Padre): </strong>{" "}
+                            {`${data?.father2?.first_name} ${data?.father2?.last_name}`}
                         </li>
                         <li>
                             <strong>Correo Electronico: </strong> {data.email}

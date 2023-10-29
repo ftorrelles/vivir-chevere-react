@@ -17,6 +17,7 @@ import CustomerForm from "../components/CustomerForm";
 import { useNavigate } from "react-router-dom";
 import { setSelectedCustomerForMovements } from "../store/slices/selectedCustomerForMovements.slice";
 import { Link } from "react-router-dom";
+import ModalCreateProduct from "../components/ModalCreateProduct";
 
 const Searcher = () => {
     const navigate = useNavigate();
@@ -72,6 +73,12 @@ const Searcher = () => {
     const handleCloseForm = () => setShowForm(false);
     const handleShowForm = () => setShowForm(true);
 
+    //modal crear producto
+    //Show form
+    const [showModalCreateProduct, setShowModalCreateProduct] = useState(false);
+    const handleCloseCreateProduct = () => setShowModalCreateProduct(false);
+    const handleShowCreateProduct = () => setShowModalCreateProduct(true);
+
     //pagination
     const [currentPage, setCurrentPage] = useState(1);
     const customersPerPage = 10; // Cantidad de clientes por página
@@ -97,7 +104,6 @@ const Searcher = () => {
                     <h6>Tipo de cuenta: {loggedUser?.Role?.name_role}</h6>
                     <h6>Sede: {loggedUser?.Branches[0]?.name}</h6>
                 </div>{" "}
-                <hr />
                 <div className="sidebarCustomer">
                     <h5>Clientes</h5>{" "}
                     <div>
@@ -167,10 +173,21 @@ const Searcher = () => {
                         </div>
                     </div>
                 </div>
-                <hr />
-                <h5>Detalles almacen</h5>
-                <Link to="/warehouse">Ingreso al almacen</Link>
-                <Link to="/movementControl">Control de movimiento</Link>
+                <Link className="linkSidbar" to="/warehouse">
+                    Ingreso al almacen
+                </Link>
+                <Link className="linkSidbar" to="/movementControl">
+                    Control de movimiento
+                </Link>
+                <div>
+                    <Button
+                        type="button"
+                        className="btCreateCustomer"
+                        onClick={handleShowCreateProduct}
+                    >
+                        Crear nuevo producto
+                    </Button>
+                </div>
             </div>
 
             <div className="bodySearcher">
@@ -365,6 +382,10 @@ const Searcher = () => {
             <CustomerForm
                 showForm={showForm}
                 handleCloseForm={handleCloseForm}
+            />
+            <ModalCreateProduct
+                showModalCreateProduct={showModalCreateProduct}
+                handleCloseCreateProduct={handleCloseCreateProduct}
             />
         </section>
     );

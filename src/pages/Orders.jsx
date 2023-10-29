@@ -212,7 +212,7 @@ const Orders = () => {
                         </p>
                     </div> */}
                     <hr />
-                    <h5>completar formulario</h5>
+                    <h5>Completar formulario</h5>
                     <Form onSubmit={handleSubmit(submit)}>
                         <input
                             type="hidden"
