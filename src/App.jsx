@@ -11,6 +11,7 @@ import Orders from "./pages/Orders";
 import MovementControl from "./pages/MovementControl";
 import Warehouse from "./pages/Warehouse";
 import Products from "./pages/Products";
+import BalanceBranches from "./pages/BalanceBranches";
 import NavBar from "./components/NavBar";
 import Loader from "./components/Loader";
 import ProtectedRoutes from "./components/ProtectedRoutes";
@@ -74,6 +75,10 @@ function App() {
                         />
                         <Route path="/warehouse" element={<Warehouse />} />
                         <Route path="/products" element={<Products />} />
+                        <Route
+                            path="/balancebranches"
+                            element={<BalanceBranches />}
+                        />
                     </Route>
                 </Routes>
             </div>

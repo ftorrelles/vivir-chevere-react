@@ -28,11 +28,8 @@ const Searcher = () => {
     const [identification_document, setIdentification_document] = useState("");
 
     // Acceder a los clientes desde el estado de Redux.
-
     const loggedUser = useSelector((state) => state.loggedUser);
     const customers = useSelector((state) => state.customers);
-
-    console.log(loggedUser);
 
     useEffect(() => {
         dispatch(getCustomersThunk()); // Cargar los datos iniciales de los clientes
@@ -174,6 +171,9 @@ const Searcher = () => {
                 </Link>
                 <Link className="linkSidbar" to="/products">
                     Productos
+                </Link>
+                <Link className="linkSidbar" to="/balanceBranches">
+                    Saldo sede
                 </Link>
                 {loggedUser?.role_id == 3 ? (
                     <div>

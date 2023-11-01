@@ -33,6 +33,9 @@ const NavBar = () => {
     const handleMovements = () => {
         navigate("/movementControl");
     };
+    const handleBalances = () => {
+        navigate("/balanceBranches");
+    };
     return (
         <>
             <Navbar bg="primary" variant="dark">
@@ -85,6 +88,9 @@ const NavBar = () => {
                                             onClick={handleMovements}
                                         >
                                             Control de movimientos
+                                        </Dropdown.Item>
+                                        <Dropdown.Item onClick={handleBalances}>
+                                            Saldo sede
                                         </Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>

@@ -121,7 +121,11 @@ const Products = () => {
                                     <td>{`${product?.measure} ${product?.Specification?.name}`}</td>
                                     <td>{product?.price_general}</td>
                                     <td>{product?.price_afiliate}</td>
-                                    <td>{product?.promotion_type}</td>
+                                    <td>
+                                        {product?.promotion_type !== 1
+                                            ? "sin Promoción"
+                                            : "20%"}
+                                    </td>
                                     <td style={{ padding: "0" }}>
                                         <Button
                                             style={{
@@ -158,7 +162,11 @@ const Products = () => {
                                     <td>{`${product?.measure} ${product?.Specification?.name}`}</td>
                                     <td>{product?.price_general}</td>
                                     <td>{product?.price_afiliate}</td>
-                                    <td>{product?.promotion_type}</td>
+                                    <td>
+                                        {product?.promotion_type !== 1
+                                            ? "sin Promoción"
+                                            : "20%"}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

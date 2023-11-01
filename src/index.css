@@ -189,6 +189,23 @@ a {
 .bodyProduct {
     padding: 1rem;
 }
+/* estilos para el componente Balances */
+.Balances {
+    display: grid;
+    grid-template-columns: 20% 80%;
+}
+.sidebarBalances {
+    display: flex;
+    flex-direction: column;
+    /* gap: 1rem; */
+    background-color: #f2f2f2;
+    height: 100vh;
+    padding: 1rem;
+}
+
+.bodyBalances {
+    padding: 1rem;
+}
 /* ---------styls pages order------------ */
 .container_orders {
     height: 100vh;
