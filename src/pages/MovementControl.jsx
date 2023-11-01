@@ -151,6 +151,8 @@ const MovementControl = () => {
     // función para cambiar de página
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+    // console.log(movements);
+
     return (
         <section className="movements">
             <div className="sidebarMovement">

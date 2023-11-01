@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Button, Modal } from "react-bootstrap";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -8,11 +8,33 @@ const ModalMovementDetail = ({
     handleCloseMovementDetail,
     dataMovemet,
 }) => {
+    // console.log(dataMovemet);
+    const [totalWithoutPromotion, setTotalWithoutPromotion] = useState(0);
+    // Calcula el total de los subtotales en función de productsCart
+    useEffect(() => {
+        const calculateTotal = () => {
+            if (dataMovemet && dataMovemet.Movement_items) {
+                const subtotal = dataMovemet.Movement_items.reduce(
+                    (acc, product) => acc + parseFloat(product.total_line),
+                    0
+                ).toFixed(2);
+                setTotalWithoutPromotion(subtotal);
+            }
+        };
+        calculateTotal();
+    }, [dataMovemet]);
+
     const printMovement = (data) => {
         const doc = new jsPDF();
         doc.setFontSize(10);
         doc.text("Detalles del Movimiento", 80, 10);
-        doc.text(`Fecha: ${dataMovemet?.movement_date?.slice(0, 10)}`, 10, 30);
+        doc.text(
+            `Fecha: ${dataMovemet?.movement_date?.slice(0, 10)}  |  Sede: ${
+                dataMovemet?.Branch?.name
+            }  |  Categoria: ${dataMovemet?.Type_movement?.name}`,
+            10,
+            30
+        );
         doc.text(
             `Quien despacha: ${`${dataMovemet?.dispatcher?.first_name} ${dataMovemet?.dispatcher?.last_name}`}`,
             10,
@@ -23,9 +45,18 @@ const ModalMovementDetail = ({
             10,
             50
         );
-        doc.text(`Sede: ${dataMovemet?.Branch?.name}`, 10, 60);
-        doc.text(`Categoria: ${dataMovemet?.Type_movement?.name}`, 10, 70);
-        doc.text(`Total: ${dataMovemet.total}`, 10, 80);
+        // doc.text(`Sede: ${dataMovemet?.Branch?.name}`, 10, 60);
+        // doc.text(`Categoria: ${dataMovemet?.Type_movement?.name}`, 10, 70);
+        doc.text(`Total: ${totalWithoutPromotion}`, 10, 60);
+        doc.text(
+            `Descuento: ${(totalWithoutPromotion - dataMovemet.total).toFixed(
+                2
+            )}`,
+            10,
+            70
+        );
+        doc.text(`Total a pagar: ${dataMovemet.total}`, 10, 80);
+
         autoTable(doc, {
             theme: "grid",
             head: [["Cant", "Producto", "P.unit", "Total"]],
@@ -44,7 +75,7 @@ const ModalMovementDetail = ({
 
         doc.save(`Movimiento_${dataMovemet?.id}`);
     };
-
+    // console.log(totalWithoutPromotion);
     return (
         <>
             <Modal
@@ -105,15 +136,42 @@ const ModalMovementDetail = ({
                                     )}
                                 </tbody>
                             </Table>
-                            <strong
+
+                            <h6
                                 style={{
                                     display: "flex",
                                     justifyContent: "flex-end",
                                     paddingRight: "2rem",
                                 }}
                             >
-                                Total: {dataMovemet.total}
-                            </strong>
+                                <strong>Total: {totalWithoutPromotion}</strong>
+                            </h6>
+                            <h6
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "flex-end",
+                                    paddingRight: "2rem",
+                                }}
+                            >
+                                <strong>
+                                    Descuento:{" "}
+                                    {(
+                                        totalWithoutPromotion -
+                                        dataMovemet.total
+                                    ).toFixed(2)}
+                                </strong>
+                            </h6>
+                            <h6
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "flex-end",
+                                    paddingRight: "2rem",
+                                }}
+                            >
+                                <strong>
+                                    Total a pagar: {dataMovemet.total}
+                                </strong>
+                            </h6>
                         </div>
                     )}
                 </Modal.Body>

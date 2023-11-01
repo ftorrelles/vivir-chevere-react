@@ -32,6 +32,8 @@ const Searcher = () => {
     const loggedUser = useSelector((state) => state.loggedUser);
     const customers = useSelector((state) => state.customers);
 
+    console.log(loggedUser);
+
     useEffect(() => {
         dispatch(getCustomersThunk()); // Cargar los datos iniciales de los clientes
     }, [dispatch]);
@@ -152,15 +154,6 @@ const Searcher = () => {
                                 }
                             />
                         </InputGroup>
-                        {/* <Button
-                            size="sm"
-                            variant="primary"
-                            onClick={handleFilter}
-                        >
-                            Buscar
-                        </Button>
-                       */}
-
                         <div>
                             <p>Crear nuevo cliente</p>
                             <Button
@@ -179,88 +172,23 @@ const Searcher = () => {
                 <Link className="linkSidbar" to="/movementControl">
                     Control de movimiento
                 </Link>
-                <div>
-                    <Button
-                        type="button"
-                        className="btCreateCustomer"
-                        onClick={handleShowCreateProduct}
-                    >
-                        Crear nuevo producto
-                    </Button>
-                </div>
+                <Link className="linkSidbar" to="/products">
+                    Productos
+                </Link>
+                {loggedUser?.role_id == 3 ? (
+                    <div>
+                        <Button
+                            type="button"
+                            className="btCreateCustomer"
+                            onClick={handleShowCreateProduct}
+                        >
+                            Crear nuevo producto
+                        </Button>
+                    </div>
+                ) : null}
             </div>
 
             <div className="bodySearcher">
-                {/* <h2>Buscar cliente</h2>
-                <div className="bodySearcher_input">
-                    <Col>
-                        <InputGroup className="mb-3">
-                            <Form.Control
-                                aria-label="Example text with button addon"
-                                aria-describedby="basic-addon1"
-                                id="first_name"
-                                type="text"
-                                value={first_name}
-                                placeholder="Filtrar por nombre"
-                                onChange={(event) =>
-                                    setFirst_name(
-                                        event.target.value.toLowerCase()
-                                    )
-                                }
-                            />
-                        </InputGroup>
-                    </Col>
-                    <Col>
-                        <InputGroup className="mb-3">
-                            <Form.Control
-                                aria-label="Example text with button addon"
-                                aria-describedby="basic-addon1"
-                                id="last_name"
-                                type="text"
-                                value={last_name}
-                                placeholder="Filtrar por apellido"
-                                onChange={(event) =>
-                                    setLast_name(
-                                        event.target.value.toLowerCase()
-                                    )
-                                }
-                            />
-                        </InputGroup>
-                    </Col>
-                </div>
-
-                <InputGroup className="mb-3">
-                    <Form.Control
-                        aria-label="Example text with button addon"
-                        aria-describedby="basic-addon1"
-                        id="identification_document"
-                        type="text"
-                        value={identification_document}
-                        placeholder="Filtrar por cédula"
-                        onChange={(event) =>
-                            setIdentification_document(
-                                event.target.value.toLowerCase()
-                            )
-                        }
-                    />
-                </InputGroup>
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <Button size="sm" variant="primary" onClick={handleFilter}>
-                        Buscar
-                    </Button>
-                    <br />
-                    <br />
-                    <br />
-                </div>
-                <br />
-                <hr /> */}
-
                 <br />
                 {/* Tabla de clientes */}
                 {currentCustomers && currentCustomers.length > 0 ? (

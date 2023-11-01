@@ -24,6 +24,15 @@ const NavBar = () => {
         dispatch(setloggedUser(null));
         navigate("/password_recovery");
     };
+    const handleProducts = () => {
+        navigate("/products");
+    };
+    const handleBranch = () => {
+        navigate("/warehouse");
+    };
+    const handleMovements = () => {
+        navigate("/movementControl");
+    };
     return (
         <>
             <Navbar bg="primary" variant="dark">
@@ -64,6 +73,18 @@ const NavBar = () => {
                                         </Dropdown.Item>
                                         <Dropdown.Item onClick={handleLogout}>
                                             Cerrar sesión
+                                        </Dropdown.Item>
+                                        <hr />
+                                        <Dropdown.Item onClick={handleProducts}>
+                                            Productos
+                                        </Dropdown.Item>
+                                        <Dropdown.Item onClick={handleBranch}>
+                                            Ingreso al almacen
+                                        </Dropdown.Item>
+                                        <Dropdown.Item
+                                            onClick={handleMovements}
+                                        >
+                                            Control de movimientos
                                         </Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>

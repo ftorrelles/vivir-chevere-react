@@ -10,6 +10,7 @@ import PasswordRecoveryStep2 from "./pages/PasswordRecoveryStep2";
 import Orders from "./pages/Orders";
 import MovementControl from "./pages/MovementControl";
 import Warehouse from "./pages/Warehouse";
+import Products from "./pages/Products";
 import NavBar from "./components/NavBar";
 import Loader from "./components/Loader";
 import ProtectedRoutes from "./components/ProtectedRoutes";
@@ -72,6 +73,7 @@ function App() {
                             element={<MovementControl />}
                         />
                         <Route path="/warehouse" element={<Warehouse />} />
+                        <Route path="/products" element={<Products />} />
                     </Route>
                 </Routes>
             </div>

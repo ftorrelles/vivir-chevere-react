@@ -1,6 +1,6 @@
 import { Button, Table, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { setAddToCart } from "../store/slices/addToCart.slice";
+// import { setAddToCart } from "../store/slices/addToCart.slice";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { setIsLoading } from "../store/slices/isLoading.slice";

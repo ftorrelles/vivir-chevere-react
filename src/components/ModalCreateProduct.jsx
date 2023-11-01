@@ -1,13 +1,19 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Table, Button, Modal, Form, Row, Col } from "react-bootstrap";
+import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import InputGroup from "react-bootstrap/InputGroup";
+import { useSelector, useDispatch } from "react-redux";
+import { setSelectedProduct } from "../store/slices/selectedProduct.slice";
 
 const ModalCreateProduct = ({
     showModalCreateProduct,
     handleCloseCreateProduct,
 }) => {
+    const dispatch = useDispatch();
+    //obtener datos del producto seleccionado
+    const selectedProduct = useSelector((state) => state.selectedProduct);
+    // console.log(selectedProduct);
     //funciones de de react hook form
     const {
         register,
@@ -21,7 +27,7 @@ const ModalCreateProduct = ({
         axios
             .get("http://localhost:3000/api/v1/specifications")
             .then((response) => {
-                console.log(response.data.specifications);
+                // console.log(response.data.specifications);
                 setSpecifications(response.data.specifications);
             });
     };
@@ -29,24 +35,78 @@ const ModalCreateProduct = ({
         getSpecifications();
     }, []);
 
+    //obtencion de los datos del cliente a modificar
+    useEffect(() => {
+        if (selectedProduct) {
+            setValue("id", selectedProduct.id);
+            setValue("name", selectedProduct.name);
+            setValue("measure", selectedProduct.measure);
+            setValue("specification_id", selectedProduct.specification_id);
+            setValue("price_afiliate", selectedProduct.price_afiliate);
+            setValue("price_general", selectedProduct.price_general);
+            setValue("promotion_type", selectedProduct.promotion_type);
+            setValue("status", selectedProduct.status);
+        } else {
+            reset(resetForm());
+        }
+    }, [selectedProduct, setValue]);
+
     const submit = async (data) => {
-        const newData = {
-            name: data.name,
-            measure: data.measure,
-            specification_id: Number(data.specification_id),
-            price_afiliate: data.price_afiliate,
-            price_general: data.price_general,
-            status: true,
-        };
-        const formDataWithDefaults = {
-            ...newData,
-        };
-        axios
-            .post("http://localhost:3000/api/v1/products", formDataWithDefaults)
-            .then((response) => {
-                console.log(response.data);
-            })
-            .catch((error) => console.error(error));
+        const allowedFieldsForUpdate = [
+            "id",
+            "name",
+            "measure",
+            "specification_id",
+            "price_afiliate",
+            "price_general",
+            "promotion_type",
+            "status",
+        ];
+
+        const formDataForUpdate = Object.keys(data)
+            .filter((field) => allowedFieldsForUpdate.includes(field))
+            .reduce((obj, key) => {
+                obj[key] = data[key];
+                return obj;
+            }, {});
+        if (selectedProduct) {
+            axios
+                .patch(
+                    `http://localhost:3000/api/v1/products/${formDataForUpdate.id}`,
+                    formDataForUpdate
+                )
+                .then((response) => {
+                    dispatch(setSelectedProduct(null));
+                    console.log(response);
+                })
+                .catch((error) => console.error(error));
+        } else {
+            const newData = {
+                name: data.name,
+                measure: data.measure,
+                specification_id: Number(data.specification_id),
+                price_afiliate: data.price_afiliate,
+                price_general: data.price_general,
+                promotion_type: data.promotion_type,
+                status: true,
+            };
+            console.log(newData);
+            const formDataWithDefaults = {
+                ...newData,
+            };
+            console.log(formDataWithDefaults);
+            axios
+                .post(
+                    "http://localhost:3000/api/v1/products",
+                    formDataWithDefaults
+                )
+                .then((response) => {
+                    console.log(response.data);
+                })
+                .catch((error) => console.error(error));
+        }
+        console.log(data);
+
         reset(resetForm());
         handleCloseCreateProduct();
     };
@@ -58,8 +118,10 @@ const ModalCreateProduct = ({
             specification_id: "",
             price_afiliate: "",
             price_general: "",
+            promotion_type: "",
         };
     };
+
     return (
         <>
             <Modal
@@ -183,6 +245,23 @@ const ModalCreateProduct = ({
                                 </p>
                             )}
                         </InputGroup>
+                        <Form.Group style={{ display: "flex" }}>
+                            <Form.Control
+                                placeholder="id de promocion..."
+                                aria-describedby="basic-addon2"
+                                {...register("promotion_type", {
+                                    required: true,
+                                })}
+                            />
+                            <InputGroup.Text id="basic-addon2">
+                                id promoción
+                            </InputGroup.Text>
+                            {errors.promition_type && (
+                                <p className="error-message">
+                                    El tipo de promocion es necesario.
+                                </p>
+                            )}
+                        </Form.Group>
                         <hr />
                         <Row>
                             <Col
@@ -204,10 +283,10 @@ const ModalCreateProduct = ({
                                     justifyContent: "center",
                                 }}
                             >
-                                <Button type="submit" variant="primary">
+                                {/* <Button type="submit" variant="primary">
                                     Crear
-                                </Button>
-                                {/* {customerSelected ? (
+                                </Button> */}
+                                {selectedProduct ? (
                                     <Button type="submit" variant="primary">
                                         Actualizar
                                     </Button>
@@ -215,7 +294,7 @@ const ModalCreateProduct = ({
                                     <Button type="submit" variant="primary">
                                         Crear
                                     </Button>
-                                )} */}
+                                )}
                             </Col>
                         </Row>
                     </Form>

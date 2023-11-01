@@ -6,6 +6,7 @@ import statusEmailCodeSlice from "./slices/statusEmailCode.slice";
 import loggedUserSlice from "./slices/loggedUser.slice";
 import selectedCustomerForMovementsSlice from "./slices/selectedCustomerForMovements.slice";
 import addToCartSlice from "./slices/addToCart.slice";
+import selectedProductSlice from "./slices/selectedProduct.slice";
 
 export default configureStore({
     reducer: {
@@ -16,5 +17,6 @@ export default configureStore({
         loggedUser: loggedUserSlice,
         selectedCustomerForMovements: selectedCustomerForMovementsSlice,
         addToCart: addToCartSlice,
+        selectedProduct: selectedProductSlice,
     },
 });

@@ -13,10 +13,11 @@ const Orders = () => {
     const navigate = useNavigate();
     const [productsCart, setProductsCart] = useState([]);
     const [typeMovements, setTypeMovements] = useState([]);
+    const [filteredTypeMovemet, setFilteredTypeMovemet] = useState([]);
     const [warehouses, setWarehouses] = useState([]);
     const [filteredWarehouses, setFilteredWarehouses] = useState([]);
     const [total, setTotal] = useState(0);
-    // const [isFormValid, setIsFormValid] = useState(false);
+    const [totalWithPromotion, setTotalWithPromotion] = useState(0);
 
     const {
         register,
@@ -30,6 +31,7 @@ const Orders = () => {
     );
     const loggedUser = useSelector((state) => state.loggedUser);
     const addToCart = useSelector((state) => state.addToCart);
+    // console.log(addToCart);
 
     // Obtener tipos de movimientos y almacenes
     const getTypeMovements = () => {
@@ -69,6 +71,7 @@ const Orders = () => {
         setShowWarehouse(true);
     };
 
+    // console.log(addToCart);
     // Agregar productos al carrito
     useEffect(() => {
         if (addToCart && Object.keys(addToCart).length > 0) {
@@ -78,6 +81,37 @@ const Orders = () => {
             const availableQuantity = addToCart?.quantity || 0;
 
             if (!productExists && availableQuantity > 0) {
+                // Obtener el valor de promotion_type del producto
+                const promotionType = addToCart?.Product?.promotion_type;
+                console.log(promotionType);
+                // Obtener el tipo de cliente
+                const customerType =
+                    selectedCustomerForMovements?.TypeCustomer?.name;
+                console.log(customerType);
+
+                let newprice;
+
+                if (customerType === "Afiliado") {
+                    // Si el cliente es afiliado, aplicamos las siguientes condiciones
+                    if (promotionType === 1) {
+                        // Si promotionType es 1, aplicamos un 20% de descuento
+                        newprice = addToCart?.Product?.price_afiliate * 0.8;
+                    } else if (promotionType === 2) {
+                        // Si promotionType es 2, calculamos 2 productos por el precio de 1
+                        newprice = addToCart?.Product?.price_afiliate / 2;
+                    } else if (promotionType === 3) {
+                        // Si promotionType es 3, establecemos un precio fijo de $5.00
+                        newprice = 5.0;
+                    } else {
+                        // Si promotionType no es 1, 2 o 3, el precio se mantiene sin descuento
+                        newprice = addToCart?.Product?.price_afiliate;
+                    }
+                } else {
+                    // Si el cliente no es afiliado, aplicamos el precio general
+                    newprice = addToCart?.Product?.price_general;
+                }
+                console.log(newprice);
+
                 let newCart = {
                     product_id: addToCart.product_id,
                     name: addToCart?.Product?.name,
@@ -93,6 +127,7 @@ const Orders = () => {
                             ? Number(addToCart?.Product?.price_afiliate)
                             : Number(addToCart?.Product?.price_general)) * 1,
                     availableQuantity,
+                    promotion_price: newprice,
                 };
 
                 setProductsCart((prevProducts) => [...prevProducts, newCart]);
@@ -147,6 +182,15 @@ const Orders = () => {
             setTotal(subtotal);
         };
         calculateTotal();
+        const calculateTotal2 = () => {
+            const subtotal = productsCart?.reduce(
+                (acc, product) =>
+                    acc + product.quantity * Number(product.promotion_price),
+                0
+            );
+            setTotalWithPromotion(subtotal);
+        };
+        calculateTotal2();
     }, [productsCart]);
 
     // Función para enviar el formulario
@@ -157,7 +201,7 @@ const Orders = () => {
             const dataToSend = {
                 ...data,
                 status: "true",
-                total,
+                total: totalWithPromotion,
                 movement_items: productsCart.map((product) => ({
                     product_id: product.product_id,
                     quantity: product.quantity,
@@ -184,6 +228,19 @@ const Orders = () => {
             );
         }
     };
+
+    //funcion para filtrar los tipo de movimientos aceptados en esta pagina
+    useEffect(() => {
+        setFilteredTypeMovemet(
+            typeMovements.filter(
+                (typeMovement) => typeMovement.id !== 2 && typeMovement.id !== 5
+            )
+        );
+    }, [typeMovements]);
+    // console.log(filteredTypeMovemet);
+    // console.log(productsCart);
+    // console.log(total);
+    // console.log(totalWithPromotion);
     return (
         <>
             <div className="container_orders">
@@ -191,26 +248,15 @@ const Orders = () => {
                     <ul>
                         <li>Sede: {loggedUser?.Branches[0]?.name}</li>
                         <li>
-                            Quien recibe:{" "}
-                            {`${selectedCustomerForMovements?.first_name} ${selectedCustomerForMovements?.last_name} (${selectedCustomerForMovements?.TypeCustomer?.name})`}
+                            Quien despacha:{" "}
+                            {`${loggedUser?.first_name} ${loggedUser?.last_name} (${loggedUser?.TypeCustomer?.name})`}
                         </li>
                         <li>
                             Quien recibe:{" "}
                             {`${selectedCustomerForMovements?.first_name} ${selectedCustomerForMovements?.last_name} (${selectedCustomerForMovements?.TypeCustomer?.name})`}
                         </li>
                     </ul>
-                    {/* <div>
-                        <p></p>
-                        <p>
-                            Quien despacha:{" "}
-                            {`${loggedUser?.first_name} ${loggedUser?.last_name} (${loggedUser?.Role?.name_role})`}
-                        </p>
-                        <p>
-                            {" "}
-                            Quien recibe:{" "}
-                            {`${selectedCustomerForMovements?.first_name} ${selectedCustomerForMovements?.last_name} (${selectedCustomerForMovements?.TypeCustomer?.name})`}
-                        </p>
-                    </div> */}
+
                     <hr />
                     <h5>Completar formulario</h5>
                     <Form onSubmit={handleSubmit(submit)}>
@@ -245,7 +291,7 @@ const Orders = () => {
                                     <option value="">
                                         Seleccione un tipo de movimiento
                                     </option>
-                                    {typeMovements.map((typeMovement) => (
+                                    {filteredTypeMovemet.map((typeMovement) => (
                                         <option
                                             key={typeMovement?.id}
                                             value={typeMovement?.id}
@@ -276,7 +322,6 @@ const Orders = () => {
                                 )}
                             </Form.Group>
                         </div>
-
                         <Form.Group controlId="description">
                             <Form.Label>Descripción o Detalles</Form.Label>
                             <Form.Control
@@ -293,97 +338,6 @@ const Orders = () => {
                                 </p>
                             )}
                         </Form.Group>
-                        {/* <div
-                            style={{
-                                backgroundColor: "white",
-                                padding: "1rem",
-                                borderRadius: "1rem",
-                            }}
-                        >
-                            <h5>completar formulario</h5>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "space-around",
-                                    gap: "1rem",
-                                }}
-                            >
-                                <div style={{ width: "25%" }}>
-                                    <Form.Group controlId="typemovementId">
-                                        <Form.Label>
-                                            Tipo de movimiento
-                                        </Form.Label>
-                                        <Form.Control
-                                            as="select"
-                                            placeholder="Tipo de movimiento"
-                                            {...register("typemovement_id", {
-                                                required: true,
-                                            })}
-                                        >
-                                            <option value="">
-                                                Seleccione un tipo de movimiento
-                                            </option>
-                                            {typeMovements.map(
-                                                (typeMovement) => (
-                                                    <option
-                                                        key={typeMovement?.id}
-                                                        value={typeMovement?.id}
-                                                    >
-                                                        {typeMovement?.name}
-                                                    </option>
-                                                )
-                                            )}
-                                        </Form.Control>
-                                        {errors.typemovementId && (
-                                            <p className="error-message">
-                                                El tipo de movimiento es
-                                                requerido.
-                                            </p>
-                                        )}
-                                    </Form.Group>
-                                </div>
-                                <div style={{ width: "15%" }}>
-                                    <Form.Group>
-                                        <Form.Label>Fecha</Form.Label>
-                                        <Form.Control
-                                            type="date"
-                                            placeholder="Fecha"
-                                            {...register("movement_date", {
-                                                required: true,
-                                            })}
-                                        />
-                                        {errors.movement_date && (
-                                            <p className="error-message">
-                                                La fecha de movimiento es
-                                                requerida.
-                                            </p>
-                                        )}
-                                    </Form.Group>
-                                </div>
-                                <div style={{ width: "50%" }}>
-                                    <Form.Group controlId="description">
-                                        <Form.Label>
-                                            Descripción o Detalles
-                                        </Form.Label>
-                                        <Form.Control
-                                            as="textarea"
-                                            rows={2}
-                                            placeholder="Ingrese una descripción o detalles"
-                                            {...register("description", {
-                                                required: true,
-                                            })}
-                                        />
-                                        {errors.description && (
-                                            <p className="error-message">
-                                                La descripción o detalles son
-                                                requeridos.
-                                            </p>
-                                        )}
-                                    </Form.Group>
-                                </div>
-                            </div>
-                        </div>
-                        <br /> */}
                         <h6>
                             Agregar producto{" "}
                             <Button
@@ -407,166 +361,6 @@ const Orders = () => {
                         </Col>
                     </Form>
                 </div>
-                {/* <div className="section_forms">
-                    <div>
-                        <h4>Detalles de la operación</h4>
-                        <ul>
-                            <li>Sede: {loggedUser?.Branches[0]?.name}</li>
-                            <li>
-                                Quien despacha:{" "}
-                                {`${loggedUser?.first_name} ${loggedUser?.last_name} (${loggedUser?.Role?.name_role})`}
-                            </li>
-                            <li>
-                                Quien recibe:{" "}
-                                {`${selectedCustomerForMovements?.first_name} ${selectedCustomerForMovements?.last_name} (${selectedCustomerForMovements?.TypeCustomer?.name})`}
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <Form onSubmit={handleSubmit(submit)}>
-                            <input
-                                type="hidden"
-                                {...register("dispatcher_id", {
-                                    value: loggedUser?.id,
-                                })}
-                            />
-                            <input
-                                type="hidden"
-                                {...register("customer_id", {
-                                    value: selectedCustomerForMovements?.id,
-                                })}
-                            />
-                            <input
-                                type="hidden"
-                                {...register("branch_id", {
-                                    value: loggedUser?.Branches[0]?.id,
-                                })}
-                            />
-                            <div
-                                style={{
-                                    backgroundColor: "white",
-                                    padding: "1rem",
-                                    borderRadius: "1rem",
-                                }}
-                            >
-                                <h5>completar formulario</h5>
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        justifyContent: "space-around",
-                                        gap: "1rem",
-                                    }}
-                                >
-                                    <div style={{ width: "25%" }}>
-                                        <Form.Group controlId="typemovementId">
-                                            <Form.Label>
-                                                Tipo de movimiento
-                                            </Form.Label>
-                                            <Form.Control
-                                                as="select"
-                                                placeholder="Tipo de movimiento"
-                                                {...register(
-                                                    "typemovement_id",
-                                                    {
-                                                        required: true,
-                                                    }
-                                                )}
-                                            >
-                                                <option value="">
-                                                    Seleccione un tipo de
-                                                    movimiento
-                                                </option>
-                                                {typeMovements.map(
-                                                    (typeMovement) => (
-                                                        <option
-                                                            key={
-                                                                typeMovement?.id
-                                                            }
-                                                            value={
-                                                                typeMovement?.id
-                                                            }
-                                                        >
-                                                            {typeMovement?.name}
-                                                        </option>
-                                                    )
-                                                )}
-                                            </Form.Control>
-                                            {errors.typemovementId && (
-                                                <p className="error-message">
-                                                    El tipo de movimiento es
-                                                    requerido.
-                                                </p>
-                                            )}
-                                        </Form.Group>
-                                    </div>
-                                    <div style={{ width: "15%" }}>
-                                        <Form.Group>
-                                            <Form.Label>Fecha</Form.Label>
-                                            <Form.Control
-                                                type="date"
-                                                placeholder="Fecha"
-                                                {...register("movement_date", {
-                                                    required: true,
-                                                })}
-                                            />
-                                            {errors.movement_date && (
-                                                <p className="error-message">
-                                                    La fecha de movimiento es
-                                                    requerida.
-                                                </p>
-                                            )}
-                                        </Form.Group>
-                                    </div>
-                                    <div style={{ width: "50%" }}>
-                                        <Form.Group controlId="description">
-                                            <Form.Label>
-                                                Descripción o Detalles
-                                            </Form.Label>
-                                            <Form.Control
-                                                as="textarea"
-                                                rows={2}
-                                                placeholder="Ingrese una descripción o detalles"
-                                                {...register("description", {
-                                                    required: true,
-                                                })}
-                                            />
-                                            {errors.description && (
-                                                <p className="error-message">
-                                                    La descripción o detalles
-                                                    son requeridos.
-                                                </p>
-                                            )}
-                                        </Form.Group>
-                                    </div>
-                                </div>
-                            </div>
-                            <br />
-                            <h6>
-                                Agregar producto{" "}
-                                <Button
-                                    onClick={handleShowWarehouse}
-                                    type="button"
-                                    style={{
-                                        backgroundColor: "transparent",
-                                        border: "none",
-                                    }}
-                                >
-                                    <i className="bx bx-cart-add"></i>
-                                </Button>
-                            </h6>
-
-                            <Col>
-                                <p>Total a pagar: ${total.toFixed(2)}</p>
-
-                                <Button type="submit" variant="primary">
-                                    Confirmar compra
-                                </Button>
-                            </Col>
-                        </Form>
-                        <br />
-                    </div>
-                </div> */}
                 <div className="section_table">
                     {productsCart.length !== 0 ? (
                         <>
@@ -642,16 +436,36 @@ const Orders = () => {
                                     ))}
                                 </tbody>
                             </Table>
-                            <h5
+                            <h6
+                                style={{
+                                    textAlign: "end",
+                                    paddingRight: "1rem",
+                                }}
+                            >
+                                <strong>Total : ${total?.toFixed(2)}</strong>
+                            </h6>
+                            <h6
                                 style={{
                                     textAlign: "end",
                                     paddingRight: "1rem",
                                 }}
                             >
                                 <strong>
-                                    Total a pagar: ${total?.toFixed(2)}
+                                    Descuento: $
+                                    {(total - totalWithPromotion).toFixed(2)}
                                 </strong>
-                            </h5>
+                            </h6>
+                            <h6
+                                style={{
+                                    textAlign: "end",
+                                    paddingRight: "1rem",
+                                }}
+                            >
+                                <strong>
+                                    Total a pagar: $
+                                    {totalWithPromotion?.toFixed(2)}
+                                </strong>
+                            </h6>
                         </>
                     ) : (
                         <div
