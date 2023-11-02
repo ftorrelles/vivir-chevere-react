@@ -1,0 +1,98 @@
+:root {
+    --dark: #201e1e;
+    --detail: #f05a36;
+    --detail2: #b83437;
+    --caffee: #5c382c;
+    --light-color: #fefefe;
+    --grey: #96989a;
+}
+.home {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-image: url("/prueba3.jpg");
+    background-size: cover;
+    background-position: center center;
+}
+
+/* .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: var(--dark);
+    opacity: 0.6;
+} */
+
+.container_home {
+    z-index: 1;
+    text-align: center;
+    color: var(--light-color);
+}
+
+.title {
+    font-size: 4rem;
+    margin-bottom: 2rem;
+}
+
+.subtitle {
+    font-size: 2rem;
+    margin-bottom: 4rem;
+}
+
+/* .btn {
+    font-size: 1.2rem;
+    padding: 1rem 2rem;
+    border-radius: 2rem;
+    color: var(--light-color);
+    text-decoration: none;
+    background-color: var(--detail);
+    border: none;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+} */
+
+/* .btn:hover {
+    background-color: #d35f48;
+    transform: translateY(-2px);
+}
+
+.btn:focus {
+    outline: none;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2), 0 0 0 3px #ffbb99;
+} */
+
+/* ------- */
+/* Estilos para dispositivos móviles */
+@media only screen and (max-width: 767px) {
+    .home {
+        background-image: url("/12.png");
+    }
+    /* .container_home {
+        background-color: #7a7575c7;
+        margin: 10px;
+        padding: 10px;
+        border-radius: 20px;
+    } */
+    .title {
+        font-size: 3rem;
+    }
+    .subtitle {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+}
+
+/* Estilos para tabletas */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .title {
+        font-size: 3.5rem;
+    }
+    .subtitle {
+        font-size: 2rem;
+        margin-bottom: 3rem;
+    }
+}

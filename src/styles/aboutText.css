@@ -1,0 +1,46 @@
+:root {
+    --dark: #201e1e;
+    --detail: #f05a36;
+    --detail2: #b83437;
+    --caffee: #5c382c;
+    --light-color: #fefefe;
+    --grey: #96989a;
+}
+.about-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: var(--dark);
+    color: var(--light-color);
+    padding: 50px;
+    height: 60vh;
+}
+
+.about-container h2 {
+    color: var(--detail);
+    margin-bottom: 20px;
+}
+
+.about-container p {
+    color: var(--light-color);
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.btHome a:hover {
+    color: #fefefe;
+}
+
+@media (max-width: 768px) {
+    .about-container {
+        padding: 30px;
+    }
+
+    .about-container h2 {
+        font-size: 24px;
+    }
+
+    .about-container p {
+        font-size: 16px;
+    }
+}
