@@ -36,7 +36,9 @@ const MovementControl = () => {
     // Realiza una solicitud para obtener la lista de movimientos con sus items, las sedes y los tipos de movimientos
     const getTypeMovements = () => {
         axios
-            .get("http://localhost:3000/api/v1/typeMovements")
+            .get(
+                "https://back-end-vivirchevere.onrender.com/api/v1/typeMovements"
+            )
             .then((response) => {
                 setTypeMovements(response.data);
             })
@@ -44,7 +46,7 @@ const MovementControl = () => {
     };
     const getBranches = () => {
         axios
-            .get("http://localhost:3000/api/v1/branches")
+            .get("https://back-end-vivirchevere.onrender.com/api/v1/branches")
             .then((response) => {
                 setBranches(response.data);
             })
@@ -54,7 +56,7 @@ const MovementControl = () => {
     };
     const getMovements = () => {
         axios
-            .get("http://localhost:3000/api/v1/movements")
+            .get("https://back-end-vivirchevere.onrender.com/api/v1/movements")
             .then((response) => {
                 setMovements(response.data);
             })

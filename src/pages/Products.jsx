@@ -23,7 +23,7 @@ const Products = () => {
     //funcion para obtener porductos
     const getProducts = () => {
         axios
-            .get("http://localhost:3000/api/v1/products")
+            .get("https://back-end-vivirchevere.onrender.com/api/v1/products")
             .then((response) => {
                 // console.log(response?.data?.products);
                 setProducts(response.data.products);

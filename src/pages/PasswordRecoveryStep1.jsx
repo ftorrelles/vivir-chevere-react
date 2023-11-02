@@ -22,14 +22,14 @@ const PasswordRecoveryStep1 = () => {
             ...data,
             frontBaseUrl: window.location.origin + "/#",
         };
-        console.log(params);
+        // console.log(params);
         axios
             .post(
-                "http://localhost:3000/api/v1/customers/sendrecoveryemail",
+                "https://back-end-vivirchevere.onrender.com/api/v1/customers/sendrecoveryemail",
                 params
             )
             .then((resp) => {
-                console.log(resp.data);
+                // console.log(resp.data);
                 alert(
                     "Correo de recuperación enviado. Por favor, revisa tu bandeja de entrada."
                 );

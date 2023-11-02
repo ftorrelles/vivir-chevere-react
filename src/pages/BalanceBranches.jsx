@@ -21,7 +21,9 @@ const BalanceBranches = () => {
 
     const getCuentaCLiente = () => {
         axios
-            .get("http://localhost:3000/api/v1/cuenta_clientes")
+            .get(
+                "https://back-end-vivirchevere.onrender.com/api/v1/cuenta_clientes"
+            )
             .then((response) => {
                 setDataBalances(
                     response.data.cuenta_clientes.filter(
@@ -34,7 +36,7 @@ const BalanceBranches = () => {
     };
     const getBranches = () => {
         axios
-            .get("http://localhost:3000/api/v1/branches")
+            .get("https://back-end-vivirchevere.onrender.com/api/v1/branches")
             .then((response) => {
                 setBranches(response.data);
             })

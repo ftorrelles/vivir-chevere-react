@@ -21,7 +21,7 @@ const ModalProducts = ({
     const branchId = loggedUser?.Branches[0]?.id;
     useEffect(() => {
         axios
-            .get("http://localhost:3000/api/v1/products")
+            .get("https://back-end-vivirchevere.onrender.com/api/v1/products")
             .then((resp) => setProducts(resp.data))
             .catch((error) => console.error(error));
     }, []);
@@ -43,7 +43,10 @@ const ModalProducts = ({
             };
             dispatch(setIsLoading(true));
             axios
-                .post(`http://localhost:3000/api/v1/warehouses`, addToWarehouse)
+                .post(
+                    `https://back-end-vivirchevere.onrender.com/api/v1/warehouses`,
+                    addToWarehouse
+                )
                 .then((resp) => {
                     navigate("/warehouse");
                     handleCloseProducts(); // Cierra el modal

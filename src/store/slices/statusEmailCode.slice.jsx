@@ -13,7 +13,9 @@ export const statusEmailCodeSlice = createSlice({
 
 export const verifyEmailCodeThunk = (code) => (dispatch) => {
     axios
-        .get(`http://localhost:3000/api/v1/customers/verify/${code}`)
+        .get(
+            `https://back-end-vivirchevere.onrender.com/api/v1/customers/verify/${code}`
+        )
         .then((resp) => {
             console.log(resp.data);
             dispatch(setStatus(resp.data.status));

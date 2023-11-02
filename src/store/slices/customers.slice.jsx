@@ -18,7 +18,10 @@ export const getCustomersThunk = () => (dispatch) => {
     const config = getConfig();
     dispatch(setIsLoading(true));
     axios
-        .get("http://localhost:3000/api/v1/customers", config)
+        .get(
+            "https://back-end-vivirchevere.onrender.com/api/v1/customers",
+            config
+        )
         .then((resp) => dispatch(setCustomers(resp.data.customers)))
         .catch((error) => console.error(error))
         .finally(() => dispatch(setIsLoading(false)));
@@ -28,7 +31,7 @@ export const filterCustomersThunk = (filterOptions) => (dispatch) => {
     const config = getConfig();
     dispatch(setIsLoading(true));
     axios
-        .get("http://localhost:3000/api/v1/customers", {
+        .get("https://back-end-vivirchevere.onrender.com/api/v1/customers", {
             params: filterOptions,
             ...config,
         })
@@ -41,7 +44,10 @@ export const createCustomerThunk = (data) => (dispatch) => {
     // const config = getConfig();
     dispatch(setIsLoading(true));
     return axios
-        .post("http://localhost:3000/api/v1/customers", data)
+        .post(
+            "https://back-end-vivirchevere.onrender.com/api/v1/customers",
+            data
+        )
         .then((resp) => {
             // console.log(resp);
             dispatch(getCustomersThunk());
@@ -55,7 +61,7 @@ export const updateCustomerThunk = (data) => (dispatch) => {
     dispatch(setIsLoading(true));
     return axios
         .patch(
-            `http://localhost:3000/api/v1/customers/${data.id}`,
+            `https://back-end-vivirchevere.onrender.com/api/v1/customers/${data.id}`,
             data,
             config
         )
@@ -71,7 +77,10 @@ export const deleteCustomerThunk = (data) => (dispatch) => {
     const config = getConfig();
     dispatch(setIsLoading(true));
     return axios
-        .delete(`http://localhost:3000/api/v1/customers/${data.id}`, config)
+        .delete(
+            `https://back-end-vivirchevere.onrender.com/api/v1/customers/${data.id}`,
+            config
+        )
         .then(() => dispatch(getCustomersThunk()))
         .catch((error) => console.error(error))
         .finally(() => dispatch(setIsLoading(false)));

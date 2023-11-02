@@ -31,7 +31,7 @@ const CustomerForm = ({ showForm, handleCloseForm }) => {
     //obtencion de los datos de los roles
     useEffect(() => {
         axios
-            .get("http://localhost:3000/api/v1/roles")
+            .get("https://back-end-vivirchevere.onrender.com/api/v1/roles")
             .then((resp) => setRoles(resp.data.roles))
             .catch((error) => console.error(error));
     }, []);

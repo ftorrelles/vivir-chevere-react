@@ -31,7 +31,10 @@ const Login = () => {
         };
 
         axios
-            .post("http://localhost:3000/api/v1/customers/login", data)
+            .post(
+                "https://back-end-vivirchevere.onrender.com/api/v1/customers/login",
+                data
+            )
             .then((resp) => {
                 dispatch(setloggedUser(resp.data.customer));
                 localStorage.setItem("token", resp.data.token);
@@ -66,10 +69,10 @@ const Login = () => {
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>
                             Correo electronico
-                            <strong>
+                            {/* <strong>
                                 {" "}
                                 correo prueba: 'torrellef93@gmail.com'
-                            </strong>
+                            </strong> */}
                         </Form.Label>
                         <Form.Control
                             type="email"
@@ -81,7 +84,7 @@ const Login = () => {
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                         <Form.Label>
                             Contraseña{" "}
-                            <strong> test data: 'Francisco1234'</strong>
+                            {/* <strong> test data: 'Francisco1234'</strong> */}
                         </Form.Label>
                         <InputGroup>
                             <Form.Control

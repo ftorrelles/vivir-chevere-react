@@ -37,7 +37,9 @@ const Orders = () => {
     const getTypeMovements = () => {
         dispatch(setIsLoading(true));
         axios
-            .get("http://localhost:3000/api/v1/typeMovements")
+            .get(
+                "https://back-end-vivirchevere.onrender.com/api/v1/typeMovements"
+            )
             .then((resp) => setTypeMovements(resp.data?.typeMovements))
             .catch((error) => console.error(error))
             .finally(() => dispatch(setIsLoading(false)));
@@ -45,7 +47,7 @@ const Orders = () => {
     const getWarehouses = () => {
         dispatch(setIsLoading(true));
         axios
-            .get("http://localhost:3000/api/v1/warehouses")
+            .get("https://back-end-vivirchevere.onrender.com/api/v1/warehouses")
             .then((resp) => {
                 setWarehouses(resp.data.warehouses);
             })
@@ -212,7 +214,10 @@ const Orders = () => {
 
             // Envía la solicitud POST con el movimiento y los movement_items utilizando Axios
             axios
-                .post("http://localhost:3000/api/v1/movements", dataToSend)
+                .post(
+                    "https://back-end-vivirchevere.onrender.com/api/v1/movements",
+                    dataToSend
+                )
                 .then((response) => {
                     setProductsCart([]);
                     navigate("/movementControl");

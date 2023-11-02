@@ -25,7 +25,9 @@ const ModalCreateProduct = ({
     const [specifications, setSpecifications] = useState([]);
     const getSpecifications = () => {
         axios
-            .get("http://localhost:3000/api/v1/specifications")
+            .get(
+                "https://back-end-vivirchevere.onrender.com/api/v1/specifications"
+            )
             .then((response) => {
                 // console.log(response.data.specifications);
                 setSpecifications(response.data.specifications);
@@ -72,7 +74,7 @@ const ModalCreateProduct = ({
         if (selectedProduct) {
             axios
                 .patch(
-                    `http://localhost:3000/api/v1/products/${formDataForUpdate.id}`,
+                    `https://back-end-vivirchevere.onrender.com/api/v1/products/${formDataForUpdate.id}`,
                     formDataForUpdate
                 )
                 .then((response) => {
@@ -97,7 +99,7 @@ const ModalCreateProduct = ({
             console.log(formDataWithDefaults);
             axios
                 .post(
-                    "http://localhost:3000/api/v1/products",
+                    "https://back-end-vivirchevere.onrender.com/api/v1/products",
                     formDataWithDefaults
                 )
                 .then((response) => {

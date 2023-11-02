@@ -23,7 +23,10 @@ const ModalForPay = ({ showModalPay, handleClosePay }) => {
             status: true,
         };
         axios
-            .post(`http://localhost:3000/api/v1/cuenta_clientes`, dataForPay)
+            .post(
+                `https://back-end-vivirchevere.onrender.com/api/v1/cuenta_clientes`,
+                dataForPay
+            )
             .then((response) => console.log(response.data))
             .catch((error) => console.error(error));
         reset(resetForm());
