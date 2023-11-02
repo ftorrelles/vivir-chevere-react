@@ -11,9 +11,10 @@ const Gift = () => {
                             style={{
                                 paddingBottom: "2rem",
                                 textAlign: "center",
+                                color: "#f05a36",
                             }}
                         >
-                            Premio Regalo de Navidad
+                            <strong>Premio Regalo de Navidad</strong>
                         </h2>
                     </div>
                     <div className="gift">

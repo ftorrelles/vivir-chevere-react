@@ -18,7 +18,7 @@ const SocialInnovation = () => {
                 }`}
                 ref={ref}
             >
-                Innovación social
+                <strong>Innovación social</strong>
             </h2>
             <div className="container">
                 <div className="row">

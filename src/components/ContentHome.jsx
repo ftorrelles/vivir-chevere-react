@@ -16,7 +16,7 @@ const ContentHome = () => {
                         Cuidate hoy... Vive chevere mañana!!!
                     </p>
                     <Button
-                        variant="outline-warning"
+                        variant="warning"
                         className="btHome animate__animated animate__bounceIn"
                     >
                         <Link to="/login">Iniciar sesión</Link>
