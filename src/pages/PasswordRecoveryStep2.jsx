@@ -27,12 +27,6 @@ const PasswordRecoveryStep2 = () => {
     const [showPassword, setShowPassword] = useState(false); // visibilidad de la contraseña
 
     const onSubmit = (data) => {
-        // console.log(data.newPassword);
-        // // const email = decodeURIComponent(
-        // //     new URLSearchParams(window.location.search).get("email")
-        // // );
-        // console.log(email);
-        // console.log(code);
         axios
             .patch(
                 `https://back-end-vivirchevere.onrender.com/api/v1/customers/reset-password/${code}`,

@@ -371,7 +371,7 @@ const Orders = () => {
                         <>
                             <h5>Productos en el movimiento</h5>
                             <br />
-                            <Table striped bordered hover>
+                            <Table striped bordered hover responsive>
                                 <thead>
                                     <tr>
                                         <th>Producto</th>
