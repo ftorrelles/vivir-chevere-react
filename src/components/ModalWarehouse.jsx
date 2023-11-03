@@ -23,7 +23,7 @@ const ModalWarehouse = ({
                     <Modal.Title>Almacen</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Table striped bordered hover>
+                    <Table striped bordered hover responsive>
                         <thead>
                             <tr>
                                 <th>Producto</th>

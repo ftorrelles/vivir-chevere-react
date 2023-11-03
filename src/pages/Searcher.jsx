@@ -105,7 +105,7 @@ const Searcher = () => {
                 </div>{" "}
                 <div className="sidebarCustomer">
                     <h5>Clientes</h5>{" "}
-                    <div>
+                    <div className="formSidebarCurtomer">
                         <InputGroup className="mb-3">
                             <Form.Control
                                 aria-label="Example text with button addon"

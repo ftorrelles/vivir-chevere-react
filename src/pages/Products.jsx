@@ -102,76 +102,81 @@ const Products = () => {
             </div>
             <div className="bodyProduct">
                 <br />
-                {loggedUser?.role_id == 3 ? (
-                    <Table striped bordered hover>
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Presentacion</th>
-                                <th>Precio publico</th>
-                                <th>Precio afiliado</th>
-                                <th>Promoción</th>
-                                <th>Editar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {products?.map((product) => (
-                                <tr key={product?.id}>
-                                    <td>{product?.name}</td>
-                                    <td>{`${product?.measure} ${product?.Specification?.name}`}</td>
-                                    <td>{product?.price_general}</td>
-                                    <td>{product?.price_afiliate}</td>
-                                    <td>
-                                        {product?.promotion_type !== 1
-                                            ? "sin Promoción"
-                                            : "20%"}
-                                    </td>
-                                    <td style={{ padding: "0" }}>
-                                        <Button
-                                            style={{
-                                                backgroundColor: "transparent",
-                                                border: "none",
-                                            }}
-                                            variant="primary"
-                                            size="sm"
-                                            type="button"
-                                            onClick={() => handleShow(product)}
-                                        >
-                                            <i className="bx bx-edit"></i>
-                                        </Button>
-                                    </td>
+                <div>
+                    {loggedUser?.role_id == 3 ? (
+                        <Table striped bordered hover responsive>
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Presentacion</th>
+                                    <th>Precio publico</th>
+                                    <th>Precio afiliado</th>
+                                    <th>Promoción</th>
+                                    <th>Editar</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                ) : (
-                    <Table striped bordered hover>
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Presentacion</th>
-                                <th>Precio publico</th>
-                                <th>Precio afiliado</th>
-                                <th>Promoción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {products?.map((product) => (
-                                <tr key={product?.id}>
-                                    <td>{product?.name}</td>
-                                    <td>{`${product?.measure} ${product?.Specification?.name}`}</td>
-                                    <td>{product?.price_general}</td>
-                                    <td>{product?.price_afiliate}</td>
-                                    <td>
-                                        {product?.promotion_type !== 1
-                                            ? "sin Promoción"
-                                            : "20%"}
-                                    </td>
+                            </thead>
+                            <tbody>
+                                {products?.map((product) => (
+                                    <tr key={product?.id}>
+                                        <td>{product?.name}</td>
+                                        <td>{`${product?.measure} ${product?.Specification?.name}`}</td>
+                                        <td>{product?.price_general}</td>
+                                        <td>{product?.price_afiliate}</td>
+                                        <td>
+                                            {product?.promotion_type !== 1
+                                                ? "sin Promoción"
+                                                : "20%"}
+                                        </td>
+                                        <td style={{ padding: "0" }}>
+                                            <Button
+                                                style={{
+                                                    backgroundColor:
+                                                        "transparent",
+                                                    border: "none",
+                                                }}
+                                                variant="primary"
+                                                size="sm"
+                                                type="button"
+                                                onClick={() =>
+                                                    handleShow(product)
+                                                }
+                                            >
+                                                <i className="bx bx-edit"></i>
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    ) : (
+                        <Table striped bordered hover responsive>
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Presentacion</th>
+                                    <th>Precio publico</th>
+                                    <th>Precio afiliado</th>
+                                    <th>Promoción</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                )}
+                            </thead>
+                            <tbody>
+                                {products?.map((product) => (
+                                    <tr key={product?.id}>
+                                        <td>{product?.name}</td>
+                                        <td>{`${product?.measure} ${product?.Specification?.name}`}</td>
+                                        <td>{product?.price_general}</td>
+                                        <td>{product?.price_afiliate}</td>
+                                        <td>
+                                            {product?.promotion_type !== 1
+                                                ? "sin Promoción"
+                                                : "20%"}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    )}
+                </div>
             </div>
             <ModalCreateProduct
                 showModalCreateProduct={showModalCreateProduct}

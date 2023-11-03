@@ -588,7 +588,7 @@ const Warehouse = () => {
                 <div className="section_table">
                     {productsCart.length !== 0 ? (
                         <>
-                            <Table striped bordered hover>
+                            <Table striped bordered hover responsive>
                                 <thead>
                                     <tr>
                                         <th>Producto</th>

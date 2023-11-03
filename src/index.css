@@ -105,11 +105,34 @@ a {
         opacity: 0;
     }
 }
-/* estilos icono desloguear */
+/* estilos icono y link */
 .bx-user {
     margin: 0 auto;
     font-size: 6rem;
     margin-bottom: 1rem;
+}
+.bx-edit,
+.bx-trash {
+    color: blue;
+    font-size: 1.5rem;
+}
+.bx-edit:hover,
+.bx-trash:hover {
+    color: red;
+    font-size: 1.5rem;
+}
+.bx-cart-add {
+    font-size: 2.5rem;
+    color: blue;
+}
+.bx-cart-add:hover {
+    color: red;
+}
+.linkSidbar {
+    color: #325d88;
+}
+.linkSidbar:hover {
+    color: red;
 }
 
 /* estulos del Dropdown del icono login */
@@ -142,20 +165,14 @@ a {
     height: 100%;
     padding: 1rem;
 }
-.linkSidbar {
-    color: #325d88;
+.bodySearcher {
+    padding: 1rem;
 }
-.linkSidbar:hover {
-    color: red;
-}
+/* boton usado en varios componentes */
 .btCreateCustomer {
     background-color: transparent;
     border: none;
     color: blue;
-}
-
-.bodySearcher {
-    padding: 1rem;
 }
 
 /* estilos para el componente Product */
@@ -171,24 +188,10 @@ a {
     height: 100%;
     padding: 1rem;
 }
-
-/* .btCreateCustomer {
-    background-color: transparent;
-    border: none;
-    color: blue;
-} */
-.bx-edit {
-    color: blue;
-    font-size: 1.5rem;
-}
-.bx-edit:hover {
-    color: red;
-    font-size: 1.5rem;
-}
-
 .bodyProduct {
     padding: 1rem;
 }
+
 /* estilos para el componente Balances */
 .Balances {
     display: grid;
@@ -202,17 +205,16 @@ a {
     height: 100vh;
     padding: 1rem;
 }
-
 .bodyBalances {
     padding: 1rem;
 }
+
 /* ---------styls pages order------------ */
 .container_orders {
     height: 100vh;
     display: grid;
     grid-template-columns: 35% 65%;
 }
-
 .sidebarOrders {
     display: flex;
     flex-direction: column;
@@ -229,20 +231,13 @@ a {
 .container_orders .section_table {
     padding: 1rem 3rem;
 }
-.bx-cart-add {
-    font-size: 2.5rem;
-    color: blue;
-}
-.bx-cart-add:hover {
-    color: red;
-}
+
 /* ---------styls pages Warehouse------------ */
 .container_warehouse {
     height: 100vh;
     display: grid;
     grid-template-columns: 35% 65%;
 }
-
 .sidebarWarehouse {
     display: flex;
     flex-direction: column;
@@ -259,15 +254,8 @@ a {
 .container_warehouse .section_table {
     padding: 1rem 3rem;
 }
-.bx-cart-add {
-    font-size: 2.5rem;
-    color: blue;
-}
-.bx-cart-add:hover {
-    color: red;
-}
-/* --- pages MovementsControl */
 
+/* --- pages MovementsControl */
 .movements {
     height: 100vh;
     display: grid;
@@ -284,18 +272,9 @@ a {
 .bodyMovement {
     padding: 1rem;
 }
-.bx-trash {
-    font-size: 1.5rem;
-    color: blue;
-}
-.bx-trash:hover {
-    color: red;
-}
-
 .selectBranch {
     width: 100%;
 }
-
 .custom-datepicker {
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -307,7 +286,6 @@ a {
 }
 
 /* ----------footer------------- */
-
 .footer {
     background-color: #325d88;
     padding: 3rem 2rem 1rem 2rem;
@@ -321,7 +299,6 @@ a {
     align-self: center;
     width: 100%;
 }
-
 .footer-content {
     display: flex;
     flex-direction: column;
@@ -333,11 +310,9 @@ a {
 .footer-content h3 {
     color: #f2f2f2;
 }
-
 .copy {
     border-top: 2px solid var(--dark);
 }
-
 .footer_copy {
     color: #f2f2f2;
     display: flex;
@@ -360,6 +335,27 @@ a {
 }
 /* Estilos para versión de tablet */
 @media (max-width: 768px) {
+    .searcher,
+    .product,
+    .container_warehouse,
+    .movements,
+    .container_orders,
+    .Balances {
+        display: flex;
+        flex-direction: column;
+    }
+    .formSidebarCurtomer {
+        max-width: 70%;
+    }
+    .sidebarBalances {
+        height: 50%;
+        gap: 0;
+    }
+    .sidebarMovement {
+        padding: 1rem 5rem 1rem 0.5rem;
+        max-height: 50%;
+    }
+
     .footer_container {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -370,6 +366,13 @@ a {
 }
 /* Estilos para versión móvil */
 @media (max-width: 480px) {
+    .formSidebarCurtomer {
+        max-width: 90%;
+    }
+    .sidebarMovement {
+        padding: 1rem 3rem 1rem 0.5rem;
+    }
+
     .footer_container {
         grid-template-columns: repeat(1, 1fr);
     }

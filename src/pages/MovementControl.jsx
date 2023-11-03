@@ -271,7 +271,7 @@ const MovementControl = () => {
                                                     )
                                                 }
                                             >
-                                                Ver Detalles
+                                                Detalles
                                             </Button>
                                         </td>
                                     </tr>

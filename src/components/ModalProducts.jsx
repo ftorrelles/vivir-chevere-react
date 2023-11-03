@@ -66,7 +66,7 @@ const ModalProducts = ({
                     <Modal.Title>Productos</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Table striped bordered hover>
+                    <Table striped bordered hover responsive>
                         <thead>
                             <tr>
                                 <th>Producto</th>

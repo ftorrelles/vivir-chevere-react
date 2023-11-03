@@ -109,7 +109,7 @@ const ModalMovementDetail = ({
                             </ul>
 
                             <h4>Detalles del Movimiento:</h4>
-                            <Table striped bordered hover>
+                            <Table striped bordered hover responsive>
                                 <thead>
                                     <tr>
                                         <th>Cant</th>
