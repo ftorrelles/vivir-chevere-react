@@ -26,10 +26,16 @@ const Products = () => {
             .get("https://back-end-vivirchevere.onrender.com/api/v1/products")
             .then((response) => {
                 // console.log(response?.data?.products);
-                setProducts(response.data.products);
+                // setProducts(response.data.products);
+                setProducts(
+                    response.data.products.sort((a, b) =>
+                        a.name.localeCompare(b.name)
+                    )
+                );
             })
             .catch((error) => console.error(error));
     };
+
     useEffect(() => {
         getProducts();
     }, []);
@@ -38,6 +44,10 @@ const Products = () => {
     const [showModalCreateProduct, setShowModalCreateProduct] = useState(false);
     const handleCloseCreateProduct = () => setShowModalCreateProduct(false);
     const handleShowCreateProduct = () => setShowModalCreateProduct(true);
+
+    useEffect(() => {
+        getProducts();
+    }, [handleCloseCreateProduct]);
 
     const printProduct = () => {
         const doc = new jsPDF();
@@ -48,18 +58,24 @@ const Products = () => {
             theme: "grid",
             head: [
                 [
+                    "id",
                     "Producto",
                     "Presentacion",
                     "Precio publico",
                     "Precio afiliado",
+                    "Promoción",
                 ],
             ],
             body: products.map((product) => {
                 return [
+                    product.id,
                     product?.name,
                     `${product?.measure} ${product?.Specification?.name}`,
                     product?.price_general,
                     product?.price_afiliate,
+                    `${
+                        product?.promotion_type == 3 ? "5.00" : "Sin descuento"
+                    }`,
                 ];
             }),
             margin: {
@@ -107,6 +123,7 @@ const Products = () => {
                         <Table striped bordered hover responsive>
                             <thead>
                                 <tr>
+                                    <th>id</th>
                                     <th>Producto</th>
                                     <th>Presentacion</th>
                                     <th>Precio publico</th>
@@ -118,14 +135,15 @@ const Products = () => {
                             <tbody>
                                 {products?.map((product) => (
                                     <tr key={product?.id}>
+                                        <td>{product?.id}</td>
                                         <td>{product?.name}</td>
                                         <td>{`${product?.measure} ${product?.Specification?.name}`}</td>
                                         <td>{product?.price_general}</td>
                                         <td>{product?.price_afiliate}</td>
                                         <td>
-                                            {product?.promotion_type !== 1
-                                                ? "sin Promoción"
-                                                : "20%"}
+                                            {product?.promotion_type == 3
+                                                ? "5.00"
+                                                : "Sin descuento"}
                                         </td>
                                         <td style={{ padding: "0" }}>
                                             <Button
