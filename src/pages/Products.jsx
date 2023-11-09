@@ -170,6 +170,7 @@ const Products = () => {
                         <Table striped bordered hover responsive>
                             <thead>
                                 <tr>
+                                    <th>id</th>
                                     <th>Producto</th>
                                     <th>Presentacion</th>
                                     <th>Precio publico</th>
@@ -180,14 +181,15 @@ const Products = () => {
                             <tbody>
                                 {products?.map((product) => (
                                     <tr key={product?.id}>
+                                        <td>{product?.id}</td>
                                         <td>{product?.name}</td>
                                         <td>{`${product?.measure} ${product?.Specification?.name}`}</td>
                                         <td>{product?.price_general}</td>
                                         <td>{product?.price_afiliate}</td>
                                         <td>
-                                            {product?.promotion_type !== 1
-                                                ? "sin Promoción"
-                                                : "20%"}
+                                            {product?.promotion_type == 3
+                                                ? "5.00"
+                                                : "Sin descuento"}
                                         </td>
                                     </tr>
                                 ))}

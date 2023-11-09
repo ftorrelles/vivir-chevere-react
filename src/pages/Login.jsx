@@ -8,6 +8,7 @@ import { useNavigate, Link } from "react-router-dom";
 import AlertError from "../components/AlertError";
 import { setloggedUser } from "../store/slices/loggedUser.slice";
 import { useDispatch, useSelector } from "react-redux";
+import { setIsLoading } from "../store/slices/isLoading.slice";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -29,7 +30,7 @@ const Login = () => {
             email: lowerCaseEmail, // Usar el correo electrónico en minúsculas
             password,
         };
-
+        dispatch(setIsLoading(true));
         axios
             .post(
                 "https://back-end-vivirchevere.onrender.com/api/v1/customers/login",
@@ -47,7 +48,8 @@ const Login = () => {
             .catch((error) => {
                 console.error(error);
                 setAlert(true);
-            });
+            })
+            .finally(() => dispatch(setIsLoading(false)));
     };
     // const [isLogged, setIsLogged] = useState(localStorage.getItem("token"));
     // const logout = () => {

@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-    Col,
-    InputGroup,
-    Form,
-    Button,
-    Table,
-    Pagination,
-} from "react-bootstrap";
+import { InputGroup, Form, Button, Table, Pagination } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import {
     filterCustomersThunk,
@@ -91,6 +84,10 @@ const Searcher = () => {
     );
     // función para cambiar de página
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    console.log(currentCustomers);
+    const isAdmin = loggedUser?.role_id === 3;
+    console.log(isAdmin);
 
     return (
         <section className="searcher">
@@ -190,8 +187,33 @@ const Searcher = () => {
 
             <div className="bodySearcher">
                 <br />
+                <p style={{ textAlign: "end" }}>
+                    Leyenda: Afiliando{" "}
+                    <button
+                        style={{
+                            height: "15px",
+                            width: "15px",
+                            backgroundColor: "green",
+                            borderRadius: "50%",
+                        }}
+                    ></button>{" "}
+                    Publico{" "}
+                    <button
+                        style={{
+                            height: "15px",
+                            width: "15px",
+                            backgroundColor: "red",
+                            borderRadius: "50%",
+                        }}
+                    ></button>
+                </p>
                 {/* Tabla de clientes */}
-                {currentCustomers && currentCustomers.length > 0 ? (
+                {currentCustomers &&
+                currentCustomers.length > 0 &&
+                (isAdmin ||
+                    first_name ||
+                    last_name ||
+                    identification_document) ? (
                     <>
                         <h3>Resultados</h3>
                         <Table striped bordered hover responsive>
@@ -207,8 +229,31 @@ const Searcher = () => {
                                 {currentCustomers.map((customer) => (
                                     <tr key={customer.id}>
                                         <td>
-                                            {customer.first_name}{" "}
-                                            {customer.last_name}
+                                            {customer?.type_customer_id == 1 ? (
+                                                <button
+                                                    style={{
+                                                        height: "15px",
+                                                        width: "15px",
+                                                        backgroundColor:
+                                                            "green",
+                                                        borderRadius: "50%",
+
+                                                        textAlign: "right",
+                                                        marginRight: "10px",
+                                                    }}
+                                                ></button>
+                                            ) : (
+                                                <button
+                                                    style={{
+                                                        height: "15px",
+                                                        width: "15px",
+                                                        backgroundColor: "red",
+                                                        borderRadius: "50%",
+                                                        marginRight: "10px",
+                                                    }}
+                                                ></button>
+                                            )}
+                                            {`${customer.first_name} ${customer.last_name}`}
                                         </td>
                                         <td>
                                             {customer.identification_document}
