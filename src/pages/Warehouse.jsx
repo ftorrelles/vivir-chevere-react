@@ -18,6 +18,7 @@ const Warehouse = () => {
     const [warehouses, setWarehouses] = useState([]);
     const [filteredWarehouses, setFilteredWarehouses] = useState([]);
     const [total, setTotal] = useState(0);
+    const [filteredDispatcher, setFilteredDispatcher] = useState([]);
     // const [isFormValid, setIsFormValid] = useState(false);
 
     const {
@@ -29,8 +30,15 @@ const Warehouse = () => {
     // Obtener datos de los estados de Redux
     const loggedUser = useSelector((state) => state.loggedUser);
     const addToCart = useSelector((state) => state.addToCart);
-
+    //obtener todos los clientes y luego filtrar en el useEffect solo los administradores que pueden despachar a las sedes
     const customers = useSelector((state) => state.customers);
+    useEffect(() => {
+        const filteredDispatchers = customers.filter(
+            (dispatcher) => dispatcher.role_id === 3
+        );
+        setFilteredDispatcher(filteredDispatchers);
+    }, [customers]);
+
     useEffect(() => {
         dispatch(getCustomersThunk()); // Cargar los datos iniciales de los clientes
     }, []);
@@ -244,7 +252,7 @@ const Warehouse = () => {
                                     )}
                                 >
                                     <option value="">quien despacha</option>
-                                    {customers.map((customer) => (
+                                    {filteredDispatcher.map((customer) => (
                                         <option
                                             key={customer?.id}
                                             value={customer?.id}
@@ -295,9 +303,9 @@ const Warehouse = () => {
                         <br />
                         <ul>
                             <li>
-                                Aumentar almacen{" "}
+                                Agregar nuevo producto{" "}
                                 <Button
-                                    onClick={handleShowWarehouse}
+                                    onClick={handleShowProducts}
                                     type="button"
                                     style={{
                                         backgroundColor: "transparent",
@@ -308,9 +316,9 @@ const Warehouse = () => {
                                 </Button>
                             </li>
                             <li>
-                                Agregar nuevo producto{" "}
+                                Aumentar almacen{" "}
                                 <Button
-                                    onClick={handleShowProducts}
+                                    onClick={handleShowWarehouse}
                                     type="button"
                                     style={{
                                         backgroundColor: "transparent",

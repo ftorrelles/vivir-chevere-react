@@ -343,7 +343,7 @@ const Searcher = () => {
                         </Pagination>
                     </>
                 ) : (
-                    <img src="/noEncontrado.jpg" alt="No encontrado" />
+                    <img src="/noEncontrado.png" alt="No encontrado" />
                 )}
             </div>
 
