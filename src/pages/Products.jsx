@@ -6,11 +6,23 @@ import axios from "axios";
 import { setSelectedProduct } from "../store/slices/selectedProduct.slice";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { setIsLoading } from "../store/slices/isLoading.slice";
+import Select from "react-select";
 
 const Products = () => {
     const dispatch = useDispatch();
     const [products, setProducts] = useState([]);
+    const [branches, setBranches] = useState([]);
+    const [selectedBranch, setSelectedBranch] = useState(null);
+
+    const clearTypeMovementFilter = () => {
+        setSelectedBranch(null);
+    };
+
     const loggedUser = useSelector((state) => state.loggedUser);
+    // console.log(loggedUser);
+    const isAdmin = loggedUser?.role_id === 3;
+    // console.log(isAdmin);
 
     //funcion data seleccionada para editar producto
     const handleShow = (info) => {
@@ -18,10 +30,9 @@ const Products = () => {
         dispatch(setSelectedProduct(info));
         setShowModalCreateProduct(true);
     };
-    // console.log(productSelected);
 
-    //funcion para obtener porductos
     const getProducts = () => {
+        dispatch(setIsLoading(true));
         axios
             .get("https://back-end-vivirchevere.onrender.com/api/v1/products")
             .then((response) => {
@@ -33,13 +44,34 @@ const Products = () => {
                     )
                 );
             })
-            .catch((error) => console.error(error));
+            .catch((error) => console.error(error))
+            .finally(() => dispatch(setIsLoading(false)));
+    };
+    const getBranches = () => {
+        dispatch(setIsLoading(true));
+        axios
+            .get("https://back-end-vivirchevere.onrender.com/api/v1/branches")
+            .then((response) => {
+                setBranches(response.data.branches);
+            })
+            .catch((error) => console.error(error))
+            .finally(() => dispatch(setIsLoading(false)));
+    };
+
+    //funcion para filtrar las sedes y no es un administrador (de ser sede solo podra ver su sede)
+    const fiteredBranchxloggedUser = () => {
+        if (!isAdmin) {
+            return setSelectedBranch(loggedUser?.Branches[0]?.id);
+        }
     };
 
     useEffect(() => {
         getProducts();
+        getBranches();
+        fiteredBranchxloggedUser();
     }, []);
-    // console.log(products);
+
+    // console.log(branches);
     //modal crear producto
     const [showModalCreateProduct, setShowModalCreateProduct] = useState(false);
     const handleCloseCreateProduct = () => setShowModalCreateProduct(false);
@@ -47,7 +79,7 @@ const Products = () => {
 
     useEffect(() => {
         getProducts();
-    }, [handleCloseCreateProduct]);
+    }, [selectedBranch]);
 
     const printProduct = () => {
         const doc = new jsPDF();
@@ -85,6 +117,13 @@ const Products = () => {
 
         doc.save(`lista de precio`);
     };
+    // console.log(products);
+    // console.log(selectedBranch);
+
+    //funcion del select para seleccionar una sede (solo administradores)
+    // const handleBranchSelection = (e) => {
+    //     setSelectedBranch(e.target.value);
+    // };
 
     return (
         <section className="product">
@@ -115,6 +154,50 @@ const Products = () => {
                         Imprimir lista de precio
                     </Button>
                 </div>
+
+                {isAdmin ? (
+                    // <div>
+                    //     <label>Seleccione la Sede: </label>
+                    //     <select
+                    //         value={selectedBranch}
+                    //         onChange={handleBranchSelection}
+                    //     >
+                    //         <option value={null}>Todas las sedes</option>
+                    //         {branches.map((branch) => (
+                    //             <option key={branch.id} value={branch.id}>
+                    //                 {branch.name}
+                    //             </option>
+                    //         ))}
+                    //     </select>
+                    // </div>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                        <Select
+                            value={selectedBranch}
+                            onChange={(selectedOption) => {
+                                // console.log(selectedOption);
+                                setSelectedBranch(selectedOption?.value);
+                            }}
+                            options={branches.map((branch) => ({
+                                value: branch?.id,
+                                label: branch?.name,
+                            }))}
+                            placeholder="Todas las sedes"
+                            className="selectTypeMovemet"
+                        />
+
+                        <div>
+                            <Button
+                                style={{
+                                    backgroundColor: "transparent",
+                                    border: "none",
+                                }}
+                                onClick={clearTypeMovementFilter}
+                            >
+                                <i className="bx bx-trash"></i>
+                            </Button>
+                        </div>
+                    </div>
+                ) : null}
             </div>
             <div className="bodyProduct">
                 <br />
@@ -125,6 +208,7 @@ const Products = () => {
                                 <tr>
                                     <th>id</th>
                                     <th>Producto</th>
+                                    <th>stock</th>
                                     <th>Presentacion</th>
                                     <th>Precio publico</th>
                                     <th>Precio afiliado</th>
@@ -137,6 +221,34 @@ const Products = () => {
                                     <tr key={product?.id}>
                                         <td>{product?.id}</td>
                                         <td>{product?.name}</td>
+                                        {/* <td>
+                                            {product?.Warehouses[0]?.quantity ==
+                                            undefined
+                                                ? "0"
+                                                : product?.Warehouses[0]
+                                                      ?.quantity}
+                                        </td> */}
+                                        <td>
+                                            {selectedBranch
+                                                ? // Si selectedBranch no es nulo, filtrar y sumar las cantidades específicas
+                                                  product?.Warehouses.filter(
+                                                      (warehouse) =>
+                                                          warehouse.branch_id ==
+                                                          selectedBranch
+                                                  ).reduce(
+                                                      (total, warehouse) =>
+                                                          total +
+                                                          warehouse.quantity,
+                                                      0
+                                                  )
+                                                : // Si selectedBranch es nulo, sumar todas las cantidades
+                                                  product?.Warehouses.reduce(
+                                                      (total, warehouse) =>
+                                                          total +
+                                                          warehouse.quantity,
+                                                      0
+                                                  )}
+                                        </td>
                                         <td>{`${product?.measure} ${product?.Specification?.name}`}</td>
                                         <td>{product?.price_general}</td>
                                         <td>{product?.price_afiliate}</td>
@@ -172,6 +284,7 @@ const Products = () => {
                                 <tr>
                                     <th>id</th>
                                     <th>Producto</th>
+                                    <th>stock</th>
                                     <th>Presentacion</th>
                                     <th>Precio publico</th>
                                     <th>Precio afiliado</th>
@@ -183,6 +296,34 @@ const Products = () => {
                                     <tr key={product?.id}>
                                         <td>{product?.id}</td>
                                         <td>{product?.name}</td>
+                                        {/* <td>
+                                            {product?.Warehouses[0]?.quantity ==
+                                            undefined
+                                                ? "0"
+                                                : product?.Warehouses[0]
+                                                      ?.quantity}
+                                        </td> */}
+                                        <td>
+                                            {selectedBranch
+                                                ? // Si selectedBranch no es nulo, filtrar y sumar las cantidades específicas
+                                                  product?.Warehouses.filter(
+                                                      (warehouse) =>
+                                                          warehouse.branch_id ==
+                                                          selectedBranch
+                                                  ).reduce(
+                                                      (total, warehouse) =>
+                                                          total +
+                                                          warehouse.quantity,
+                                                      0
+                                                  )
+                                                : // Si selectedBranch es nulo, sumar todas las cantidades
+                                                  product?.Warehouses.reduce(
+                                                      (total, warehouse) =>
+                                                          total +
+                                                          warehouse.quantity,
+                                                      0
+                                                  )}
+                                        </td>
                                         <td>{`${product?.measure} ${product?.Specification?.name}`}</td>
                                         <td>{product?.price_general}</td>
                                         <td>{product?.price_afiliate}</td>

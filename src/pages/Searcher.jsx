@@ -85,9 +85,9 @@ const Searcher = () => {
     // función para cambiar de página
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-    console.log(currentCustomers);
+    // console.log(currentCustomers);
     const isAdmin = loggedUser?.role_id === 3;
-    console.log(isAdmin);
+    // console.log(isAdmin);
 
     return (
         <section className="searcher">
