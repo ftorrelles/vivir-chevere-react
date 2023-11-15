@@ -74,7 +74,11 @@ const Warehouse = () => {
         const filtered = warehouses.filter((warehouse) => {
             return warehouse.branch_id == loggedUser?.Branches[0]?.id;
         });
-        setFilteredWarehouses(filtered);
+        setFilteredWarehouses(
+            filtered.sort((a, b) =>
+                a?.Product?.name.localeCompare(b?.Product?.name)
+            )
+        );
     }, [warehouses, loggedUser]);
 
     // Modal de almacén
@@ -202,6 +206,7 @@ const Warehouse = () => {
             );
         }
     };
+    // console.log(productsCart);
     return (
         <>
             <div className="container_warehouse">

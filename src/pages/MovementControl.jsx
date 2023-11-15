@@ -102,7 +102,7 @@ const MovementControl = () => {
         }
         // Filtro por tipo de movimiento
         if (selectedTypeMovement) {
-            console.log(selectedTypeMovement);
+            // console.log(selectedTypeMovement);
             filtered = filtered?.filter((movement) => {
                 return movement?.typemovement_id == selectedTypeMovement?.value;
             });

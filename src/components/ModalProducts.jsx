@@ -22,10 +22,16 @@ const ModalProducts = ({
     useEffect(() => {
         axios
             .get("https://back-end-vivirchevere.onrender.com/api/v1/products")
-            .then((resp) => setProducts(resp.data))
+            .then((resp) => {
+                // console.log(resp.data.products);
+                setProducts(
+                    resp.data.products?.sort((a, b) =>
+                        a.name.localeCompare(b.name)
+                    )
+                );
+            })
             .catch((error) => console.error(error));
     }, []);
-
     const productSelected = (data) => {
         // Verificar si el producto ya existe en el almacén de la sede
         const existingProductInWarehouse = dataWarehouse.find(
@@ -77,7 +83,7 @@ const ModalProducts = ({
                             </tr>
                         </thead>
                         <tbody>
-                            {products?.products?.map((product) => (
+                            {products?.map((product) => (
                                 <tr key={product?.id}>
                                     <td>{product?.name}</td>
                                     <td>{`${product?.measure} ${product?.Specification?.name}`}</td>
