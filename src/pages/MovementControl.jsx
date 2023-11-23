@@ -289,7 +289,7 @@ const MovementControl = () => {
                             />
                             {Array.from({
                                 length: Math.ceil(
-                                    filteredMovement.length / movementsPerPage
+                                    filteredMovement?.length / movementsPerPage
                                 ),
                             }).map((_, index) => (
                                 <Pagination.Item

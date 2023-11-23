@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Table } from "react-bootstrap";
+import { Button, Card, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import ModalForPay from "../components/ModalForPay";
@@ -142,6 +142,18 @@ const BalanceBranches = () => {
             <div className="bodyBalances">
                 {selectedBranch ? (
                     <>
+                        <Card
+                            bg="primary" // Cambia a un color válido para el fondo
+                            border="primary" // Cambia a un color válido para el borde
+                            text="white"
+                            style={{ textAlign: "center", width: "15rem" }}
+                            className="mb-2"
+                        >
+                            <Card.Header>Saldo por pagar</Card.Header>
+                            <Card.Body>
+                                <Card.Title>{totalSaldo} </Card.Title>
+                            </Card.Body>
+                        </Card>
                         <br />
                         <p>
                             Saldo Pendiente: <strong>{totalSaldo}</strong>

@@ -63,7 +63,11 @@ const Orders = () => {
         const filtered = warehouses.filter((warehouse) => {
             return warehouse.branch_id == loggedUser?.Branches[0]?.id;
         });
-        setFilteredWarehouses(filtered);
+        setFilteredWarehouses(
+            filtered.sort((a, b) =>
+                a?.Product?.name.localeCompare(b?.Product?.name)
+            )
+        );
     }, [warehouses, loggedUser]);
 
     // Modal de almacén
@@ -85,11 +89,11 @@ const Orders = () => {
             if (!productExists && availableQuantity > 0) {
                 // Obtener el valor de promotion_type del producto
                 const promotionType = addToCart?.Product?.promotion_type;
-                console.log(promotionType);
+                // console.log(promotionType);
                 // Obtener el tipo de cliente
                 const customerType =
                     selectedCustomerForMovements?.TypeCustomer?.name;
-                console.log(customerType);
+                // console.log(customerType);
 
                 let newprice;
 
@@ -112,7 +116,7 @@ const Orders = () => {
                     // Si el cliente no es afiliado, aplicamos el precio general
                     newprice = addToCart?.Product?.price_general;
                 }
-                console.log(newprice);
+                // console.log(newprice);
 
                 let newCart = {
                     product_id: addToCart.product_id,
