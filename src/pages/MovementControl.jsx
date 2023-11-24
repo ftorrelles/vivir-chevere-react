@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import ModalMovementDetail from "../components/ModalMovementDetail";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Dashboard from "../components/Dashboard";
 
 const MovementControl = () => {
     const [movements, setMovements] = useState([]);
@@ -230,6 +231,7 @@ const MovementControl = () => {
                 </div>
             </div>
             <div className="bodyMovement">
+                <Dashboard />
                 {selectedBranch ? (
                     <>
                         <h4>Control de Movimientos</h4>

@@ -153,6 +153,12 @@ a {
 }
 /*  */
 
+/* --- estilos para componente Dashboard --- */
+.secctionDashboard {
+    display: flex;
+    justify-content: space-evenly;
+}
+
 /* estilos para el componente searcher */
 .searcher {
     display: grid;
@@ -375,6 +381,12 @@ a {
 }
 /* Estilos para versión móvil */
 @media (max-width: 480px) {
+    .secctionDashboard {
+        flex-direction: column;
+    }
+    .secctionDashboard .cardDashboard {
+        max-height: 6rem;
+    }
     .formSidebarCurtomer {
         max-width: 90%;
     }

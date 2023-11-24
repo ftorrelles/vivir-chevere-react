@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { setSelectedCustomerForMovements } from "../store/slices/selectedCustomerForMovements.slice";
 import { Link } from "react-router-dom";
 import ModalCreateProduct from "../components/ModalCreateProduct";
+import Dashboard from "../components/Dashboard";
 
 const Searcher = () => {
     const navigate = useNavigate();
@@ -186,6 +187,8 @@ const Searcher = () => {
             </div>
 
             <div className="bodySearcher">
+                <br />
+                <Dashboard />
                 <br />
                 <p style={{ textAlign: "end" }}>
                     Leyenda: Afiliando{" "}

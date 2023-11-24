@@ -8,6 +8,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { setIsLoading } from "../store/slices/isLoading.slice";
 import Select from "react-select";
+import Dashboard from "../components/Dashboard";
 
 const Products = () => {
     const dispatch = useDispatch();
@@ -241,8 +242,6 @@ const Products = () => {
                         </div>
                     </div>
                 ) : null}
-            </div>
-            <div className="bodyProduct">
                 <Card
                     bg="primary" // Cambia a un color válido para el fondo
                     border="primary" // Cambia a un color válido para el borde
@@ -262,6 +261,10 @@ const Products = () => {
                         <Card.Title>{warehouses} </Card.Title>
                     </Card.Body>
                 </Card>
+            </div>
+            <div className="bodyProduct">
+                <Dashboard />
+                <br />
                 <div>
                     {loggedUser?.role_id == 3 ? (
                         <Table striped bordered hover responsive>
