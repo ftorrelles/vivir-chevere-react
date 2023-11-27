@@ -362,7 +362,9 @@ const Orders = () => {
                         </h6>
 
                         <Col>
-                            <p>Total a pagar: ${total?.toFixed(2)}</p>
+                            <p>
+                                Total a pagar: ${totalWithPromotion?.toFixed(2)}
+                            </p>
 
                             <Button type="submit" variant="primary">
                                 Confirmar compra

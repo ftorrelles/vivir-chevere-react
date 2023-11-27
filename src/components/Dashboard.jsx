@@ -13,7 +13,7 @@ const Dashboard = () => {
     const getCuentasClientes = () => {
         axios
             .get(
-                `https://back-end-vivirchevere.onrender.com/api/v1/cuenta_clientes/${loggedUser?.id}/5`
+                `https://back-end-vivirchevere.onrender.com/api/v1/cuenta_clientes/customerId/${loggedUser?.id}/typeMovement/5`
             )
             .then((resp) => [
                 // console.log(resp.data.new_cuenta_cliente),
@@ -22,7 +22,7 @@ const Dashboard = () => {
             .catch((error) => console.error(error));
         axios
             .get(
-                `https://back-end-vivirchevere.onrender.com/api/v1/cuenta_clientes/${loggedUser?.id}/6`
+                `https://back-end-vivirchevere.onrender.com/api/v1/cuenta_clientes/customerId/${loggedUser?.id}/typeMovement/6`
             )
             .then((resp) => [
                 // console.log(resp.data.new_cuenta_cliente),

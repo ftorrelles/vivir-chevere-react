@@ -306,7 +306,7 @@ const MovementControl = () => {
                                 onClick={() =>
                                     setCurrentPage((prevPage) =>
                                         prevPage <
-                                        filteredMovement.length /
+                                        filteredMovement?.length /
                                             movementsPerPage
                                             ? prevPage + 1
                                             : prevPage
@@ -315,7 +315,7 @@ const MovementControl = () => {
                                 disabled={
                                     currentPage ===
                                     Math.ceil(
-                                        filteredMovement.length /
+                                        filteredMovement?.length /
                                             movementsPerPage
                                     )
                                 }

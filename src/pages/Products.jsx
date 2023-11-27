@@ -242,30 +242,37 @@ const Products = () => {
                         </div>
                     </div>
                 ) : null}
-                <Card
-                    bg="primary" // Cambia a un color válido para el fondo
-                    border="primary" // Cambia a un color válido para el borde
-                    text="white"
-                    style={{ textAlign: "center", width: "15rem" }}
-                    className="mb-2"
-                >
-                    <Card.Header>
-                        Stock:{" "}
-                        {selectedBranch ? (
-                            selectedBranchDetail?.label
-                        ) : (
-                            <span>Todas las sedes</span>
-                        )}
-                    </Card.Header>
-                    <Card.Body>
-                        <Card.Title>{warehouses} </Card.Title>
-                    </Card.Body>
-                </Card>
+                {isAdmin && (
+                    <p>
+                        <span>Total stock </span>
+                        <span style={{ color: "red" }}>
+                            {selectedBranch ? (
+                                selectedBranchDetail?.label
+                            ) : (
+                                <span>Todas las sedes</span>
+                            )}
+                        </span>
+                        {": "}
+                        <strong>{warehouses}</strong>
+                    </p>
+                )}
             </div>
             <div className="bodyProduct">
                 <Dashboard />
                 <br />
                 <div>
+                    {isAdmin && (
+                        <p>
+                            <span>Tabla de productos en stock </span>
+                            <span style={{ color: "red" }}>
+                                {selectedBranch ? (
+                                    selectedBranchDetail?.label
+                                ) : (
+                                    <span>Todas las sedes</span>
+                                )}
+                            </span>
+                        </p>
+                    )}
                     {loggedUser?.role_id == 3 ? (
                         <Table striped bordered hover responsive>
                             <thead>
