@@ -1,13 +1,9 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../styles/home.css";
 import "animate.css/animate.min.css";
 import { Button } from "react-bootstrap";
 
 const ContentHome = () => {
-    const navigate = useNavigate();
-    const handleButton = () => {
-        navigate("vivirchevere.com/virtual_office/admin");
-    };
     return (
         <>
             <section className="home">
@@ -33,9 +29,9 @@ const ContentHome = () => {
                         >
                             <Link to="/login">Iniciar sesión sede</Link>
                         </Button>
-                        <Button onClick={handleButton}>
-                            Iniciar sesión oficina virtual
-                        </Button>
+                        <a href="https://vivirchevere.com/virtual_office/admin">
+                            <Button>Iniciar sesión oficina virtual</Button>
+                        </a>
                     </div>
                 </div>
             </section>
