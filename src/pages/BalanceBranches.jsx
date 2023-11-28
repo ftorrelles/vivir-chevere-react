@@ -1,14 +1,16 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Table } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import ModalForPay from "../components/ModalForPay";
 import Dashboard from "../components/Dashboard";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
+import { setIsLoading } from "../store/slices/isLoading.slice";
 
 const BalanceBranches = () => {
+    const dispatch = useDispatch();
     const [key, setKey] = useState("acumulado");
 
     const [cuentaPorPagar, setCuentaPorPagar] = useState([]);
@@ -57,6 +59,7 @@ const BalanceBranches = () => {
     };
     ////////////////////////////////////////////////////
     const getCuentasClientes = () => {
+        dispatch(setIsLoading(true));
         axios
             .get(
                 `https://back-end-vivirchevere.onrender.com/api/v1/cuenta_clientes/customerId/${loggedUser?.id}/typeMovement/5`
@@ -86,7 +89,8 @@ const BalanceBranches = () => {
                     })
                 ),
             ])
-            .catch((error) => console.error(error));
+            .catch((error) => console.error(error))
+            .finally(() => dispatch(setIsLoading(false)));
     };
     // console.log(cuentaPorCobrar);
     // console.log(cuentaPorPagar);
@@ -231,32 +235,42 @@ const BalanceBranches = () => {
                         <Table striped bordered hover>
                             <thead>
                                 <tr>
+                                    <th>Factura</th>
+                                    <th>A nombre de</th>
                                     <th>Fecha</th>
                                     <th>
                                         Acumulado a devolver por venta{" "}
                                         <span style={{ color: "red" }}>$</span>
                                         <strong style={{ color: "red" }}>
                                             {!selectedBranch
-                                                ? cuentaPorPagar
-                                                      ?.reduce(
-                                                          (total, balance) =>
-                                                              total +
-                                                              parseFloat(
-                                                                  balance?.ingreso
-                                                              ),
-                                                          0
-                                                      )
-                                                      .toFixed(2) -
-                                                  cuentaPorPagar
-                                                      ?.reduce(
-                                                          (total, balance) =>
-                                                              total +
-                                                              parseFloat(
-                                                                  balance?.egreso
-                                                              ),
-                                                          0
-                                                      )
-                                                      .toFixed(2)
+                                                ? (
+                                                      cuentaPorPagar
+                                                          ?.reduce(
+                                                              (
+                                                                  total,
+                                                                  balance
+                                                              ) =>
+                                                                  total +
+                                                                  parseFloat(
+                                                                      balance?.ingreso
+                                                                  ),
+                                                              0
+                                                          )
+                                                          .toFixed(2) -
+                                                      cuentaPorPagar
+                                                          ?.reduce(
+                                                              (
+                                                                  total,
+                                                                  balance
+                                                              ) =>
+                                                                  total +
+                                                                  parseFloat(
+                                                                      balance?.egreso
+                                                                  ),
+                                                              0
+                                                          )
+                                                          .toFixed(2)
+                                                  ).toFixed(2)
                                                 : filteredCuentaPorPagar
                                                       ?.reduce(
                                                           (total, balance) =>
@@ -291,6 +305,12 @@ const BalanceBranches = () => {
                                           .map((dataBalance) => (
                                               <tr key={dataBalance.id}>
                                                   <td>
+                                                      {dataBalance.Movement.id}
+                                                  </td>
+                                                  <td>
+                                                      {`${dataBalance?.Movement?.customer?.first_name} ${dataBalance?.Movement?.customer?.last_name}`}
+                                                  </td>
+                                                  <td>
                                                       {dataBalance?.createdAt.slice(
                                                           0,
                                                           10
@@ -309,6 +329,12 @@ const BalanceBranches = () => {
                                           )
                                           .map((dataBalance) => (
                                               <tr key={dataBalance?.id}>
+                                                  <td>
+                                                      {dataBalance.Movement.id}
+                                                  </td>
+                                                  <td>
+                                                      {`${dataBalance?.Movement?.customer?.first_name} ${dataBalance?.Movement?.customer?.last_name}`}
+                                                  </td>
                                                   <td>
                                                       {dataBalance?.createdAt.slice(
                                                           0,
@@ -400,6 +426,8 @@ const BalanceBranches = () => {
                         <Table striped bordered hover>
                             <thead>
                                 <tr>
+                                    <th>Factura</th>
+                                    <th>A nombre de</th>
                                     <th>Fecha</th>
                                     <th>
                                         Ganacia por venta{" "}
@@ -443,6 +471,12 @@ const BalanceBranches = () => {
                                           .map((dataBalance) => (
                                               <tr key={dataBalance?.id}>
                                                   <td>
+                                                      {dataBalance.Movement.id}
+                                                  </td>
+                                                  <td>
+                                                      {`${dataBalance?.Movement?.customer?.first_name} ${dataBalance?.Movement?.customer?.last_name}`}
+                                                  </td>
+                                                  <td>
                                                       {dataBalance?.createdAt.slice(
                                                           0,
                                                           10
@@ -460,6 +494,12 @@ const BalanceBranches = () => {
                                           )
                                           .map((dataBalance) => (
                                               <tr key={dataBalance?.id}>
+                                                  <td>
+                                                      {dataBalance.Movement.id}
+                                                  </td>
+                                                  <td>
+                                                      {`${dataBalance?.Movement?.customer?.first_name} ${dataBalance?.Movement?.customer?.last_name}`}
+                                                  </td>
                                                   <td>
                                                       {dataBalance?.createdAt.slice(
                                                           0,

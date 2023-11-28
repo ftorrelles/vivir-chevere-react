@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsLoading } from "../store/slices/isLoading.slice";
 
 const Dashboard = () => {
+    const dispatch = useDispatch();
     const [cuentaPorPagar, setCuentaPorPagar] = useState([]);
     const [cuentaPorCobrar, setCuentaPorCobrar] = useState([]);
     const [stockWarehouses, setStockWarehouses] = useState([]);
@@ -11,6 +13,7 @@ const Dashboard = () => {
     const isAdmin = loggedUser?.role_id === 3;
     // console.log(loggedUser);
     const getCuentasClientes = () => {
+        dispatch(setIsLoading(true));
         axios
             .get(
                 `https://back-end-vivirchevere.onrender.com/api/v1/cuenta_clientes/customerId/${loggedUser?.id}/typeMovement/5`
@@ -19,7 +22,8 @@ const Dashboard = () => {
                 // console.log(resp.data.new_cuenta_cliente),
                 setCuentaPorPagar(resp.data.new_cuenta_cliente),
             ])
-            .catch((error) => console.error(error));
+            .catch((error) => console.error(error))
+            .finally(() => dispatch(setIsLoading(false)));
         axios
             .get(
                 `https://back-end-vivirchevere.onrender.com/api/v1/cuenta_clientes/customerId/${loggedUser?.id}/typeMovement/6`
