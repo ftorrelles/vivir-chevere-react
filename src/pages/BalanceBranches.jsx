@@ -19,12 +19,8 @@ const BalanceBranches = () => {
     const [filteredCuentaPorPagar, setFilteredCuentaPorPagar] = useState([]);
     const [filteredCuentaPorCobrar, setFilteredCuentaPorCobrar] = useState([]);
 
-    // const [dataBalances, setDataBalances] = useState([]);
-    // const [filteredDataBalance, setFilteredDataBalance] = useState([]);
     const [selectedBranch, setSelectedBranch] = useState(null);
     const [branches, setBranches] = useState([]);
-    // const [filteredBranch, setFilteredBranch] = useState([]);
-    // const [totalSaldo, setTotalSaldo] = useState(0);
 
     const [showModalPay, setShowModalPay] = useState(false);
     const loggedUser = useSelector((state) => state.loggedUser);
@@ -32,21 +28,6 @@ const BalanceBranches = () => {
     //Obtener datos
     const isAdmin = loggedUser?.role_id == 3;
 
-    // const getCuentaCLiente = () => {
-    //     axios
-    //         .get(
-    //             "https://back-end-vivirchevere.onrender.com/api/v1/cuenta_clientes"
-    //         )
-    //         .then((response) => {
-    //             setDataBalances(
-    //                 response.data.cuenta_clientes.filter(
-    //                     (dataBalance) => dataBalance?.typemovement_id == 5
-    //                 )
-    //             );
-    //             // console.log(response.data);
-    //         })
-    //         .catch((error) => console.error(error));
-    // };
     const getBranches = () => {
         axios
             .get("https://back-end-vivirchevere.onrender.com/api/v1/branches")
@@ -95,11 +76,9 @@ const BalanceBranches = () => {
     // console.log(cuentaPorCobrar);
     // console.log(cuentaPorPagar);
     useEffect(() => {
-        // getCuentaCLiente();
         getBranches();
         getCuentasClientes();
     }, []);
-    // console.log(selectedBranch);
     ///Filtrado de sedes por selector
     useEffect(() => {
         let filteredCuentaPorPagar;
@@ -126,67 +105,33 @@ const BalanceBranches = () => {
     }, [selectedBranch]);
     // console.log(filteredCuentaPorCobrar);
     // console.log(filteredCuentaPorPagar);
-    ///////////////////////////////////////////////
 
-    //funcion para filtro si es administrador o no
-    // useEffect(() => {
-    //     if (!isAdmin) {
-    //         const loggedBranch = branches?.branches?.find((branch) => {
-    //             return branch?.id == loggedUser?.Branches[0]?.id;
-    //         });
-    //         setFilteredBranch(loggedBranch ? [loggedBranch] : []);
-    //     } else {
-    //         setFilteredBranch(branches?.branches);
-    //     }
-    // }, [branches]);
-    // console.log(filteredBranch);
-    // console.log(dataBalances);
-    //funcion para filtrar por sede seleccionada
-    // useEffect(() => {
-    //     let filtered = dataBalances;
-    //     if (!isAdmin) {
-    //         // No es un administrador, filtra por sede actual del usuario
-    //         filtered = filtered?.filter((movement) => {
-    //             return (
-    //                 movement?.Customer?.Branches[0]?.id ==
-    //                 loggedUser?.Branches[0]?.id
-    //             );
-    //         });
-    //     } else {
-    //         // Es un administrador y ha seleccionado una sede
-    //         filtered = filtered?.filter((movement) => {
-    //             return (
-    //                 movement?.Customer?.Branches[0]?.id == selectedBranch?.value
-    //             );
-    //         });
-    //     }
-
-    //     setFilteredDataBalance(filtered);
-    // }, [dataBalances, selectedBranch, loggedUser]);
-    //funcion para obtener total de deuda
-    // useEffect(() => {
-    //     const totalIngreso = filteredDataBalance.reduce(
-    //         (total, balance) => total + parseFloat(balance.ingreso),
-    //         0
-    //     );
-    //     const totalEgreso = filteredDataBalance.reduce(
-    //         (total, balance) => total + parseFloat(balance.egreso),
-    //         0
-    //     );
-    //     const nuevoSaldoPendiente = totalIngreso - totalEgreso;
-    //     setTotalSaldo(nuevoSaldoPendiente.toFixed(2));
-    // }, [filteredDataBalance]);
-    // console.log(totalSaldo);
-    // console.log(loggedUser);
-    //modal para pago
-
-    const handleClosePay = () => setShowModalPay(false);
+    const handleClosePay = () => {
+        setShowModalPay(false), getCuentasClientes();
+    };
     const handleShowModalPay = () => setShowModalPay(true);
 
-    useEffect(() => {
-        // getCuentaCLiente();
-        getCuentasClientes();
-    }, [showModalPay]);
+    const handleUpdateVerificationPayment = (data) => {
+        dispatch(setIsLoading(true));
+        const dataForUpdate = {
+            typemovement_id: data.typemovement_id,
+            customer_id: data.customer_id,
+            ingreso: data.ingreso,
+            egreso: data.egreso,
+            status: data.status,
+            verified_payment: true,
+        };
+        axios
+            .patch(
+                `https://back-end-vivirchevere.onrender.com/api/v1/cuenta_clientes/${data.id}`,
+                dataForUpdate
+            )
+            .then((resp) => {
+                console.log(resp.data), getCuentasClientes();
+            })
+            .catch((error) => console.error(error))
+            .finally(() => dispatch(setIsLoading(false)));
+    };
     return (
         <section className="Balances">
             <div className="sidebarBalances">
@@ -263,10 +208,12 @@ const BalanceBranches = () => {
                                                                   total,
                                                                   balance
                                                               ) =>
-                                                                  total +
-                                                                  parseFloat(
-                                                                      balance?.egreso
-                                                                  ),
+                                                                  balance.verified_payment
+                                                                      ? total +
+                                                                        parseFloat(
+                                                                            balance?.egreso
+                                                                        )
+                                                                      : total,
                                                               0
                                                           )
                                                           .toFixed(2)
@@ -284,10 +231,12 @@ const BalanceBranches = () => {
                                                   filteredCuentaPorPagar
                                                       ?.reduce(
                                                           (total, balance) =>
-                                                              total +
-                                                              parseFloat(
-                                                                  balance?.egreso
-                                                              ),
+                                                              balance.verified_payment
+                                                                  ? total +
+                                                                    parseFloat(
+                                                                        balance?.egreso
+                                                                    )
+                                                                  : total,
                                                           0
                                                       )
                                                       .toFixed(2)}
@@ -349,79 +298,7 @@ const BalanceBranches = () => {
                             </tbody>
                         </Table>
                     </Tab>
-                    <Tab eventKey="cancelado" title="Cancelado">
-                        <Table striped bordered hover>
-                            <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>
-                                        Montos cancelados{" "}
-                                        <span style={{ color: "orange" }}>
-                                            $
-                                        </span>
-                                        <strong style={{ color: "orange" }}>
-                                            {!selectedBranch
-                                                ? cuentaPorPagar
-                                                      ?.reduce(
-                                                          (total, balance) =>
-                                                              total +
-                                                              parseFloat(
-                                                                  balance?.egreso
-                                                              ),
-                                                          0
-                                                      )
-                                                      .toFixed(2)
-                                                : filteredCuentaPorPagar
-                                                      ?.reduce(
-                                                          (total, balance) =>
-                                                              total +
-                                                              parseFloat(
-                                                                  balance?.egreso
-                                                              ),
-                                                          0
-                                                      )
-                                                      .toFixed(2)}
-                                        </strong>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {!selectedBranch
-                                    ? cuentaPorPagar
-                                          ?.filter(
-                                              (dataBalance) =>
-                                                  dataBalance?.egreso !== "0.00"
-                                          )
-                                          .map((dataBalance) => (
-                                              <tr key={dataBalance?.id}>
-                                                  <td>
-                                                      {dataBalance?.createdAt.slice(
-                                                          0,
-                                                          10
-                                                      )}
-                                                  </td>
-                                                  <td>{dataBalance?.egreso}</td>
-                                              </tr>
-                                          ))
-                                    : filteredCuentaPorPagar
-                                          ?.filter(
-                                              (dataBalance) =>
-                                                  dataBalance?.egreso !== "0.00"
-                                          )
-                                          .map((dataBalance) => (
-                                              <tr key={dataBalance?.id}>
-                                                  <td>
-                                                      {dataBalance?.createdAt.slice(
-                                                          0,
-                                                          10
-                                                      )}
-                                                  </td>
-                                                  <td>{dataBalance?.egreso}</td>
-                                              </tr>
-                                          ))}
-                            </tbody>
-                        </Table>
-                    </Tab>
+
                     <Tab eventKey="ganancias" title="Ganancias">
                         <Table striped bordered hover>
                             <thead>
@@ -514,69 +391,185 @@ const BalanceBranches = () => {
                             </tbody>
                         </Table>
                     </Tab>
-                </Tabs>
-
-                {/* {selectedBranch ? (
-                    <>
-                        <br />
-                        <p>
-                            Saldo Pendiente en{" "}
-                            <span style={{ color: "red" }}>
-                                {selectedBranch?.label}
-                            </span>{" "}
-                            : <strong>{totalSaldo}</strong>
-                        </p>
+                    <Tab eventKey="cancelado" title="Cancelado">
                         <Table striped bordered hover>
                             <thead>
                                 <tr>
-                                    <th>fecha</th>
-                                    <th>Acumulado por venta</th>
-                                    <th>Saldo cancelado</th>
-                                    <th>Saldo pendiente</th>
+                                    <th>Verificación</th>
+                                    <th>Fecha</th>
+                                    <th>
+                                        Montos cancelados{" "}
+                                        <span style={{ color: "orange" }}>
+                                            $
+                                        </span>
+                                        <strong style={{ color: "orange" }}>
+                                            {!selectedBranch
+                                                ? cuentaPorPagar
+                                                      ?.reduce(
+                                                          (total, balance) =>
+                                                              balance.verified_payment
+                                                                  ? total +
+                                                                    parseFloat(
+                                                                        balance?.egreso
+                                                                    )
+                                                                  : total,
+                                                          0
+                                                      )
+                                                      .toFixed(2)
+                                                : filteredCuentaPorPagar
+                                                      ?.reduce(
+                                                          (total, balance) =>
+                                                              balance.verified_payment
+                                                                  ? total +
+                                                                    parseFloat(
+                                                                        balance?.egreso
+                                                                    )
+                                                                  : total,
+                                                          0
+                                                      )
+                                                      .toFixed(2)}
+                                        </strong>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredDataBalance?.map(
-                                    (dataBalance, index) => {
-                                        const ingreso =
-                                            parseFloat(dataBalance.ingreso) ||
-                                            0; // Si no se puede convertir, establecer en 0
-                                        const egreso =
-                                            parseFloat(dataBalance.egreso) || 0; // Si no se puede convertir, establecer en 0
-
-                                        const saldoPendiente =
-                                            index === 0
-                                                ? ingreso - egreso
-                                                : filteredDataBalance[index - 1]
-                                                      .saldoPendiente +
-                                                  ingreso -
-                                                  egreso;
-
-                                        dataBalance.saldoPendiente =
-                                            saldoPendiente;
-                                        return (
-                                            <tr key={dataBalance?.id}>
-                                                <td>
-                                                    {dataBalance?.created_at.slice(
-                                                        0,
-                                                        10
-                                                    )}
-                                                </td>
-                                                <td>{ingreso.toFixed(2)}</td>
-                                                <td>{egreso.toFixed(2)}</td>
-                                                <td>
-                                                    {saldoPendiente.toFixed(2)}
-                                                </td>
-                                            </tr>
-                                        );
-                                    }
-                                )}
+                                {!selectedBranch
+                                    ? cuentaPorPagar
+                                          ?.filter(
+                                              (dataBalance) =>
+                                                  dataBalance?.egreso !== "0.00"
+                                          )
+                                          .map((dataBalance) => (
+                                              <tr key={dataBalance?.id}>
+                                                  <td
+                                                      style={{
+                                                          display: "flex",
+                                                          justifyContent:
+                                                              "space-between",
+                                                      }}
+                                                  >
+                                                      {dataBalance?.verified_payment ? (
+                                                          <span
+                                                              style={{
+                                                                  color: "green",
+                                                              }}
+                                                          >
+                                                              Si
+                                                          </span>
+                                                      ) : (
+                                                          <span
+                                                              style={{
+                                                                  color: "red",
+                                                              }}
+                                                          >
+                                                              No
+                                                          </span>
+                                                      )}
+                                                      {isAdmin ? (
+                                                          !dataBalance?.verified_payment ? (
+                                                              <button
+                                                                  onClick={() =>
+                                                                      handleUpdateVerificationPayment(
+                                                                          dataBalance
+                                                                      )
+                                                                  }
+                                                                  style={{
+                                                                      backgroundColor:
+                                                                          "red",
+                                                                      borderRadius:
+                                                                          "50%",
+                                                                  }}
+                                                              >
+                                                                  <i
+                                                                      style={{
+                                                                          color: "white",
+                                                                          fontWeight:
+                                                                              "bold",
+                                                                      }}
+                                                                      className="bx bx-check-double"
+                                                                  ></i>
+                                                              </button>
+                                                          ) : null
+                                                      ) : null}
+                                                  </td>
+                                                  <td>
+                                                      {dataBalance?.createdAt.slice(
+                                                          0,
+                                                          10
+                                                      )}
+                                                  </td>
+                                                  <td>{dataBalance?.egreso}</td>
+                                              </tr>
+                                          ))
+                                    : filteredCuentaPorPagar
+                                          ?.filter(
+                                              (dataBalance) =>
+                                                  dataBalance?.egreso !== "0.00"
+                                          )
+                                          .map((dataBalance) => (
+                                              <tr key={dataBalance?.id}>
+                                                  <td
+                                                      style={{
+                                                          display: "flex",
+                                                          justifyContent:
+                                                              "space-between",
+                                                      }}
+                                                  >
+                                                      {dataBalance?.verified_payment ? (
+                                                          <span
+                                                              style={{
+                                                                  color: "green",
+                                                              }}
+                                                          >
+                                                              Si
+                                                          </span>
+                                                      ) : (
+                                                          <span
+                                                              style={{
+                                                                  color: "red",
+                                                              }}
+                                                          >
+                                                              No
+                                                          </span>
+                                                      )}
+                                                      {isAdmin ? (
+                                                          !dataBalance?.verified_payment ? (
+                                                              <button
+                                                                  onClick={
+                                                                      handleUpdateVerificationPayment
+                                                                  }
+                                                                  style={{
+                                                                      backgroundColor:
+                                                                          "red",
+                                                                      borderRadius:
+                                                                          "50%",
+                                                                  }}
+                                                              >
+                                                                  <i
+                                                                      style={{
+                                                                          color: "white",
+                                                                          fontWeight:
+                                                                              "bold",
+                                                                      }}
+                                                                      className="bx bx-check-double"
+                                                                  ></i>
+                                                              </button>
+                                                          ) : null
+                                                      ) : null}
+                                                  </td>
+                                                  <td>
+                                                      {dataBalance?.createdAt.slice(
+                                                          0,
+                                                          10
+                                                      )}
+                                                  </td>
+                                                  <td>{dataBalance?.egreso}</td>
+                                              </tr>
+                                          ))}
                             </tbody>
                         </Table>
-                    </>
-                ) : (
-                    <img src="/sedes.jpg" alt="Buscar sedes" />
-                )} */}
+                    </Tab>
+                </Tabs>
             </div>
             <ModalForPay
                 showModalPay={showModalPay}

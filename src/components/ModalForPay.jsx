@@ -21,6 +21,7 @@ const ModalForPay = ({ showModalPay, handleClosePay }) => {
             ingreso: 0.0,
             egreso: data.egreso,
             status: true,
+            verified_payment: false,
         };
         axios
             .post(

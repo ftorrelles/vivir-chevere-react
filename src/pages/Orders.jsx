@@ -106,8 +106,8 @@ const Orders = () => {
                         // Si promotionType es 2, calculamos 2 productos por el precio de 1
                         newprice = addToCart?.Product?.price_afiliate / 2;
                     } else if (promotionType === 3) {
-                        // Si promotionType es 3, establecemos un precio fijo de $5.00
-                        newprice = 5.0;
+                        // Si promotionType es 3, establecemos un precio fijo de $6.50
+                        newprice = 6.5;
                     } else {
                         // Si promotionType no es 1, 2 o 3, el precio se mantiene sin descuento
                         newprice = addToCart?.Product?.price_afiliate;

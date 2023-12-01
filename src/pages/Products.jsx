@@ -325,8 +325,12 @@ const Products = () => {
                                         <td>{product?.price_afiliate}</td>
                                         <td>
                                             {product?.promotion_type == 3
-                                                ? "5.00"
-                                                : "Sin descuento"}
+                                                ? "6.50"
+                                                : product?.promotion_type == 2
+                                                ? "2x1"
+                                                : product?.promotion_type == 1
+                                                ? "20% al afiliado"
+                                                : "sin descuento"}
                                         </td>
                                         <td style={{ padding: "0" }}>
                                             <Button
