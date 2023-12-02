@@ -152,7 +152,13 @@ const Products = () => {
                     product?.price_general,
                     product?.price_afiliate,
                     `${
-                        product?.promotion_type == 3 ? "5.00" : "Sin descuento"
+                        product?.promotion_type == 3
+                            ? "6.50"
+                            : product?.promotion_type == 2
+                            ? "2x1"
+                            : product?.promotion_type == 1
+                            ? "20% al afiliado"
+                            : "sin descuento"
                     }`,
                 ];
             }),
