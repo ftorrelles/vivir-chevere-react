@@ -218,28 +218,36 @@ const BalanceBranches = () => {
                                                           )
                                                           .toFixed(2)
                                                   ).toFixed(2)
-                                                : filteredCuentaPorPagar
-                                                      ?.reduce(
-                                                          (total, balance) =>
-                                                              total +
-                                                              parseFloat(
-                                                                  balance?.ingreso
-                                                              ),
-                                                          0
-                                                      )
-                                                      .toFixed(2) -
-                                                  filteredCuentaPorPagar
-                                                      ?.reduce(
-                                                          (total, balance) =>
-                                                              balance.verified_payment
-                                                                  ? total +
-                                                                    parseFloat(
-                                                                        balance?.egreso
-                                                                    )
-                                                                  : total,
-                                                          0
-                                                      )
-                                                      .toFixed(2)}
+                                                : (
+                                                      filteredCuentaPorPagar
+                                                          ?.reduce(
+                                                              (
+                                                                  total,
+                                                                  balance
+                                                              ) =>
+                                                                  total +
+                                                                  parseFloat(
+                                                                      balance?.ingreso
+                                                                  ),
+                                                              0
+                                                          )
+                                                          .toFixed(2) -
+                                                      filteredCuentaPorPagar
+                                                          ?.reduce(
+                                                              (
+                                                                  total,
+                                                                  balance
+                                                              ) =>
+                                                                  balance.verified_payment
+                                                                      ? total +
+                                                                        parseFloat(
+                                                                            balance?.egreso
+                                                                        )
+                                                                      : total,
+                                                              0
+                                                          )
+                                                          .toFixed(2)
+                                                  ).toFixed(2)}
                                         </strong>
                                     </th>
                                 </tr>
