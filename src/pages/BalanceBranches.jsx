@@ -543,8 +543,10 @@ const BalanceBranches = () => {
                                                       {isAdmin ? (
                                                           !dataBalance?.verified_payment ? (
                                                               <button
-                                                                  onClick={
-                                                                      handleUpdateVerificationPayment
+                                                                  onClick={() =>
+                                                                      handleUpdateVerificationPayment(
+                                                                          dataBalance
+                                                                      )
                                                                   }
                                                                   style={{
                                                                       backgroundColor:
